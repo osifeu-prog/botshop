@@ -1,295 +1,1138 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
   <meta charset="utf-8" />
-  <title>SLHNET  שער הכניסה לנכס הדיגיטלי שלך</title>
+  <title>SLH - סלה ללא גבולות | שער כניסה לנכס הדיגיטלי שלך</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="description" content="קהילת עסקים, טוקן SLH, חנויות דיגיטליות ומודל ריפרל שקוף. תשלום חדפעמי של 39  פותח לך עולם של הכנסות, חשיפה והזדמנויות." />
+  <meta name="description" content="קהילת עסקים, טוקן SLH, חנויות דיגיטליות ומודל ריפרל שקוף. תשלום חדפעמי של 39₪ פותח לך עולם של הכנסות, חשיפה והזדמנויות." />
 
   <!-- Open Graph for social sharing -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="SLHNET  שער הכניסה לנכס הדיגיטלי שלך" />
-  <meta property="og:description" content="שלם 39  פעם אחת, קבל גישה לקבוצת עסקים, חנות דיגיטלית אישית, לינק ריפרל ועתיד של סטייקינג וטוקני SLH." />
+  <meta property="og:title" content="SLH - סלה ללא גבולות | שער כניסה לנכס הדיגיטלי שלך" />
+  <meta property="og:description" content="שלם 39₪ פעם אחת, קבל גישה לקבוצת עסקים, חנות דיגיטלית אישית, לינק ריפרל ועתיד של סטייקינג וטוקני SLH." />
   <meta property="og:url" content="https://slh-nft.com/" />
   <meta property="og:image" content="https://slh-nft.com/assets/start_banner.jpg" />
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
 
   <link rel="icon" href="https://slh-nft.com/assets/start_banner.jpg" type="image/svg+xml" />
-
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
   <style>
-    body {
+    :root {
+      --primary: #6366f1;
+      --primary-dark: #4f46e5;
+      --primary-light: #8b5cf6;
+      --secondary: #06d6a0;
+      --secondary-dark: #05b384;
+      --accent: #f59e0b;
+      --dark: #0f172a;
+      --darker: #020617;
+      --light: #f8fafc;
+      --gray: #64748b;
+      --gray-light: #cbd5e1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+      --gradient-secondary: linear-gradient(135deg, #06d6a0 0%, #0ea5e9 100%);
+      --gradient-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      --shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      --shadow-light: 0 5px 15px rgba(0, 0, 0, 0.1);
+      --radius: 16px;
+      --transition: all 0.3s ease;
+    }
+    
+    * {
       margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #111827 0, #020617 55%, #000 100%);
-      color: #e5e7eb;
+      padding: 0;
+      box-sizing: border-box;
     }
-    a { color: inherit; text-decoration: none; }
-    .page {
-      max-width: 1000px;
+    
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--darker);
+      color: var(--light);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    
+    body[dir="ltr"] {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body[dir="rtl"] {
+      font-family: 'Assistant', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    a { 
+      color: inherit; 
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    
+    .container {
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 24px 16px 48px;
+      padding: 0 20px;
     }
-    .hero {
-      display: grid;
-      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
-      gap: 24px;
+    
+    /* Header & Navigation */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(15, 23, 42, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      z-index: 1000;
+      padding: 15px 0;
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
       align-items: center;
     }
-    @media (max-width: 768px) {
-      .hero { grid-template-columns: minmax(0, 1fr); }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 700;
+      font-size: 1.5rem;
+      color: var(--light);
     }
-    .badge {
+    
+    .logo-icon {
+      color: var(--primary);
+      font-size: 1.8rem;
+    }
+    
+    .nav-links {
+      display: flex;
+      gap: 30px;
+    }
+    
+    .nav-link {
+      font-weight: 500;
+      position: relative;
+      padding: 8px 0;
+    }
+    
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--primary);
+      transition: var(--transition);
+    }
+    
+    .nav-link:hover::after {
+      width: 100%;
+    }
+    
+    .nav-actions {
+      display: flex;
+      gap: 15px;
+      align-items: center;
+    }
+    
+    .mobile-menu-btn {
+      display: none;
+      background: none;
+      border: none;
+      color: var(--light);
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+    
+    /* Hero Section */
+    .hero {
+      padding: 160px 0 100px;
+      background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
+                  radial-gradient(circle at bottom left, rgba(6, 214, 160, 0.15) 0%, transparent 50%),
+                  var(--darker);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+      z-index: 0;
+    }
+    
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 50px;
+      align-items: center;
+    }
+    
+    .hero-badge {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      font-size: 12px;
-      color: #cbd5f5;
-      background: rgba(15, 23, 42, 0.75);
-      backdrop-filter: blur(14px);
-    }
-    .title {
-      font-size: clamp(26px, 4vw, 34px);
-      font-weight: 700;
-      margin: 18px 0 8px;
-      color: #f9fafb;
-    }
-    .subtitle {
-      font-size: 16px;
-      line-height: 1.7;
-      color: #cbd5f5;
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: rgba(99, 102, 241, 0.2);
+      border: 1px solid rgba(99, 102, 241, 0.4);
+      font-size: 0.9rem;
+      font-weight: 500;
       margin-bottom: 20px;
+      backdrop-filter: blur(10px);
     }
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 13px;
-      margin-bottom: 18px;
+    
+    .hero-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 20px;
+      background: linear-gradient(135deg, #f8fafc 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
-    .pill {
-      padding: 4px 10px;
-      border-radius: 999px;
-      background: rgba(30, 64, 175, 0.25);
-      border: 1px solid rgba(129, 140, 248, 0.35);
-      color: #e0e7ff;
-    }
-    .cta-main {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 14px;
-    }
-    .btn-primary {
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: none;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 14px;
-      background: linear-gradient(135deg, #22c55e, #16a34a);
-      color: #022c22;
-      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.45);
-    }
-    .btn-secondary {
-      padding: 9px 14px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.5);
-      background: transparent;
-      color: #e5e7eb;
-      font-size: 14px;
-      cursor: pointer;
-    }
-    .mini-note {
-      font-size: 12px;
-      color: #9ca3af;
-    }
-    .card {
-      border-radius: 18px;
-      padding: 16px 18px;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.95) 0, rgba(15, 23, 42, 0.9) 40%, rgba(15, 23, 42, 0.92) 100%);
-      border: 1px solid rgba(148, 163, 184, 0.4);
-      box-shadow: 0 12px 40px rgba(15, 23, 42, 0.65);
-    }
-    .card h3 {
-      margin: 0 0 8px;
-      font-size: 16px;
-      color: #e5e7eb;
-    }
-    .card p {
-      margin: 0 0 10px;
-      font-size: 13px;
-      color: #cbd5f5;
+    
+    .hero-subtitle {
+      font-size: 1.25rem;
+      color: var(--gray-light);
+      margin-bottom: 30px;
       line-height: 1.6;
     }
-    .card ul {
-      margin: 0;
-      padding-inline-start: 18px;
-      font-size: 13px;
-      color: #e5e7eb;
-    }
-    .section-title {
-      margin: 32px 0 8px;
-      font-size: 18px;
-      font-weight: 600;
-    }
-    .section-sub {
-      margin: 0 0 18px;
-      font-size: 13px;
-      color: #9ca3af;
-    }
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 16px;
-    }
-    @media (max-width: 900px) {
-      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    }
-    @media (max-width: 640px) {
-      .grid-3 { grid-template-columns: minmax(0, 1fr); }
-    }
-    .stacked {
+    
+    .hero-features {
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
       gap: 10px;
-      font-size: 13px;
-      color: #cbd5f5;
+      margin-bottom: 30px;
     }
+    
+    .hero-feature {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      font-size: 0.9rem;
+    }
+    
+    .hero-actions {
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 50px;
+      font-weight: 600;
+      font-size: 1rem;
+      transition: var(--transition);
+      border: none;
+      cursor: pointer;
+    }
+    
+    .btn-primary {
+      background: var(--gradient-primary);
+      color: white;
+      box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(99, 102, 241, 0.6);
+    }
+    
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+    }
+    
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.15);
+      transform: translateY(-3px);
+    }
+    
+    .hero-card {
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: var(--radius);
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .hero-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+    }
+    
+    .hero-card-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .hero-card-list {
+      list-style: none;
+      margin-bottom: 20px;
+    }
+    
+    .hero-card-list li {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    
+    .hero-card-list li::before {
+      content: '✓';
+      color: var(--secondary);
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+    
     .investor-card {
-      margin-top: 12px;
-      border-radius: 16px;
-      padding: 12px 14px;
-      background: rgba(15, 23, 42, 0.9);
-      border: 1px dashed rgba(250, 204, 21, 0.7);
-      font-size: 13px;
-      color: #fef9c3;
+      background: rgba(245, 158, 11, 0.1);
+      border: 1px dashed rgba(245, 158, 11, 0.5);
+      border-radius: 12px;
+      padding: 20px;
+      margin-top: 20px;
     }
-    .investor-card strong {
-      color: #fde68a;
+    
+    /* Sections */
+    .section {
+      padding: 100px 0;
     }
-    footer {
-      margin-top: 32px;
-      font-size: 11px;
-      color: #6b7280;
+    
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
       text-align: center;
+      margin-bottom: 15px;
+    }
+    
+    .section-subtitle {
+      font-size: 1.2rem;
+      color: var(--gray-light);
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 50px;
+    }
+    
+    /* Cards Grid */
+    .cards-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    
+    .card {
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: var(--radius);
+      padding: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      transition: var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: var(--gradient-primary);
+      transform: scaleX(0);
+      transition: var(--transition);
+    }
+    
+    .card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .card:hover {
+      transform: translateY(-10px);
+      box-shadow: var(--shadow);
+    }
+    
+    .card-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+    
+    .card-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+    }
+    
+    .card-content {
+      color: var(--gray-light);
+    }
+    
+    /* Ecosystem Section */
+    .ecosystem {
+      background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+                  var(--darker);
+    }
+    
+    .ecosystem-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+    }
+    
+    /* Payment Methods */
+    .payment-methods {
+      background: radial-gradient(circle at bottom right, rgba(6, 214, 160, 0.1) 0%, transparent 50%),
+                  var(--darker);
+    }
+    
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+    }
+    
+    .payment-card {
+      text-align: center;
+      padding: 30px 20px;
+    }
+    
+    .payment-icon {
+      font-size: 3rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+    
+    /* Stats */
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 30px;
+      margin: 50px 0;
+    }
+    
+    .stat {
+      text-align: center;
+      padding: 30px 20px;
+      background: rgba(15, 23, 42, 0.7);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .stat-number {
+      font-size: 3rem;
+      font-weight: 700;
+      color: var(--primary);
+      display: block;
+      margin-bottom: 10px;
+    }
+    
+    /* Contact Section */
+    .contact {
+      background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%),
+                  var(--darker);
+    }
+    
+    .contact-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 30px;
+    }
+    
+    .contact-card {
+      text-align: center;
+      padding: 30px;
+    }
+    
+    .contact-icon {
+      font-size: 2.5rem;
+      margin-bottom: 20px;
+      color: var(--primary);
+    }
+    
+    /* Footer */
+    .footer {
+      background: var(--dark);
+      padding: 60px 0 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .footer-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+    
+    .footer-column h3 {
+      font-size: 1.3rem;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+    
+    .footer-column h3::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 40px;
+      height: 2px;
+      background: var(--primary);
+    }
+    
+    .footer-links {
+      list-style: none;
+    }
+    
+    .footer-links li {
+      margin-bottom: 10px;
+    }
+    
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+    
+    .footer-bottom {
+      text-align: center;
+      padding-top: 30px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--gray);
+    }
+    
+    /* Animations */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    .fade-in-up {
+      animation: fadeInUp 0.8s ease forwards;
+    }
+    
+    /* Language Switcher */
+    .language-switcher {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .lang-btn {
+      background: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 0.9em;
+      transition: var(--transition);
+    }
+    
+    .lang-btn:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    /* Responsive Design */
+    @media (max-width: 1024px) {
+      .hero-title {
+        font-size: 3rem;
+      }
+      
+      .hero-content {
+        gap: 40px;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .header-content {
+        flex-wrap: wrap;
+      }
+      
+      .mobile-menu-btn {
+        display: block;
+      }
+      
+      .nav-links {
+        display: none;
+        width: 100%;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+      }
+      
+      .nav-links.active {
+        display: flex;
+      }
+      
+      .hero {
+        padding: 140px 0 80px;
+      }
+      
+      .hero-content {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+      
+      .hero-title {
+        font-size: 2.5rem;
+      }
+      
+      .section {
+        padding: 80px 0;
+      }
+      
+      .section-title {
+        font-size: 2rem;
+      }
+    }
+    
+    @media (max-width: 576px) {
+      .hero-title {
+        font-size: 2rem;
+      }
+      
+      .hero-actions {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      
+      .btn {
+        justify-content: center;
+      }
+      
+      .section-title {
+        font-size: 1.8rem;
+      }
+    }
+    
+    /* Code blocks */
+    code {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: monospace;
+      font-size: 0.9em;
+    }
+    
+    /* Highlighted text */
+    .highlight {
+      color: var(--primary);
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <div class="page">
-    <section class="hero" id="top">
-      <div>
-        <div class="badge">
-          <span>SLHNET</span>
-          <span></span>
-          <span>נכס דיגיטלי לכל אחד</span>
-        </div>
-        <h1 class="title">שלם 39  פעם אחת  וקבל נכס דיגיטלי שיכול לעבוד בשבילך כל החיים.</h1>
-        <p class="subtitle">
-          SLHNET מחברת בין בעלי עסקים, יוצרים ומשווקים לרשת ריפרל חכמה סביב טוקן
-          <strong>SLH</strong>, חנויות דיגיטליות וקהילת עסקים פעילה. כל מי שנכנס דרך הלינק שלך
-          מתועד בעץ הפניות שקוף  ואתה הראשון ליהנות.
-        </p>
-        <div class="pill-row">
-          <div class="pill">גישה לקבוצת עסקים פרטית</div>
-          <div class="pill">חנות דיגיטלית אישית</div>
-          <div class="pill">לינק ריפרל ייחודי</div>
-          <div class="pill">איירדרופים וסטייקינג עתידי</div>
-        </div>
-        <div class="cta-main" id="join39">
-          <a href="https://links.payboxapp.com/1SNfaJ6XcYb" target="_blank" rel="noopener">
-            <button class="btn-primary"> תשלום חדפעמי 39  וגישה מלאה</button>
+  <!-- Header -->
+  <header class="header">
+    <div class="container">
+      <div class="header-content">
+        <a href="#" class="logo">
+          <i class="fas fa-gem logo-icon"></i>
+          <span>SLH</span>
+        </a>
+        
+        <button class="mobile-menu-btn" id="mobileMenuBtn">
+          <i class="fas fa-bars"></i>
+        </button>
+        
+        <nav class="nav-links" id="navLinks">
+          <a href="#ecosystem" class="nav-link">האקוסיסטם</a>
+          <a href="#how-it-works" class="nav-link">איך זה עובד</a>
+          <a href="#token" class="nav-link">טוקן SLH</a>
+          <a href="#payment" class="nav-link">תשלום</a>
+          <a href="#contact" class="nav-link">צור קשר</a>
+        </nav>
+        
+        <div class="nav-actions">
+          <div class="language-switcher">
+            <button class="lang-btn" onclick="changeLanguage('he')">עברית</button>
+            <button class="lang-btn" onclick="changeLanguage('en')">English</button>
+          </div>
+          <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="btn btn-secondary">
+            <i class="fab fa-telegram"></i> בוט טלגרם
           </a>
-          <a href="https://t.me/Buy_My_Shop_bot" target="_blank" rel="noopener">
-            <button class="btn-secondary"> כניסה לבוט SLHNET</button>
-          </a>
-        </div>
-        <div class="mini-note">
-          אפשר לשלם גם בביט / PayPal  כל הפרטים בבוט ובקבוצת העסקים אחרי ההצטרפות.
         </div>
       </div>
-      <div>
-        <div class="card">
-          <h3>מה קורה אחרי שאתה משלים תשלום 39 ?</h3>
-          <p>זו לא עוד "קבוצת וואטסאפ". אתה מקבל <strong>נכס דיגיטלי</strong> שממשיך לעבוד בשבילך:</p>
-          <ul>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero" id="top">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-text">
+          <div class="hero-badge">
+            <i class="fas fa-rocket"></i>
+            <span>SLHNET - נכס דיגיטלי לכל אחד</span>
+          </div>
+          
+          <h1 class="hero-title">שלם 39₪ פעם אחת וקבל נכס דיגיטלי שיכול לעבוד בשבילך כל החיים.</h1>
+          
+          <p class="hero-subtitle">
+            SLHNET מחברת בין בעלי עסקים, יוצרים ומשווקים לרשת ריפרל חכמה סביב טוקן
+            <span class="highlight">SLH</span>, חנויות דיגיטליות וקהילת עסקים פעילה. כל מי שנכנס דרך הלינק שלך
+            מתועד בעץ הפניות שקוף ואתה הראשון ליהנות.
+          </p>
+          
+          <div class="hero-features">
+            <div class="hero-feature">
+              <i class="fas fa-users"></i>
+              <span>גישה לקבוצת עסקים פרטית</span>
+            </div>
+            <div class="hero-feature">
+              <i class="fas fa-store"></i>
+              <span>חנות דיגיטלית אישית</span>
+            </div>
+            <div class="hero-feature">
+              <i class="fas fa-link"></i>
+              <span>לינק ריפרל ייחודי</span>
+            </div>
+            <div class="hero-feature">
+              <i class="fas fa-chart-line"></i>
+              <span>איירדרופים וסטייקינג עתידי</span>
+            </div>
+          </div>
+          
+          <div class="hero-actions">
+            <a href="https://links.payboxapp.com/1SNfaJ6XcYb" target="_blank" class="btn btn-primary">
+              <i class="fas fa-lock"></i> תשלום חדפעמי 39₪ וגישה מלאה
+            </a>
+            <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="btn btn-secondary">
+              <i class="fab fa-telegram"></i> כניסה לבוט SLHNET
+            </a>
+          </div>
+          
+          <p class="mini-note">
+            <i class="fas fa-info-circle"></i> אפשר לשלם גם בביט / PayPal - כל הפרטים בבוט ובקבוצת העסקים אחרי ההצטרפות.
+          </p>
+        </div>
+        
+        <div class="hero-card fade-in-up">
+          <h3 class="hero-card-title">
+            <i class="fas fa-question-circle"></i> מה קורה אחרי שאתה משלים תשלום 39₪?
+          </h3>
+          <p>זו לא עוד "קבוצת וואטסאפ". אתה מקבל <span class="highlight">נכס דיגיטלי</span> שממשיך לעבוד בשבילך:</p>
+          <ul class="hero-card-list">
             <li>גישה לקבוצת עסקים סגורה עם הדרכות, שיתופי פעולה ותוכן איכותי.</li>
             <li>פתיחת חנות דיגיטלית אישית שתוכל למכור דרכה מוצרים/שירותים.</li>
-            <li>לינק ריפרל אישי  כל מי שנכנס דרכך מתועד ברשת SLHNET.</li>
+            <li>לינק ריפרל אישי - כל מי שנכנס דרכך מתועד ברשת SLHNET.</li>
             <li>השתתפות עתידית בסטייקינג, איירדרופים ותגמולים נוספים בטוקני SLH.</li>
           </ul>
-          <p class="small">
-            📊 <strong>49% מכל תשלום</strong> נכנס אוטומטית לרזרבות המערכת – קרן ביטחון שמטרתה להגדיל את היציבות והרווחיות לטווח הארוך עבור כל המצטרפים.
+          <p>
+            <i class="fas fa-chart-pie"></i> <strong>49% מכל תשלום</strong> נכנס אוטומטית לרזרבות המערכת – קרן ביטחון שמטרתה להגדיל את היציבות והרווחיות לטווח הארוך.
           </p>
 
           <div class="investor-card">
-            <strong>משקיעים / שותפים אסטרטגיים</strong><br/>
-            יוצרים מודל ריפרל שקוף וסטייקינג חכם סביב אקו-סיסטם אמיתי של עסקים  לא סביב "אוויר".<br/>
-            קשר ישיר: טלפון 058-420-3384  טלגרם <a href="https://t.me/Osif83" target="_blank">@Osif83</a>
+            <strong><i class="fas fa-crown"></i> משקיעים / שותפים אסטרטגיים</strong><br/>
+            יוצרים מודל ריפרל שקוף וסטייקינג חכם סביב אקו-סיסטם אמיתי של עסקים - לא סביב "אוויר".<br/>
+            <i class="fas fa-phone"></i> קשר ישיר: 058-420-3384 | <i class="fab fa-telegram"></i> טלגרם <a href="https://t.me/Osif83" target="_blank">@Osif83</a>
           </div>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section>
+  <!-- How It Works Section -->
+  <section class="section" id="how-it-works">
+    <div class="container">
       <h2 class="section-title">איך מרוויחים ב-SLHNET בפועל?</h2>
-      <p class="section-sub">מודל ריפרל מדורג + נכסים דיגיטליים אמיתיים + טוקן SLH על Binance Smart Chain.</p>
-      <div class="grid-3">
-        <div class="card">
-          <h3>1. מצטרפים ומשלימים 39 </h3>
-          <p>פותחים לעצמכם "שער כניסה" אישי לרשת  כולל קישור שיתוף, חנות ופרופיל עסקי.</p>
+      <p class="section-subtitle">מודל ריפרל מדורג + נכסים דיגיטליים אמיתיים + טוקן SLH על Binance Smart Chain.</p>
+      
+      <div class="cards-grid">
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-user-plus"></i>
+          </div>
+          <h3 class="card-title">1. מצטרפים ומשלימים 39₪</h3>
+          <p class="card-content">פותחים לעצמכם "שער כניסה" אישי לרשת כולל קישור שיתוף, חנות ופרופיל עסקי.</p>
         </div>
-        <div class="card">
-          <h3>2. בונים עץ הפניות</h3>
-          <p>כל מי שנכנס דרך הקישור שלך מתועד. אנחנו בונים עץ קשרים שקוף  מי הביא את מי, ומתי.</p>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-network-wired"></i>
+          </div>
+          <h3 class="card-title">2. בונים עץ הפניות</h3>
+          <p class="card-content">כל מי שנכנס דרך הקישור שלך מתועד. אנחנו בונים עץ קשרים שקוף - מי הביא את מי, ומתי.</p>
         </div>
-        <div class="card">
-          <h3>3. נהנים מחשיפה ותגמולים</h3>
-          <p>הקהילה, הפוסטים, החנויות והסטייקינג מייצרים עבורך ערך מתמשך  גם כשאתה לא "רודף" אחרי לידים.</p>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-hand-holding-usd"></i>
+          </div>
+          <h3 class="card-title">3. נהנים מחשיפה ותגמולים</h3>
+          <p class="card-content">הקהילה, הפוסטים, החנויות והסטייקינג מייצרים עבורך ערך מתמשך - גם כשאתה לא "רודף" אחרי לידים.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section>
+  <!-- Token Section -->
+  <section class="section" id="token">
+    <div class="container">
       <h2 class="section-title">SLHNET + SLH Token</h2>
-      <p class="section-sub">השילוב בין טוקן על BSC לבין רשת חברתית-עסקית מייצר מודל חדש של Social-Fi.</p>
-      <div class="grid-3">
-        <div class="card">
-          <h3>טוקן SLH על BSC</h3>
-          <p>Contract: <code>0xACb0A09414CEA1C879c67bB7A877E4e19480f022</code></p>
-          <p>ניתן להחזקה בכל ארנק שתומך ב-BSC. בהמשך  סטייקינג, תגמולים והצבעות קהילה.</p>
+      <p class="section-subtitle">השילוב בין טוקן על BSC לבין רשת חברתית-עסקית מייצר מודל חדש של Social-Fi.</p>
+      
+      <div class="cards-grid">
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fab fa-ethereum"></i>
+          </div>
+          <h3 class="card-title">טוקן SLH על BSC</h3>
+          <p class="card-content">Contract: <code>0xACb0A09414CEA1C879c67bB7A877E4e19480f022</code></p>
+          <p class="card-content">ניתן להחזקה בכל ארנק שתומך ב-BSC. בהמשך - סטייקינג, תגמולים והצבעות קהילה.</p>
         </div>
-        <div class="card">
-          <h3>סטייקינג (פאזה 1)</h3>
-          <p>מתחילים ממודל נקודות פנימי על בסיס פעילות, שיתופים והפניות. בהמשך  קישור ישיר לסטייקינג ב-SLH.</p>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-coins"></i>
+          </div>
+          <h3 class="card-title">סטייקינג (פאזה 1)</h3>
+          <p class="card-content">מתחילים ממודל נקודות פנימי על בסיס פעילות, שיתופים והפניות. בהמשך - קישור ישיר לסטייקינג ב-SLH.</p>
         </div>
-        <div class="card">
-          <h3>DAO קהילתי</h3>
-          <p>שקיפות מלאה: מי הרוויח, כמה, ועל בסיס מה. כל זה נבנה בהדרגה לתוך לוגיקת המערכת.</p>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-vote-yea"></i>
+          </div>
+          <h3 class="card-title">DAO קהילתי</h3>
+          <p class="card-content">שקיפות מלאה: מי הרוויח, כמה, ועל בסיס מה. כל זה נבנה בהדרגה לתוך לוגיקת המערכת.</p>
         </div>
       </div>
-    </section>
+    </div>
+  </section>
 
-    <section>
-      <h2 class="section-title">מוכן להתחיל?</h2>
-      <div class="stacked">
-        <div>1. לוחצים על כפתור <strong>תשלום 39 </strong> ומבצעים רכישה מאובטחת.</div>
-        <div>2. נכנסים לבוט: <a href="https://t.me/Buy_My_Shop_bot" target="_blank">@Buy_My_Shop_bot</a> ומבצעים /start.</div>
-        <div>3. מצטרפים לקבוצת העסקים, מקבלים קישורים ייחודיים ומתחילים להפיץ את הנכס הדיגיטלי שלכם.</div>
+  <!-- Ecosystem Section -->
+  <section class="section ecosystem" id="ecosystem">
+    <div class="container">
+      <h2 class="section-title">💎 אקוסיסטם סלה ללא גבולות</h2>
+      <p class="section-subtitle">מערכת טכנולוגית מלאה המשלבת קריפטו, בוטים חכמים ושיווק רשתי מתקדם</p>
+      
+      <div class="ecosystem-grid">
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-coins"></i>
+          </div>
+          <h3 class="card-title">מטבע SLH</h3>
+          <p class="card-content">מטבע קריפטו ייחודי עם ערך אמיתי של 444₪ ליחידה. כל מצטרף מקבל SLH 1 עם 39₪ מידית והשאר בהדרגה.</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-robot"></i>
+          </div>
+          <h3 class="card-title">פלטפורמת בוטים</h3>
+          <p class="card-content">בוטים אוטומטיים לניהול קהילות, מערכות תשלום מתקדמות ואינטגרציה עם כל המערכות.</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-sitemap"></i>
+          </div>
+          <h3 class="card-title">שיווק רשתי - 5 דורות</h3>
+          <p class="card-content">הכנסה פסיבית מכל מצטרף חדש דרך הלינק האישי שלך, עם מעקב אוטומטי ל-5 דורות.</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-palette"></i>
+          </div>
+          <h3 class="card-title">NFT ומסחר דיגיטלי</h3>
+          <p class="card-content">שוק NFT מתקדם ליצירה וסחר בנכסים דיגיטליים עם חוזים חכמים אוטומטיים.</p>
+        </div>
       </div>
-      <div style="margin-top:16px;">
-        <a href="#top"><span style="font-size:12px;color:#9ca3af;"> חזרה למעלה</span></a>
-      </div>
-    </section>
+    </div>
+  </section>
 
-    <footer>
-      SLHNET  Social-Fi for real-world businesses  Powered by SLH token on BSC
-    </footer>
-  </div>
+  <!-- Payment Section -->
+  <section class="section payment-methods" id="payment">
+    <div class="container">
+      <h2 class="section-title">💳 דרכי תשלום</h2>
+      <p class="section-subtitle">אפשרויות תשלום מגוונות להצטרפות מהירה ונוחה</p>
+      
+      <div class="payment-grid">
+        <div class="card payment-card fade-in-up">
+          <div class="payment-icon">
+            <i class="fas fa-university"></i>
+          </div>
+          <h3 class="card-title">העברה בנקאית</h3>
+          <p class="card-content">בנק הפועלים, סניף כפר גנים (153)<br>חשבון: 73462<br>קאופמן צביקה</p>
+        </div>
+        
+        <div class="card payment-card fade-in-up">
+          <div class="payment-icon">
+            <i class="fas fa-coins"></i>
+          </div>
+          <h3 class="card-title">תשלום ב-TON</h3>
+          <p class="card-content"><code>UQCr743gEr_nqV_0SBkSp3CtYS_15R3LDLBvLmKeEv7XdGvp</code></p>
+        </div>
+        
+        <div class="card payment-card fade-in-up">
+          <div class="payment-icon">
+            <i class="fab fa-ethereum"></i>
+          </div>
+          <h3 class="card-title">קריפטו נוסף (Ethereum)</h3>
+          <p class="card-content"><code>0xEc43Fb4819b5DdCb11407DBE46B92a51c7d24B2b</code></p>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 50px;">
+        <p style="font-size: 1.2rem; margin-bottom: 20px;"><strong>💰 עלות הצטרפות: 39 ₪ בלבד</strong></p>
+        <a href="https://t.me/SLH_Israel_Bot" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;">
+          <i class="fab fa-telegram"></i> הצטרפו עכשיו דרך הבוט
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why Join Section -->
+  <section class="section">
+    <div class="container">
+      <h2 class="section-title">💫 למה להצטרף לקהילה שלנו?</h2>
+      
+      <div class="cards-grid">
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-shopping-cart"></i>
+          </div>
+          <h3 class="card-title">🛒 איקומרס מתקדם</h3>
+          <p class="card-content">לינק אישי למכירה חוזרת - תוכלו להרוויח כמו בחנות אינטרנטית ישירות בטלגרם</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <h3 class="card-title">📊 ביננס וניתוח</h3>
+          <p class="card-content">גישה לכלים מתקדמים לניתוח מסחר, ניהול תיקים וקבלת החלטות מושכלות</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-paint-brush"></i>
+          </div>
+          <h3 class="card-title">🎨 NFT וחוזים חכמים</h3>
+          <p class="card-content">יצירה וניהול נכסים דיגיטליים עם חוזים חכמים אוטומטיים</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-users"></i>
+          </div>
+          <h3 class="card-title">👥 קהילה תומכת</h3>
+          <p class="card-content">רשת של אנשי עסקים, יזמים ומשקיעים לשיתופי פעולה והזדמנויות</p>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 50px;">
+        <p style="font-size: 1.2rem; margin-bottom: 20px;"><strong>💰 עלות הצטרפות סמלית: 39 ₪ בלבד</strong></p>
+        <a href="https://t.me/SLH_Israel_Bot" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;">
+          <i class="fab fa-telegram"></i> הצטרפו עכשיו דרך הבוט
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="section contact" id="contact">
+    <div class="container">
+      <h2 class="section-title">📞 צרו קשר</h2>
+      <p class="section-subtitle">מוכנים להצטרף למהפכה הטכנולוגית? אנחנו כאן כדי לעזור!</p>
+      
+      <div class="contact-grid">
+        <div class="card contact-card fade-in-up">
+          <div class="contact-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h3 class="card-title">👤 אוסיף אונגר</h3>
+          <p class="card-content">מייסד שותף</p>
+          <p class="card-content"><strong>📞 058-4203384</strong></p>
+        </div>
+        
+        <div class="card contact-card fade-in-up">
+          <div class="contact-icon">
+            <i class="fas fa-user-tie"></i>
+          </div>
+          <h3 class="card-title">👤 צביקה קאופמן</h3>
+          <p class="card-content">מייסד שותף</p>
+          <p class="card-content"><strong>📞 054-6671882</strong></p>
+        </div>
+        
+        <div class="card contact-card fade-in-up">
+          <div class="contact-icon">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h3 class="card-title">📧 דרכי התקשרות</h3>
+          <p class="card-content">בוט טלגרם: @SLH_Israel_Bot</p>
+          <p class="card-content">פייסבוק: OMG.adv</p>
+        </div>
+        
+        <div class="card contact-card fade-in-up">
+          <div class="contact-icon">
+            <i class="fas fa-globe"></i>
+          </div>
+          <h3 class="card-title">🌐 אתרים נוספים</h3>
+          <p class="card-content">שוק NFT: slh-nft.com</p>
+          <p class="card-content">פלטפורמה: web-production-b425.up.railway.app</p>
+        </div>
+      </div>
+      
+      <div style="text-align: center; margin-top: 50px;">
+        <a href="https://t.me/SLH_Israel_Bot" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;">
+          <i class="fab fa-telegram"></i> התחילו בבוט הטלגרם
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-column">
+          <h3>SLH - סלה ללא גבולות</h3>
+          <p>שער הכניסה שלך לנכס הדיגיטלי הראשון. הצטרפו למהפכה הכלכלית של העתיד.</p>
+        </div>
+        
+        <div class="footer-column">
+          <h3>קישורים מהירים</h3>
+          <ul class="footer-links">
+            <li><a href="#top">ראשי</a></li>
+            <li><a href="#ecosystem">האקוסיסטם</a></li>
+            <li><a href="#how-it-works">איך זה עובד</a></li>
+            <li><a href="#token">טוקן SLH</a></li>
+            <li><a href="#payment">תשלום</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>פרויקטים נוספים</h3>
+          <ul class="footer-links">
+            <li><a href="https://slh-nft.com/" target="_blank">SLH NFT Marketplace</a></li>
+            <li><a href="https://web-production-b425.up.railway.app/" target="_blank">Bot Development Platform</a></li>
+            <li><a href="https://www.facebook.com/OMG.adv/" target="_blank">פייסבוק עסקי</a></li>
+          </ul>
+        </div>
+        
+        <div class="footer-column">
+          <h3>צור קשר</h3>
+          <ul class="footer-links">
+            <li><a href="https://t.me/Buy_My_Shop_bot" target="_blank"><i class="fab fa-telegram"></i> בוט טלגרם</a></li>
+            <li><a href="https://t.me/Osif83" target="_blank"><i class="fab fa-telegram"></i> אוסיף אונגר</a></li>
+            <li><a href="tel:0584203384"><i class="fas fa-phone"></i> 058-4203384</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p>© 2024 SLH - סלה ללא גבולות. כל הזכויות שמורות.</p>
+        <p>פיתוח טכנולוגיות מתקדמות לכלכלה העתידית</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Mobile menu toggle
+    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+    const navLinks = document.getElementById('navLinks');
+    
+    mobileMenuBtn.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+    });
+    
+    // Close mobile menu when clicking on a link
+    document.querySelectorAll('.nav-link').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+      });
+    });
+    
+    // Scroll animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('fade-in-up');
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all cards for animation
+    document.querySelectorAll('.card').forEach(card => {
+      observer.observe(card);
+    });
+    
+    // Language switching functionality
+    function changeLanguage(lang) {
+      // This is a simplified version - in a real implementation,
+      // you would replace all text content based on the selected language
+      alert(`שפה שונתה ל-${lang === 'he' ? 'עברית' : 'English'}`);
+      // In a full implementation, you would have translation objects and update all text
+    }
+    
+    // Add smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        
+        const targetId = this.getAttribute('href');
+        if (targetId === '#') return;
+        
+        const targetElement = document.querySelector(targetId);
+        if (targetElement) {
+          window.scrollTo({
+            top: targetElement.offsetTop - 80,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+  </script>
 </body>
 </html>
-
