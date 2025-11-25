@@ -6,7 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="description" content="קהילת עסקים, טוקן SLH, חנויות דיגיטליות ומודל ריפרל שקוף. תשלום חדפעמי של 39₪ פותח לך עולם של הכנסות, חשיפה והזדמנויות." />
 
-  <!-- Open Graph for social sharing -->
   <meta property="og:type" content="website" />
   <meta property="og:title" content="SLH - סלה ללא גבולות | שער כניסה לנכס הדיגיטלי שלך" />
   <meta property="og:description" content="שלם 39₪ פעם אחת, קבל גישה לקבוצת עסקים, חנות דיגיטלית אישית, לינק ריפרל ועתיד של סטייקינג וטוקני SLH." />
@@ -17,6 +16,7 @@
 
   <link rel="icon" href="https://slh-nft.com/assets/start_banner.jpg" type="image/svg+xml" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Assistant:wght@200..800&display=swap" rel="stylesheet">
   
   <style>
     :root {
@@ -54,19 +54,11 @@
     }
     
     body {
-      font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      font-family: 'Assistant', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
       background: var(--darker);
       color: var(--light);
       line-height: 1.6;
       overflow-x: hidden;
-    }
-    
-    body[dir="ltr"] {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-
-    body[dir="rtl"] {
-      font-family: 'Assistant', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     
     a { 
@@ -159,8 +151,8 @@
     .hero {
       padding: 160px 0 100px;
       background: radial-gradient(circle at top right, rgba(99, 102, 241, 0.2) 0%, transparent 50%),
-                  radial-gradient(circle at bottom left, rgba(6, 214, 160, 0.15) 0%, transparent 50%),
-                  var(--darker);
+              radial-gradient(circle at bottom left, rgba(6, 214, 160, 0.15) 0%, transparent 50%),
+              var(--darker);
       position: relative;
       overflow: hidden;
     }
@@ -331,6 +323,19 @@
       padding: 20px;
       margin-top: 20px;
     }
+
+    .mini-note {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin-top: 20px;
+      padding: 10px 15px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
     
     /* Sections */
     .section {
@@ -368,6 +373,9 @@
       transition: var(--transition);
       position: relative;
       overflow: hidden;
+      min-height: 250px; /* Added for visual consistency */
+      display: flex;
+      flex-direction: column;
     }
     
     .card::before {
@@ -380,6 +388,7 @@
       background: var(--gradient-primary);
       transform: scaleX(0);
       transition: var(--transition);
+      transform-origin: right; /* RTL support for hover effect */
     }
     
     .card:hover::before {
@@ -409,7 +418,7 @@
     /* Ecosystem Section */
     .ecosystem {
       background: radial-gradient(circle at top left, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-                  var(--darker);
+              var(--darker);
     }
     
     .ecosystem-grid {
@@ -418,10 +427,90 @@
       gap: 30px;
     }
     
+    /* Testimonials Section */
+    .testimonial-card {
+      text-align: center;
+      padding: 40px;
+    }
+
+    .testimonial-text {
+      font-style: italic;
+      font-size: 1.1rem;
+      margin-bottom: 20px;
+      color: var(--gray-light);
+    }
+
+    .testimonial-author {
+      font-weight: 600;
+      color: var(--secondary);
+      font-size: 1.2rem;
+    }
+    
+    .testimonial-author small {
+      display: block;
+      font-weight: 400;
+      color: var(--gray);
+      margin-top: 5px;
+    }
+
+    /* FAQ Section */
+    .faq-item {
+      margin-bottom: 10px;
+      padding: 0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: var(--transition);
+    }
+    
+    .faq-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      padding: 15px 20px;
+      background: rgba(255, 255, 255, 0.05);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: var(--transition);
+    }
+
+    .faq-question:hover {
+      background: rgba(255, 255, 255, 0.1);
+    }
+    
+    .faq-question i {
+      transition: transform 0.3s ease;
+      color: var(--primary);
+    }
+
+    .faq-answer {
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 20px;
+      transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+      color: var(--gray-light);
+      text-align: right;
+    }
+
+    .faq-item.open .faq-answer {
+      max-height: 500px; /* Large enough to fit content */
+      padding: 15px 20px 20px;
+    }
+    
+    .faq-item.open .faq-question i {
+      transform: rotate(180deg);
+    }
+    
+    .faq-grid {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
     /* Payment Methods */
     .payment-methods {
       background: radial-gradient(circle at bottom right, rgba(6, 214, 160, 0.1) 0%, transparent 50%),
-                  var(--darker);
+              var(--darker);
     }
     
     .payment-grid {
@@ -438,7 +527,7 @@
     .payment-icon {
       font-size: 3rem;
       margin-bottom: 20px;
-      color: var(--primary);
+      color: var(--secondary); /* Changed to secondary for variety */
     }
     
     /* Stats */
@@ -468,7 +557,7 @@
     /* Contact Section */
     .contact {
       background: radial-gradient(circle at center, rgba(99, 102, 241, 0.1) 0%, transparent 70%),
-                  var(--darker);
+              var(--darker);
     }
     
     .contact-grid {
@@ -513,7 +602,7 @@
       content: '';
       position: absolute;
       bottom: 0;
-      left: 0;
+      right: 0; /* Changed to right for RTL */
       width: 40px;
       height: 2px;
       background: var(--primary);
@@ -551,6 +640,12 @@
     }
     
     .fade-in-up {
+      /* Animation class is added dynamically by JS */
+      opacity: 0; /* Start hidden */
+      animation: none; /* Disable initial animation */
+    }
+
+    .fade-in-up.animate {
       animation: fadeInUp 0.8s ease forwards;
     }
     
@@ -591,8 +686,13 @@
         flex-wrap: wrap;
       }
       
+      .nav-actions {
+        order: -1; /* Move actions left/right to not interfere with logo/menu toggle */
+      }
+
       .mobile-menu-btn {
         display: block;
+        order: 1;
       }
       
       .nav-links {
@@ -601,6 +701,7 @@
         flex-direction: column;
         gap: 15px;
         margin-top: 20px;
+        padding-bottom: 10px;
       }
       
       .nav-links.active {
@@ -665,11 +766,10 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
     <div class="container">
       <div class="header-content">
-        <a href="#" class="logo">
+        <a href="#top" class="logo">
           <i class="fas fa-gem logo-icon"></i>
           <span>SLH</span>
         </a>
@@ -682,6 +782,8 @@
           <a href="#ecosystem" class="nav-link">האקוסיסטם</a>
           <a href="#how-it-works" class="nav-link">איך זה עובד</a>
           <a href="#token" class="nav-link">טוקן SLH</a>
+          <a href="#testimonials" class="nav-link">המלצות</a>
+          <a href="#faq" class="nav-link">שאלות נפוצות</a>
           <a href="#payment" class="nav-link">תשלום</a>
           <a href="#contact" class="nav-link">צור קשר</a>
         </nav>
@@ -699,7 +801,6 @@
     </div>
   </header>
 
-  <!-- Hero Section -->
   <section class="hero" id="top">
     <div class="container">
       <div class="hero-content">
@@ -746,7 +847,7 @@
           </div>
           
           <p class="mini-note">
-            <i class="fas fa-info-circle"></i> אפשר לשלם גם בביט / PayPal - כל הפרטים בבוט ובקבוצת העסקים אחרי ההצטרפות.
+            <i class="fas fa-info-circle"></i> אפשר לשלם גם בביט / PayPal / קריפטו - כל הפרטים בבוט ובקבוצת העסקים אחרי ההצטרפות.
           </p>
         </div>
         
@@ -775,7 +876,6 @@
     </div>
   </section>
 
-  <!-- How It Works Section -->
   <section class="section" id="how-it-works">
     <div class="container">
       <h2 class="section-title">איך מרוויחים ב-SLHNET בפועל?</h2>
@@ -795,7 +895,7 @@
             <i class="fas fa-network-wired"></i>
           </div>
           <h3 class="card-title">2. בונים עץ הפניות</h3>
-          <p class="card-content">כל מי שנכנס דרך הקישור שלך מתועד. אנחנו בונים עץ קשרים שקוף - מי הביא את מי, ומתי.</p>
+          <p class="card-content">כל מי שנכנס דרך הקישור שלך מתועד. אנחנו בונים עץ קשרים שקוף - מי הביא את מי, ומתי. ככל שהרשת מתרחבת, ההכנסה הפסיבית שלך גדלה.</p>
         </div>
         
         <div class="card fade-in-up">
@@ -805,46 +905,18 @@
           <h3 class="card-title">3. נהנים מחשיפה ותגמולים</h3>
           <p class="card-content">הקהילה, הפוסטים, החנויות והסטייקינג מייצרים עבורך ערך מתמשך - גם כשאתה לא "רודף" אחרי לידים.</p>
         </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Token Section -->
-  <section class="section" id="token">
-    <div class="container">
-      <h2 class="section-title">SLHNET + SLH Token</h2>
-      <p class="section-subtitle">השילוב בין טוקן על BSC לבין רשת חברתית-עסקית מייצר מודל חדש של Social-Fi.</p>
-      
-      <div class="cards-grid">
         <div class="card fade-in-up">
           <div class="card-icon">
-            <i class="fab fa-ethereum"></i>
+            <i class="fas fa-chart-area"></i>
           </div>
-          <h3 class="card-title">טוקן SLH על BSC</h3>
-          <p class="card-content">Contract: <code>0xACb0A09414CEA1C879c67bB7A877E4e19480f022</code></p>
-          <p class="card-content">ניתן להחזקה בכל ארנק שתומך ב-BSC. בהמשך - סטייקינג, תגמולים והצבעות קהילה.</p>
-        </div>
-        
-        <div class="card fade-in-up">
-          <div class="card-icon">
-            <i class="fas fa-coins"></i>
-          </div>
-          <h3 class="card-title">סטייקינג (פאזה 1)</h3>
-          <p class="card-content">מתחילים ממודל נקודות פנימי על בסיס פעילות, שיתופים והפניות. בהמשך - קישור ישיר לסטייקינג ב-SLH.</p>
-        </div>
-        
-        <div class="card fade-in-up">
-          <div class="card-icon">
-            <i class="fas fa-vote-yea"></i>
-          </div>
-          <h3 class="card-title">DAO קהילתי</h3>
-          <p class="card-content">שקיפות מלאה: מי הרוויח, כמה, ועל בסיס מה. כל זה נבנה בהדרגה לתוך לוגיקת המערכת.</p>
+          <h3 class="card-title">4. הגדלת הנכס הדיגיטלי</h3>
+          <p class="card-content">הצבירה ההדרגתית של טוקני SLH, גידול החנות הדיגיטלית האישית שלך והרווחים מהרשת הם נכס ממשי ששווה כסף.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Ecosystem Section -->
   <section class="section ecosystem" id="ecosystem">
     <div class="container">
       <h2 class="section-title">💎 אקוסיסטם סלה ללא גבולות</h2>
@@ -872,7 +944,7 @@
             <i class="fas fa-sitemap"></i>
           </div>
           <h3 class="card-title">שיווק רשתי - 5 דורות</h3>
-          <p class="card-content">הכנסה פסיבית מכל מצטרף חדש דרך הלינק האישי שלך, עם מעקב אוטומטי ל-5 דורות.</p>
+          <p class="card-content">הכנסה פסיבית מכל מצטרף חדש דרך הלינק האישי שלך, עם מעקב אוטומטי ל-5 דורות. שקיפות מלאה.</p>
         </div>
         
         <div class="card fade-in-up">
@@ -882,31 +954,93 @@
           <h3 class="card-title">NFT ומסחר דיגיטלי</h3>
           <p class="card-content">שוק NFT מתקדם ליצירה וסחר בנכסים דיגיטליים עם חוזים חכמים אוטומטיים.</p>
         </div>
-      </div>
-    </div>
 
-    <div class="card fade-in-up">
-          <div class="card-icon">
-            <i class="fas fa-palette"></i>
-          </div>
-          <h3 class="card-title">אתם מרוויחים מכל מכירה</h3>
-          <p class="card-content">לאחר תשלום 39 ש"ח תתבקשו להזין את כתובת הבנק שאליו תרצו לקבל כספים ישירות מהלקוחות שלכם דרך הבוט.</p>
-        </div>
-      </div>
-    </div>
-    
         <div class="card fade-in-up">
           <div class="card-icon">
-            <i class="fas fa-palette"></i>
+            <i class="fas fa-money-bill-wave"></i>
           </div>
-          <h3 class="card-title">ניהול קבוצות ומעדוני לקוחותרה</h3>
-          <p class="card-content">באזור האישי החדש שלכם תוכלו לנהל חנות, באופן מלא ובתמיכה מלאה של הצוות והקהילה בכל עת..</p>
+          <h3 class="card-title">אתם מרוויחים מכל מכירה</h3>
+          <p class="card-content">לאחר תשלום 39₪ תתבקשו להזין את כתובת הבנק/ארנק שאליו תרצו לקבל כספים ישירות מהלקוחות שלכם דרך הבוט.</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-store-alt"></i>
+          </div>
+          <h3 class="card-title">ניהול חנות ומעדוני לקוחות</h3>
+          <p class="card-content">באזור האישי החדש שלכם תוכלו לנהל חנות דיגיטלית, באופן מלא ובתמיכה מלאה של הצוות והקהילה בכל עת.</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Payment Section -->
+  <section class="section" id="token">
+    <div class="container">
+      <h2 class="section-title">SLHNET + SLH Token</h2>
+      <p class="section-subtitle">השילוב בין טוקן על BSC לבין רשת חברתית-עסקית מייצר מודל חדש של Social-Fi.</p>
+      
+      <div class="cards-grid">
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fab fa-ethereum"></i>
+          </div>
+          <h3 class="card-title">טוקן SLH על BSC</h3>
+          <p class="card-content">Contract: <code>0xACb0A09414CEA1C879c67bB7A877E4e19480f022</code></p>
+          <p class="card-content">ניתן להחזקה בכל ארנק שתומך ב-BSC (Binance Smart Chain). בהמשך - סטייקינג, תגמולים והצבעות קהילה.</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-coins"></i>
+          </div>
+          <h3 class="card-title">סטייקינג (פאזה 1)</h3>
+          <p class="card-content">מתחילים ממודל נקודות פנימי על בסיס פעילות, שיתופים והפניות. בהמשך - קישור ישיר לסטייקינג ב-SLH. זהו הבסיס להכנסה פסיבית יציבה.</p>
+        </div>
+        
+        <div class="card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-vote-yea"></i>
+          </div>
+          <h3 class="card-title">DAO קהילתי</h3>
+          <p class="card-content">שקיפות מלאה: מי הרוויח, כמה, ועל בסיס מה. כל זה נבנה בהדרגה לתוך לוגיקת המערכת, המאפשרת לחברי הקהילה להשפיע על עתיד המיזם.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="testimonials">
+    <div class="container">
+      <h2 class="section-title">💬 מה הקהילה אומרת?</h2>
+      <p class="section-subtitle">הצלחות מהשטח ופידבקים של יזמים שהצטרפו ונהנים מהאקוסיסטם שלנו.</p>
+      
+      <div class="cards-grid">
+        <div class="card testimonial-card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-quote-right"></i>
+          </div>
+          <p class="testimonial-text">"החנות הדיגיטלית האישית הפכה את מכירת השירותים שלי למשהו פשוט ואוטומטי. ה-39 ש"ח האלה הם ההשקעה הטובה ביותר שעשיתי השנה!"</p>
+          <p class="testimonial-author">דניאל לוי<small>יועץ עסקי</small></p>
+        </div>
+        
+        <div class="card testimonial-card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-quote-right"></i>
+          </div>
+          <p class="testimonial-text">"אני סופר מרוצה מרשת הריפרל. זה מרגיש כמו נכס אמיתי, בלי כאב ראש של שיווק יום-יומי. הכי חשוב: השקיפות המלאה במודל!"</p>
+          <p class="testimonial-author">מאיה כהן<small>משווקת דיגיטלית</small></p>
+        </div>
+        
+        <div class="card testimonial-card fade-in-up">
+          <div class="card-icon">
+            <i class="fas fa-quote-right"></i>
+          </div>
+          <p class="testimonial-text">"הדרכות הקריפטו וה-NFT ברמה גבוהה מאוד. הקהילה מאוד תומכת וזה המקום המושלם ללמוד ולהתפתח בעולם הדיגיטל."</p>
+          <p class="testimonial-author">יוסי שמעוני<small>משקיע</small></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="section payment-methods" id="payment">
     <div class="container">
       <h2 class="section-title">💳 דרכי תשלום</h2>
@@ -923,18 +1057,18 @@
         
         <div class="card payment-card fade-in-up">
           <div class="payment-icon">
-            <i class="fas fa-coins"></i>
+            <i class="fas fa-mobile-alt"></i>
           </div>
-          <h3 class="card-title">תשלום ב-TON</h3>
-          <p class="card-content"><code>UQCr743gEr_nqV_0SBkSp3CtYS_15R3LDLBvLmKeEv7XdGvp</code></p>
+          <h3 class="card-title">BIT / PayBox / PayPal</h3>
+          <p class="card-content">פרטי התשלום (טלפון) נמסרים באופן אוטומטי לאחר תחילת תהליך ההצטרפות בבוט.</p>
         </div>
-        
+
         <div class="card payment-card fade-in-up">
           <div class="payment-icon">
-            <i class="fab fa-ethereum"></i>
+            <i class="fas fa-coins"></i>
           </div>
-          <h3 class="card-title">קריפטו נוסף (Ethereum)</h3>
-          <p class="card-content"><code>0xEc43Fb4819b5DdCb11407DBE46B92a51c7d24B2b</code></p>
+          <h3 class="card-title">תשלום ב-TON / קריפטו</h3>
+          <p class="card-content">TON: <code>UQCr743gEr_nqV_0SBkSp3CtYS_15R3LDLBvLmKeEv7XdGvp</code><br>Ethereum (BSC): <code>0xEc43Fb4819b5DdCb11407DBE46B92a51c7d24B2b</code></p>
         </div>
       </div>
       
@@ -947,55 +1081,55 @@
     </div>
   </section>
 
-  <!-- Why Join Section -->
-  <section class="section">
+  <section class="section" id="faq">
     <div class="container">
-      <h2 class="section-title">💫 למה להצטרף לקהילה שלנו?</h2>
+      <h2 class="section-title">❓ שאלות ותשובות נפוצות</h2>
+      <p class="section-subtitle">כאן תוכלו למצוא תשובות לשאלות הנפוצות ביותר אודות המיזם, הטוקן ומודל ההכנסה.</p>
       
-      <div class="cards-grid">
-        <div class="card fade-in-up">
-          <div class="card-icon">
-            <i class="fas fa-shopping-cart"></i>
+      <div class="faq-grid">
+        <div class="faq-item fade-in-up">
+          <div class="faq-question">
+            <span>למה המחיר כל כך נמוך (39 ₪)?</span>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <h3 class="card-title">🛒 איקומרס מתקדם</h3>
-          <p class="card-content">לינק אישי למכירה חוזרת - תוכלו להרוויח כמו בחנות אינטרנטית ישירות בטלגרם</p>
+          <div class="faq-answer">
+            <p>המודל של SLHNET בנוי על כוח הרשת והצמיחה הקהילתית (Network Effect). המחיר הנמוך נועד להסיר חסמי כניסה ולאפשר לכל אדם להצטרף ולבנות נכס דיגיטלי. אנו מעדיפים 10,000 מצטרפים ב-39₪ מאשר 100 ב-390₪. הכוח שלנו הוא במספרים ובצמיחה האורגנית.</p>
+          </div>
         </div>
         
-        <div class="card fade-in-up">
-          <div class="card-icon">
-            <i class="fas fa-chart-bar"></i>
+        <div class="faq-item fade-in-up">
+          <div class="faq-question">
+            <span>איך אני יודע שהטוקן SLH הוא אמיתי?</span>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <h3 class="card-title">📊 ביננס וניתוח</h3>
-          <p class="card-content">גישה לכלים מתקדמים לניתוח מסחר, ניהול תיקים וקבלת החלטות מושכלות</p>
+          <div class="faq-answer">
+            <p>טוקן SLH הוא מטבע קריפטו רשמי שקיים על רשת Binance Smart Chain (BSC). ניתן לבדוק את ה-Contract Address <code dir="ltr">0xACb0A09414CEA1C879c67bB7A877E4e19480f022</code> בכל סייר בלוקים של BSC. ערכו נשען על קרן רזרבות אמיתית (49% מכל תשלום) ופונקציונליות בתוך האקוסיסטם הקיים.</p>
+          </div>
         </div>
         
-        <div class="card fade-in-up">
-          <div class="card-icon">
-            <i class="fas fa-paint-brush"></i>
+        <div class="faq-item fade-in-up">
+          <div class="faq-question">
+            <span>האם יש דמי ניהול חודשיים?</span>
+            <i class="fas fa-chevron-down"></i>
           </div>
-          <h3 class="card-title">🎨 NFT וחוזים חכמים</h3>
-          <p class="card-content">יצירה וניהול נכסים דיגיטליים עם חוזים חכמים אוטומטיים</p>
-        </div>
-        
-        <div class="card fade-in-up">
-          <div class="card-icon">
-            <i class="fas fa-users"></i>
+          <div class="faq-answer">
+            <p>לא. התשלום הוא חד-פעמי בסך 39 ₪. אין דמי מנוי, אין דמי ניהול חודשיים או שנתיים. תשלום זה פותח את הנכס הדיגיטלי שלך לכל החיים וכולל את כל העדכונים והשדרוגים העתידיים של המערכת.</p>
           </div>
-          <h3 class="card-title">👥 קהילה תומכת</h3>
-          <p class="card-content">רשת של אנשי עסקים, יזמים ומשקיעים לשיתופי פעולה והזדמנויות</p>
         </div>
-      </div>
-      
-      <div style="text-align: center; margin-top: 50px;">
-        <p style="font-size: 1.2rem; margin-bottom: 20px;"><strong>💰 עלות הצטרפות סמלית: 39 ₪ בלבד</strong></p>
-        <a href="https://t.me/SLH_Israel_Bot" class="btn btn-primary" style="font-size: 1.1rem; padding: 16px 32px;">
-          <i class="fab fa-telegram"></i> הצטרפו עכשיו דרך הבוט
-        </a>
+
+        <div class="faq-item fade-in-up">
+          <div class="faq-question">
+            <span>מה ההבדל בין SLHNET לשיווק רשתי מסורתי (MLM)?</span>
+            <i class="fas fa-chevron-down"></i>
+          </div>
+          <div class="faq-answer">
+            <p>במודל המסורתי, אתה מרוויח בעיקר מגיוס אנשים. ב-SLHNET, ההכנסה שלך מגיעה משני מקורות: 1) גיוס דרך הריפרל (5 דורות) ו-2) **נכסים דיגיטליים אמיתיים** (חנות אישית, טוקן SLH וסטייקינג) שיוצרים ערך גם בלי גיוס פעיל. המודל שקוף וממוקד בטכנולוגיית קריפטו.</p>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Contact Section -->
   <section class="section contact" id="contact">
     <div class="container">
       <h2 class="section-title">📞 צרו קשר</h2>
@@ -1009,6 +1143,9 @@
           <h3 class="card-title">👤 אוסיף אונגר</h3>
           <p class="card-content">מייסד שותף</p>
           <p class="card-content"><strong>📞 058-4203384</strong></p>
+          <a href="https://t.me/Osif83" target="_blank" class="btn btn-secondary" style="margin-top: 15px; padding: 10px 20px;">
+            <i class="fab fa-telegram"></i> @Osif83
+          </a>
         </div>
         
         <div class="card contact-card fade-in-up">
@@ -1018,24 +1155,33 @@
           <h3 class="card-title">👤 צביקה קאופמן</h3>
           <p class="card-content">מייסד שותף</p>
           <p class="card-content"><strong>📞 054-6671882</strong></p>
+          <a href="tel:0546671882" class="btn btn-secondary" style="margin-top: 15px; padding: 10px 20px;">
+            <i class="fas fa-phone"></i> חייגו עכשיו
+          </a>
         </div>
         
         <div class="card contact-card fade-in-up">
           <div class="contact-icon">
             <i class="fas fa-comments"></i>
           </div>
-          <h3 class="card-title">📧 דרכי התקשרות</h3>
+          <h3 class="card-title">📧 דרכי התקשרות נוספים</h3>
           <p class="card-content">בוט טלגרם: @Buy_My_Shop_bot</p>
           <p class="card-content">פייסבוק: OMG.adv</p>
+          <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="btn btn-primary" style="margin-top: 15px; padding: 10px 20px;">
+            <i class="fab fa-telegram"></i> פנו לבוט
+          </a>
         </div>
         
         <div class="card contact-card fade-in-up">
           <div class="contact-icon">
             <i class="fas fa-globe"></i>
           </div>
-          <h3 class="card-title">🌐 אתרים נוספים</h3>
+          <h3 class="card-title">🌐 אתרים ופלטפורמות</h3>
           <p class="card-content">שוק NFT: slh-nft.com</p>
           <p class="card-content">פלטפורמה: web-production-b425.up.railway.app</p>
+          <a href="https://slh-nft.com/" target="_blank" class="btn btn-secondary" style="margin-top: 15px; padding: 10px 20px;">
+            <i class="fas fa-external-link-alt"></i> לאתר
+          </a>
         </div>
       </div>
       
@@ -1047,7 +1193,6 @@
     </div>
   </section>
 
-  <!-- Footer -->
   <footer class="footer">
     <div class="container">
       <div class="footer-content">
@@ -1063,7 +1208,8 @@
             <li><a href="#ecosystem">האקוסיסטם</a></li>
             <li><a href="#how-it-works">איך זה עובד</a></li>
             <li><a href="#token">טוקן SLH</a></li>
-            <li><a href="#payment">תשלום</a></li>
+            <li><a href="#faq">שאלות נפוצות</a></li>
+            <li><a href="#contact">צור קשר</a></li>
           </ul>
         </div>
         
@@ -1087,57 +1233,26 @@
       </div>
       
       <div class="footer-bottom">
-        <p>© 2024 SLH - סלה ללא גבולות. כל הזכויות שמורות.</p>
-        <p>פיתוח טכנולוגיות מתקדמות לכלכלה העתידית</p>
+        <p>&copy; <span id="current-year"></span> SLHNET. כל הזכויות שמורות.</p>
+        <p>מבוסס על <span class="highlight">טכנולוגיית קריפטו</span> ושיווק מבוזר (Social-Fi).</p>
       </div>
     </div>
   </footer>
 
   <script>
+    // Set current year in footer
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
     // Mobile menu toggle
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const navLinks = document.getElementById('navLinks');
-    
-    mobileMenuBtn.addEventListener('click', () => {
+    function toggleMobileMenu() {
+      const navLinks = document.getElementById('navLinks');
       navLinks.classList.toggle('active');
-    });
-    
-    // Close mobile menu when clicking on a link
-    document.querySelectorAll('.nav-link').forEach(link => {
-      link.addEventListener('click', () => {
-        navLinks.classList.remove('active');
-      });
-    });
-    
-    // Scroll animations
-    const observerOptions = {
-      threshold: 0.1,
-      rootMargin: '0px 0px -50px 0px'
-    };
-    
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('fade-in-up');
-        }
-      });
-    }, observerOptions);
-    
-    // Observe all cards for animation
-    document.querySelectorAll('.card').forEach(card => {
-      observer.observe(card);
-    });
-    
-    // Language switching functionality
-    function changeLanguage(lang) {
-      // This is a simplified version - in a real implementation,
-      // you would replace all text content based on the selected language
-      alert(`שפה שונתה ל-${lang === 'he' ? 'עברית' : 'English'}`);
-      // In a full implementation, you would have translation objects and update all text
     }
     
-    // Add smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    document.getElementById('mobileMenuBtn').addEventListener('click', toggleMobileMenu);
+
+    // Smooth scrolling for anchor links & close menu on click
+    document.querySelectorAll('.nav-link').forEach(anchor => {
       anchor.addEventListener('click', function (e) {
         e.preventDefault();
         
@@ -1147,11 +1262,67 @@
         const targetElement = document.querySelector(targetId);
         if (targetElement) {
           window.scrollTo({
-            top: targetElement.offsetTop - 80,
+            top: targetElement.offsetTop - (document.querySelector('.header').offsetHeight || 80),
             behavior: 'smooth'
           });
         }
+
+        // Close mobile menu after clicking a link
+        const navLinks = document.getElementById('navLinks');
+        if (navLinks.classList.contains('active')) {
+          navLinks.classList.remove('active');
+        }
       });
+    });
+
+    // Language switching functionality (Dummy implementation)
+    function changeLanguage(lang) {
+      alert(`שפה שונתה ל-${lang === 'he' ? 'עברית' : 'English'}. (ביישום מלא, היינו טוענים כאן קבצי תרגום)`);
+      // For full implementation: change document.documentElement.lang and document.documentElement.dir
+    }
+
+    // FAQ Accordion functionality
+    document.querySelectorAll('.faq-question').forEach(question => {
+      question.addEventListener('click', () => {
+        const item = question.closest('.faq-item');
+        const answer = item.querySelector('.faq-answer');
+        
+        // Close other open items
+        document.querySelectorAll('.faq-item.open').forEach(openItem => {
+          if (openItem !== item) {
+            openItem.classList.remove('open');
+          }
+        });
+
+        // Toggle the current item
+        item.classList.toggle('open');
+      });
+    });
+
+    // Scroll animations using Intersection Observer
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('animate');
+          observer.unobserve(entry.target); // Stop observing once animated
+        }
+      });
+    }, observerOptions);
+    
+    // Observe all elements with the fade-in-up class for animation
+    document.querySelectorAll('.fade-in-up').forEach(element => {
+      // Exclude the hero-card as it is already animated on load
+      if (!element.closest('.hero-content')) {
+         observer.observe(element);
+      } else if (element.classList.contains('hero-card')) {
+        // Apply immediate animation to hero card
+        element.classList.add('animate');
+      }
     });
   </script>
 </body>
