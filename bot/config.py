@@ -5,8 +5,7 @@ class Settings(BaseSettings):
     BOT_TOKEN: str
     WEBHOOK_URL: str
     ADMIN_ALERT_CHAT_ID: int
-    # הוספה: רשימה של מזהי משתמשים (ID) של מנהלים
-    # הגדרה ב-Railway: ADMIN_OWNER_IDS="12345,67890" (פסיקים מפרידים)
+    # חשוב: ודא שהמשתנה הזה מוגדר ב-Railway עם רשימת ה-IDs של המנהלים המופרדת בפסיקים
     ADMIN_OWNER_IDS: list[int] = [] 
     
     LANDING_URL: str = "https://slh-nft.com"
