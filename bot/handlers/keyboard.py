@@ -1,9 +1,18 @@
 from typing import Optional
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import ContextTypes # <--- ייבוא נוסף לצורך שימוש ב-ContextTypes
 
 from bot.config import Config
 from core.logging import logger
+
+# **********************************************
+# 1. ייבוא פונקציית ה-DB
+# **********************************************
+# בהנחה שפונקציית בדיקת ה-DB שלך נמצאת ב-core.db (או מודול אחר שיצרת)
+# עליך לשנות את ה-import בהתאם למיקום המדויק של פונקציית בדיקת התשלום שלך:
+from core.db import is_user_premium 
+# **********************************************
 
 
 def safe_get_url(primary: Optional[str], fallback: str) -> str:
@@ -12,17 +21,38 @@ def safe_get_url(primary: Optional[str], fallback: str) -> str:
     return fallback
 
 
-def check_user_payment(user_id: Optional[int]) -> bool:
-    """Placeholder: in the future query DB / API.
+# **********************************************
+# 2. הפיכת הפונקציה לאסינכרונית (ASYNC)
+# **********************************************
+async def check_user_payment(user_id: Optional[int]) -> bool:
+    """Check DB / API if the user has a valid and active payment."""
+    if not user_id:
+        return False
 
-    For now always False so everyone sees the '39₪' path.
-    """
     logger.info("check_user_payment called", user_id=user_id)
-    return False
+    
+    try:
+        # **********************************************
+        # 3. קריאה אסינכרונית לפונקציית ה-DB
+        # **********************************************
+        # הקריאה חייבת להכיל "await"
+        has_paid = await is_user_premium(user_id) 
+        return has_paid
+    except Exception as e:
+        # טיפול בשגיאות DB
+        logger.error(f"DB check failed for user {user_id}: {e}")
+        return False
 
 
-def create_main_keyboard(user_id: int | None = None) -> InlineKeyboardMarkup:
-    has_paid = check_user_payment(user_id) if user_id else False
+# **********************************************
+# 4. עדכון create_main_keyboard לקבלת has_paid כארגומנט
+# **********************************************
+# הפונקציה create_main_keyboard כבר לא יכולה לקרוא ל-check_user_payment
+# בעצמה (כי היא לא אסינכרונית). נגדיר אותה לקבל את has_paid כפרמטר,
+# ונקרא לבדיקה האסינכרונית מה-handler שמשתמש בה.
+
+def create_main_keyboard(has_paid: bool) -> InlineKeyboardMarkup:
+    """Creates the main keyboard based on the user's payment status."""
 
     buttons: list[list[InlineKeyboardButton]] = []
 
