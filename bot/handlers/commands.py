@@ -20,8 +20,7 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         # ----------------------------------------------------
         # * שליחת התראה למנהל המערכת על משתמש חדש *
         # ----------------------------------------------------
-        # מונע שליחת התראות כפולות (משתמש ב-context.user_data)
-        if user and not context.user_data.get('is_registered'): 
+        if user and not context.user_data.get('is_registered'):
             chat_id = Config.ADMIN_ALERT_CHAT_ID
             username = f"@{user.username}" if user.username else "ללא שם משתמש"
             
