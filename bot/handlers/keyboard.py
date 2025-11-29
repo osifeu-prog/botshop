@@ -4,7 +4,8 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from bot.config import Config
 from core.logging import logger
-from core.db import is_user_premium # <--- **חובה לממש את הפונקציה הזו ב-core/db.py**
+# TODO: ודא שה-import הבא נכון ושהפונקציה קיימת ב-core/db.py
+from core.db import is_user_premium 
 
 
 def safe_get_url(primary: Optional[str], fallback: str) -> str:
@@ -21,7 +22,7 @@ async def check_user_payment(user_id: Optional[int]) -> bool:
     logger.info("check_user_payment called", user_id=user_id)
     
     try:
-        # קריאה לפונקציית ה-DB האמיתית (חובה: is_user_premium צריכה להיות פונקציה אסינכרונית)
+        # הקריאה חייבת להיות אסינכרונית
         has_paid = await is_user_premium(user_id) 
         return has_paid
     except Exception as e:
