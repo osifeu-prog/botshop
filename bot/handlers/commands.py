@@ -4,7 +4,7 @@ from telegram.ext import ContextTypes, CommandHandler, MessageHandler, filters, 
 from core.logging import logger
 from core.cache import get_cached_message
 from core.metrics import COMMANDS_PROCESSED, REQUEST_DURATION
-from bot.config import Config # <--- ייבוא config
+from bot.config import Config
 from .keyboard import create_main_keyboard, check_user_payment 
 
 
