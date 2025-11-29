@@ -9,7 +9,6 @@ from core.logging import logger
 # פונקציה ליצירת המקלדת של המנהל
 def create_review_keyboard(user_id: int) -> InlineKeyboardMarkup:
     # ה-Callback data יכיל את סוג הפעולה ואת ה-user_id 
-    # (הקוד ב-callbacks.py מפרש את זה נכון)
     approve_data = f"review_approve_{user_id}"
     reject_data = f"review_reject_{user_id}"
     
@@ -23,8 +22,10 @@ def create_review_keyboard(user_id: int) -> InlineKeyboardMarkup:
 
 async def payment_image_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     message = update.effective_message
+    
+    # מגיב רק להודעות המכילות תמונה 
     if not message or not message.photo:
-        return # נתעלם אם אין תמונה
+        return 
     
     # בואו נניח שהתמונה הגדולה ביותר היא הרלוונטית
     photo_file_id = message.photo[-1].file_id
@@ -60,7 +61,7 @@ async def payment_image_handler(update: Update, context: ContextTypes.DEFAULT_TY
 
 
 def register_payment_review_handler(app: Application):
-    # הוסף Handler שמגיב להודעות המכילות תמונה (filters.PHOTO)
+    # הוסף Handler שמגיב להודעות המכילות תמונה בלבד
     app.add_handler(
         MessageHandler(filters.PHOTO & ~filters.COMMAND, payment_image_handler)
     )
