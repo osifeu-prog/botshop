@@ -6,7 +6,8 @@ from core.metrics import COMMANDS_PROCESSED, REQUEST_DURATION
 from core.cache import get_cached_message
 from bot.config import Config
 from .keyboard import create_main_keyboard, check_user_payment 
-from core.db import update_user_payment_status # <--- **חובה לממש את הפונקציה הזו ב-core/db.py**
+# TODO: ודא שה-import הבא נכון ושהפונקציה קיימת ב-core/db.py
+from core.db import update_user_payment_status 
 
 # הלינק לקבוצה שהוגדר על ידי המשתמש
 PREMIUM_GROUP_LINK = "https://t.me/+HIzvM8sEgh1kNWY0"
@@ -20,7 +21,7 @@ async def payment_review_callback(query, context: ContextTypes.DEFAULT_TYPE, act
         await query.answer("אינך מורשה לבצע פעולה זו.")
         return
 
-    # הסר את הכפתורים מההודעה
+    # הסר את הכפתורים מההודעה כדי למנוע לחיצות כפולות
     await query.edit_message_reply_markup(reply_markup=None)
     
     admin_name = query.from_user.full_name
