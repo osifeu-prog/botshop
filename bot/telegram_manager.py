@@ -29,9 +29,11 @@ class TelegramAppManager:
         # Register handlers
         from .handlers.commands import register_command_handlers
         from .handlers.callbacks import register_callback_handlers
+        from .handlers.payment_review import register_payment_review_handler # <--- ייבוא חדש!
 
         register_command_handlers(app)
         register_callback_handlers(app)
+        register_payment_review_handler(app) # <--- רישום חדש!
 
         await app.initialize()
         await app.start()
