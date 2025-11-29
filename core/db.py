@@ -78,6 +78,7 @@ async def update_user_payment_status(user_id: int, status: bool) -> bool:
     try:
         async with db_conn() as conn:
             # 1. מציאת ה-ID של בקשת ה-'pending' האחרונה של המשתמש
+            # אנו מניחים שה-ID הגבוה ביותר הוא הבקשה האחרונה
             approval_id = await conn.fetchval(
                 """
                 SELECT id FROM payment_approvals
@@ -111,23 +112,11 @@ async def update_user_payment_status(user_id: int, status: bool) -> bool:
 
 
 # --------------------------------------------------------------------
-# * פונקציות קיימות *
+# * פונקציה קיימת (שלך) *
 # --------------------------------------------------------------------
 
 async def get_approval_stats() -> Dict[str, Any]:
-    """Fetch basic finance/approval stats.
-
-    This is intentionally defensive: if the table doesn't exist yet,
-    we return zeros so the API continues to work.
-    Expected schema (you can adapt on your DB):
-
-        payment_approvals(
-            id serial primary key,
-            user_id bigint, <--- ודא שהעמודה הזו קיימת בטבלה שלך!
-            amount numeric,
-            status text check (status in ('pending','approved','rejected'))
-        )
-    """
+    """Fetch basic finance/approval stats."""
     try:
         async with db_conn() as conn:
             row = await conn.fetchrow(
