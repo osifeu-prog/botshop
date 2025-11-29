@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel - Buy My Shop</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔧 פאנל ניהול</h1>
+            <p>ניהול משתמשים ותשלומים</p>
+        </div>
+
+        <div class="admin-panel">
+            <h3>📈 סטטיסטיקות כלליות</h3>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-users">0</div>
+                    <div>👥 משתמשים רשומים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="pending-payments">0</div>
+                    <div>⏳ תשלומים ממתינים</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-revenue">0₪</div>
+                    <div>💰 הכנסות</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="site-visits">0</div>
+                    <div>🌐 כניסות לאתר</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <h3>⏳ תשלומים ממתינים לאישור</h3>
+            <div id="pending-payments-list">
+                <!-- Payments will be loaded here -->
+            </div>
+        </div>
+
+        <div class="admin-panel">
+            <h3>✅ משתמשים מאושרים</h3>
+            <div id="approved-users-list">
+                <!-- Approved users will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/admin.js"></script>
+</body>
+</html>

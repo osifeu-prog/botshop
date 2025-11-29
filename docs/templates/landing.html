@@ -1,0 +1,459 @@
+﻿<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <title>SLHNET  שער הכניסה לרשת העסקית</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta property="og:title" content="SLHNET  הרשת העסקית החדשה" />
+  <meta property="og:description" content="חנויות דיגיטליות, טוקן SLH, רשת עסקים וקהילה חכמה." />
+  <meta property="og:image" content="/static/slh-og.svg" />
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #050816;
+      color: #f5f5f5;
+    }
+    a { color: #61dafb; text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .shell {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px 16px 48px;
+    }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .logo-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .logo-circle {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 30% 20%, #ffd54f, #ff9800 40%, #f44336 70%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    nav {
+      display: flex;
+      gap: 12px;
+      font-size: 0.9rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+    .nav-item {
+      cursor: pointer;
+      opacity: 0.85;
+    }
+    .nav-item:hover {
+      opacity: 1;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 2.5fr) minmax(0, 1.2fr);
+      gap: 24px;
+    }
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .panel {
+      border-radius: 16px;
+      padding: 20px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255,255,255,0.06);
+      backdrop-filter: blur(10px);
+    }
+    .panel h1, .panel h2, .panel h3 {
+      margin-top: 0;
+    }
+    .sub {
+      opacity: 0.85;
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 12px 0 20px;
+      font-size: 0.8rem;
+    }
+    .badge {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.02);
+    }
+
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    .btn {
+      border-radius: 999px;
+      padding: 10px 16px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.95rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #ff9800, #ff5722);
+      color: #000;
+      font-weight: 600;
+    }
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff;
+    }
+
+    .pill {
+      font-size: 0.8rem;
+      opacity: 0.9;
+      margin-top: 6px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    ul {
+      margin: 0 0 12px;
+      padding-left: 18px;
+      font-size: 0.9rem;
+      opacity: 0.9;
+    }
+
+    .divider {
+      border-top: 1px solid rgba(255,255,255,0.12);
+      margin: 16px 0;
+    }
+
+    .investor-card {
+      border-radius: 16px;
+      padding: 16px;
+      background: radial-gradient(circle at top, rgba(255,193,7,0.15), rgba(0,0,0,0.4));
+      border: 1px solid rgba(255,193,7,0.4);
+    }
+    .investor-card h3 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+    .investor-tagline {
+      font-size: 0.85rem;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+    .investor-contact {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    .label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+    .mono {
+      font-family: "SF Mono", ui-monospace, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    }
+    .qr-placeholder {
+      width: 90px;
+      height: 90px;
+      border-radius: 12px;
+      border: 1px dashed rgba(255,255,255,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      opacity: 0.9;
+    }
+    .investor-row {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    @media (max-width: 600px) {
+      .investor-row {
+        flex-direction: row-reverse;
+        justify-content: space-between;
+      }
+    }
+
+    .small-note {
+      font-size: 0.75rem;
+      opacity: 0.75;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <header>
+      <div class="logo-row">
+        <div class="logo-circle">SLH</div>
+        <div>
+          <div style="font-weight:600;">SLHNET הרשת העסקית החדשה</div>
+          <div style="font-size:0.85rem; opacity:0.85;">
+            איקומרס  Binance Smart Chain  טלגרם  רשת חברתית לעסקים
+          </div>
+        </div>
+      </div>
+      <nav>
+        <div class="nav-item" onclick="scrollToId('section-overview')">סקירה</div>
+        <div class="nav-item" onclick="scrollToId('section-wallet')">אזור ארנק</div>
+        <div class="nav-item" onclick="scrollToId('section-feed')">פיד חברתי</div>
+        <div class="nav-item" onclick="scrollToId('section-exchange')">בורסת SLHNET</div>
+        <div class="nav-item" onclick="scrollToId('section-admin')">פאנל ניהול</div>
+      </nav>
+    </header>
+
+    <div class="layout" id="section-overview">
+      <!-- צד שמאל: שער כניסה + תשלום -->
+      <div class="panel">
+        <h1>שער הכניסה ל-SLHNET</h1>
+        <p class="sub">
+          SLHNET מחברת בין חנויות דיגיטליות, טוקן SLH על Binance Smart Chain, קבוצות טלגרם
+          ורשת חברתית לשיתופי תוכן והמלצות.
+        </p>
+
+        <div class="badge-row">
+          <div class="badge">גישה לקבוצת עסקים פרטית</div>
+          <div class="badge">בוט טלגרם לניהול חנות ופרופיל</div>
+          <div class="badge">טוקן SLH על BSC</div>
+          <div class="badge">מודל הפניות אורגני</div>
+        </div>
+
+        <p class="sub">
+          כל שיתוף בפרופיל שלך ובחנות שלך הוא נכס. אחרי
+          <strong>39 שיתופים איכותיים</strong> או תשלום חדפעמי של
+          <strong>39 </strong>  נפתחת גישה מלאה לכל שכבות הרשת:
+          קבוצות פרימיום, חנויות, בוטים, הטבות ואיירדרופים.
+        </p>
+
+        <p class="sub">
+          מי שכבר מחזיק ב-SLH בארנק על BSC זכאי לגישה חינמית דרך הבוט לאחר אימות.
+        </p>
+
+        <p class="pill">
+          שער SLH (דמו): <strong>{{ slh_price }}</strong>  ל-SLH
+        </p>
+
+        <div class="actions">
+          <button class="btn btn-primary" onclick="scrollToId('section-payment')">
+             תשלום 39  וגישה מלאה
+          </button>
+          <button class="btn btn-secondary" onclick="openBot()">
+             כניסה לבוט SLHNET
+          </button>
+          <button class="btn btn-secondary" onclick="openBusinessGroup()">
+             הצטרפות לקבוצת העסקים
+          </button>
+        </div>
+
+        <div class="divider" id="section-payment"></div>
+
+        <div>
+          <div class="section-title">אזור תשלום וגישה</div>
+          <p class="sub">
+            את התשלום אפשר לבצע דרך ביט / PayBox / PayPal (לינקים יתעדכנו אוטומטית דרך ה-API),
+            או להעביר אישור תשלום ידני דרך הבוט.
+          </p>
+          <ul>
+            <li>בבוט  שליחת צילום אישור: מתקבל לוג וממתין לאישור ידני.</li>
+            <li>לאחר האישור  נשלח קישור לקבוצת העסקים + פתיחת שכבת גישה במערכת.</li>
+            <li>כל משתמש מקבל לינק הפניה אישי לשיתוף המערכת הלאה.</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- צד ימין: כרטיס משקיעים -->
+      <div>
+        <div class="investor-card">
+          <div class="label">INVESTOR GATE</div>
+          <h3>כרטיס משקיעים  SLHNET</h3>
+          <div class="investor-tagline">
+            אנחנו לא מחפשים רק משקיעים, אנחנו מחפשים שותפי חזון
+            למערכת חברתית-פיננסית מבוזרת, שקופה ומונעת מהקהילה.
+          </div>
+
+          <div class="investor-row">
+            <div class="investor-contact">
+              <div><strong>טלפון ישיר:</strong></div>
+              <div class="mono">058-420-3384</div>
+              <div style="height:8px;"></div>
+              <div><strong>טלגרם:</strong></div>
+              <div class="mono">
+                <a href="https://t.me/Osif83" target="_blank">@Osif83</a>
+              </div>
+              <div class="small-note">
+                ניתן לתאם שיחת עומק על מודל הריפרל, סטייקינג ו-SLHNET tokenomics.
+              </div>
+            </div>
+            <div class="qr-placeholder">
+              QR לטלגרם<br />(ייצר חיצונית)
+            </div>
+          </div>
+
+          <div class="divider"></div>
+          <div class="small-note">
+            משקיעים רציניים יקבלו גישה לפאנל אנליטיקה, תרשימי רשת הפניה, ותוכנית שכבות
+            של חלוקת הטוקן ושל הכנסות פוטנציאליות.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:32px;">
+      <div class="layout">
+        <div class="panel" id="section-wallet">
+          <h2>אזור ארנק אישי</h2>
+          <p class="sub">
+            את הארנק שלך מנהלים דרך הבוט, אבל כאן תוכל לראות תקציר (לפי הנתונים שנשמרים במערכת).
+          </p>
+          <ul>
+            <li>בבוט: שלח <code>/wallet</code> עם כתובת BSC שלך (0x...) כדי לקשר את הארנק.</li>
+            <li>לאחר החיבור  ניתן יהיה להציג כאן החזקה ב-SLH וסטטוס גישה.</li>
+          </ul>
+          <p class="sub">
+            תמיכת API מלאה לארנק תתווסף בהמשך. כרגע ההגדרה מתבצעת דרך הבוט בלבד.
+          </p>
+        </div>
+
+        <div class="panel" id="section-feed">
+          <h2>פיד חברתי  SLHNET Social</h2>
+          <p class="sub">
+            חברי הרשת יכולים ליצור פוסטים דרך הבוט (למשל: <code>/post כותרת | תוכן</code>)
+            והם יופיעו כאן. כל פוסט ניתן לשיתוף ברשתות החברתיות.
+          </p>
+          <div id="feed-status" class="small-note">טוען פוסטים...</div>
+        </div>
+      </div>
+
+      <div class="layout" style="margin-top:24px;">
+        <div class="panel" id="section-exchange">
+          <h2>בורסת SLHNET (Demo)</h2>
+          <p class="sub">
+            מודול הבורסה ינהל הצעות קנייה/מכירה על בסיס SLHNET, עם אפשרות סטייקינג,
+            נזילות ותמחור חכם על בסיס רשת ההפצה.
+          </p>
+          <p class="small-note">
+            בשלב זה  מציגים רק מחיר SLH, בלי מסחר אמיתי.
+          </p>
+        </div>
+
+        <div class="panel" id="section-admin">
+          <h2>פאנל ניהול (Admin)</h2>
+          <p class="sub">
+            מנהל המערכת יכול להתחבר עם טוקן ADMIN_DASH_TOKEN (שווה ל-BOT_TOKEN),
+            לקבל סטטיסטיקות, ולנהל את הרשת.
+          </p>
+          <p class="small-note">
+            הקצה backend להמשך: /admin/panel?token=YOUR_ADMIN_DASH_TOKEN
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function scrollToId(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+
+    async function fetchConfig() {
+      try {
+        const res = await fetch('/config/public');
+        if (!res.ok) return;
+        const cfg = await res.json();
+        window._slh_cfg = cfg;
+      } catch (e) {
+        console.warn('Failed to fetch config', e);
+      }
+    }
+
+    function openBot() {
+      const botUrl = (window._slh_cfg && window._slh_cfg.urls && window._slh_cfg.urls.bot) || '';
+      if (botUrl) {
+        window.open(botUrl, '_blank');
+      } else {
+        alert('קישור לבוט עדיין לא הוגדר. ודא ש-WEBHOOK_URL ב-Railway כולל /webhook.');
+      }
+    }
+
+    function openBusinessGroup() {
+      const url = window._slh_cfg && window._slh_cfg.urls && window._slh_cfg.urls.business_group;
+      if (url) {
+        window.open(url, '_blank');
+      } else {
+        alert('קישור לקבוצת העסקים עדיין לא הוגדר בשרת.');
+      }
+    }
+
+    async function fetchFeed() {
+      const status = document.getElementById('feed-status');
+      try {
+        const res = await fetch('/api/posts?limit=20');
+        if (!res.ok) {
+          status.textContent = 'שגיאה בטעינת הפוסטים.';
+          return;
+        }
+        const data = await res.json();
+        if (!data.items || !data.items.length) {
+          status.textContent = 'טרם נוצרו פוסטים  התחילו דרך הבוט.';
+          return;
+        }
+        status.textContent = '';
+        const container = document.getElementById('section-feed');
+        data.items.forEach(post => {
+          const div = document.createElement('div');
+          div.style.borderTop = '1px solid rgba(255,255,255,0.1)';
+          div.style.paddingTop = '8px';
+          div.style.marginTop = '8px';
+          div.innerHTML = 
+            <div style="font-weight:600;"></div>
+            <div style="font-size:0.85rem; opacity:0.9;"></div>
+            <div style="font-size:0.75rem; opacity:0.7; margin-top:4px;">
+              מאת:  | 
+            </div>
+          ;
+          container.appendChild(div);
+        });
+      } catch (e) {
+        status.textContent = 'שגיאה בטעינת הפוסטים.';
+      }
+    }
+
+    (async function init() {
+      await fetchConfig();
+      await fetchFeed();
+    })();
+  </script>
+</body>
+</html>
+
