@@ -6,10 +6,10 @@ from core.metrics import COMMANDS_PROCESSED, REQUEST_DURATION
 from core.cache import get_cached_message
 from bot.config import Config
 from .keyboard import create_main_keyboard, check_user_payment 
-# ייבוא חובה מ-core/db.py
+# ייבוא חובה של הפונקציה האסינכרונית
 from core.db import update_user_payment_status 
 
-# הלינק לקבוצה שהוגדר על ידי המשתמש
+# הלינק לקבוצה שהוגדר על ידי המשתמש (או שאתה מגדיר)
 PREMIUM_GROUP_LINK = "https://t.me/+HIzvM8sEgh1kNWY0"
 
 
@@ -29,6 +29,7 @@ async def payment_review_callback(query, context: ContextTypes.DEFAULT_TYPE, act
     try:
         # קריאה לפונקציית ה-DB לעדכון סטטוס המשתמש
         is_approved = action == "approve"
+        # חובה להיות עם await
         await update_user_payment_status(user_to_update_id, is_approved) 
         
         # בניית ההודעות
@@ -108,9 +109,10 @@ async def generic_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             await query.edit_message_text(text)
 
         else:
-            await query.answer("עוד מעט...")
+            await query.answer("מרענן מקלדת...")
             # רענון המקלדת לאחר בדיקה מחודשת של סטטוס התשלום
             user_id = query.from_user.id
+            # חובה להיות עם await
             has_paid = await check_user_payment(user_id)
             await query.edit_message_reply_markup(reply_markup=create_main_keyboard(has_paid=has_paid))
 
