@@ -4,7 +4,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from bot.config import Config
 from core.logging import logger
-# ייבוא חובה מ-core/db.py
+# ייבוא חובה של הפונקציה האסינכרונית
 from core.db import is_user_premium 
 
 
@@ -19,11 +19,12 @@ async def check_user_payment(user_id: Optional[int]) -> bool:
     if not user_id:
         return False
 
-    logger.info("check_user_payment called", user_id=user_id)
+    logger.debug("Starting check_user_payment DB call...")
     
     try:
-        # הקריאה חייבת להיות אסינכרונית
+        # הקריאה חייבת להיות עם await
         has_paid = await is_user_premium(user_id) 
+        logger.debug(f"check_user_payment result for {user_id}: {has_paid}")
         return has_paid
     except Exception as e:
         logger.error(f"DB check failed for user {user_id}: {e}")
@@ -32,6 +33,8 @@ async def check_user_payment(user_id: Optional[int]) -> bool:
 
 def create_main_keyboard(has_paid: bool) -> InlineKeyboardMarkup:
     """Creates the main keyboard based on the user's payment status (requires has_paid as input)."""
+    # 💡 DEBUG: מראה איזה מקלדת נוצרה
+    logger.debug(f"Creating keyboard with has_paid={has_paid}")
 
     buttons: list[list[InlineKeyboardButton]] = []
 
