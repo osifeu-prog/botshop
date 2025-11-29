@@ -5,10 +5,6 @@ class Settings(BaseSettings):
     BOT_TOKEN: str
     WEBHOOK_URL: str
     ADMIN_ALERT_CHAT_ID: int
-    # הוספה: רשימה של מזהי משתמשים (ID) של מנהלים
-    # הגדרה ב-Railway: ADMIN_OWNER_IDS="12345,67890" (פסיקים מפרידים)
-    ADMIN_OWNER_IDS: list[int] = [] 
-    
     LANDING_URL: str = "https://slh-nft.com"
     PAYBOX_URL: str | None = None
     BUSINESS_GROUP_URL: str | None = None
@@ -40,9 +36,6 @@ class Settings(BaseSettings):
             warnings.append("PAYBOX_URL is not set – 39₪ payment button will be generic only")
         if not cfg.BUSINESS_GROUP_URL and not cfg.GROUP_STATIC_INVITE:
             warnings.append("No BUSINESS_GROUP_URL / GROUP_STATIC_INVITE – group join button may be missing")
-        if not cfg.ADMIN_OWNER_IDS:
-             warnings.append("ADMIN_OWNER_IDS is not set – Payment review and admin features may be disabled.")
-
 
         return warnings, cfg
 
