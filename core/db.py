@@ -62,10 +62,11 @@ async def is_user_premium(user_id: int) -> bool:
                 """,
                 user_id
             )
+            # 💡 DEBUG: כדי לראות בלוגים שהפונקציה רצה בהצלחה
+            logger.debug(f"DB check for user {user_id}: Premium status is {bool(result)}")
             return bool(result)
     except Exception as e:
         logger.error(f"DB check for premium status failed for user {user_id}: {e}")
-        # אם יש שגיאה ב-DB, אנחנו מניחים שהוא לא משלם כדי למנוע חשיפת תוכן
         return False
 
 
@@ -78,7 +79,6 @@ async def update_user_payment_status(user_id: int, status: bool) -> bool:
     try:
         async with db_conn() as conn:
             # 1. מציאת ה-ID של בקשת ה-'pending' האחרונה של המשתמש
-            # אנו מניחים שה-ID הגבוה ביותר הוא הבקשה האחרונה
             approval_id = await conn.fetchval(
                 """
                 SELECT id FROM payment_approvals
