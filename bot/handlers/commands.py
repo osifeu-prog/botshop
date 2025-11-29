@@ -33,6 +33,8 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
             )
             
             try:
+                # 💡 DEBUG: מראה שהקוד הגיע לשליחת ההודעה למנהל
+                logger.debug(f"Attempting to send START alert to admin chat {chat_id}")
                 await context.bot.send_message(
                     chat_id=chat_id,
                     text=alert_text,
@@ -40,11 +42,14 @@ async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
                 )
                 context.user_data['is_registered'] = True
             except Exception as e:
-                logger.error(f"Failed to send admin START alert: {e}")
+                logger.error(f"Failed to send admin START alert (Chat ID: {chat_id}): {e}")
         # ----------------------------------------------------
         
-        # קריאה לבדיקת התשלום האסינכרונית
+        # קריאה לבדיקת התשלום האסינכרונית - חובה להיות עם await
         has_paid = await check_user_payment(user_id) 
+        
+        # 💡 DEBUG: מראה שהקוד עבר את בדיקת ה-DB
+        logger.debug(f"/start: DB check passed, has_paid={has_paid}. Sending reply.")
 
         intro = get_cached_message("start_main_he", fallback=(
             "🚀 ברוך הבא ל-SLH Savings & Investments Bot!\n\n"
