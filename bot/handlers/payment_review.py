@@ -9,6 +9,7 @@ from core.logging import logger
 # פונקציה ליצירת המקלדת של המנהל
 def create_review_keyboard(user_id: int) -> InlineKeyboardMarkup:
     # ה-Callback data יכיל את סוג הפעולה ואת ה-user_id 
+    # (הקוד ב-callbacks.py מפרש את זה נכון)
     approve_data = f"review_approve_{user_id}"
     reject_data = f"review_reject_{user_id}"
     
@@ -60,7 +61,6 @@ async def payment_image_handler(update: Update, context: ContextTypes.DEFAULT_TY
 
 def register_payment_review_handler(app: Application):
     # הוסף Handler שמגיב להודעות המכילות תמונה (filters.PHOTO)
-    # ובמקביל לא מגיב לפקודות (כמו /start)
     app.add_handler(
         MessageHandler(filters.PHOTO & ~filters.COMMAND, payment_image_handler)
     )
