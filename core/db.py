@@ -39,95 +39,31 @@ async def db_conn():
         yield conn
 
 
-# --------------------------------------------------------------------
-# * פונקציות חובה ללוגיקת הבוט החדשה *
-# --------------------------------------------------------------------
-
-async def is_user_premium(user_id: int) -> bool:
-    """
-    בדיקה האם למשתמש יש אישור תשלום פעיל (סטטוס 'approved').
-    """
-    if not user_id:
-        return False
-    
-    try:
-        async with db_conn() as conn:
-            # בודק האם קיימת רשומה אחת לפחות עבור המשתמש עם סטטוס 'approved'
-            result = await conn.fetchval(
-                """
-                SELECT EXISTS (
-                    SELECT 1 FROM payment_approvals
-                    WHERE user_id = $1 AND status = 'approved'
-                )
-                """,
-                user_id
-            )
-            # 💡 DEBUG: כדי לראות בלוגים שהפונקציה רצה בהצלחה
-            logger.debug(f"DB check for user {user_id}: Premium status is {bool(result)}")
-            return bool(result)
-    except Exception as e:
-        logger.error(f"DB check for premium status failed for user {user_id}: {e}")
-        return False
-
-
-async def update_user_payment_status(user_id: int, status: bool) -> bool:
-    """
-    מעדכן את הסטטוס של בקשת התשלום ה'pending' האחרונה של המשתמש.
-    """
-    new_status = 'approved' if status else 'rejected'
-    
-    try:
-        async with db_conn() as conn:
-            # 1. מציאת ה-ID של בקשת ה-'pending' האחרונה של המשתמש
-            approval_id = await conn.fetchval(
-                """
-                SELECT id FROM payment_approvals
-                WHERE user_id = $1 AND status = 'pending'
-                ORDER BY id DESC 
-                LIMIT 1
-                """,
-                user_id
-            )
-
-            if not approval_id:
-                logger.warning(f"DB: No pending payment approval found for user {user_id} to update.")
-                return True 
-                
-            # 2. עדכון הסטטוס של הבקשה שנמצאה
-            await conn.execute(
-                """
-                UPDATE payment_approvals
-                SET status = $1
-                WHERE id = $2
-                """,
-                new_status,
-                approval_id
-            )
-            logger.info(f"DB: Successfully set payment ID {approval_id} for user {user_id} to '{new_status}'.")
-            return True
-
-    except Exception as e:
-        logger.error(f"DB update failed for user {user_id} to {new_status}: {e}")
-        return False
-
-
-# --------------------------------------------------------------------
-# * פונקציה קיימת (שלך) *
-# --------------------------------------------------------------------
-
 async def get_approval_stats() -> Dict[str, Any]:
-    """Fetch basic finance/approval stats."""
+    """Fetch basic finance/approval stats.
+
+    This is intentionally defensive: if the table doesn't exist yet,
+    we return zeros so the API continues to work.
+    Expected schema (you can adapt on your DB):
+
+        payment_approvals(
+            id serial primary key,
+            user_id bigint,
+            amount numeric,
+            status text check (status in ('pending','approved','rejected'))
+        )
+    """
     try:
         async with db_conn() as conn:
             row = await conn.fetchrow(
-                """
+                '''
                 SELECT
                     COUNT(*) FILTER (WHERE status = 'pending')  AS pending,
                     COUNT(*) FILTER (WHERE status = 'approved') AS approved,
                     COUNT(*) FILTER (WHERE status = 'rejected') AS rejected,
                     COALESCE(SUM(amount), 0)                    AS total_amount
                 FROM payment_approvals;
-                """
+                '''
             )
             data = dict(row)
     except Exception as e:

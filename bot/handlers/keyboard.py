@@ -4,8 +4,6 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from bot.config import Config
 from core.logging import logger
-# ייבוא חובה של הפונקציה האסינכרונית
-from core.db import is_user_premium 
 
 
 def safe_get_url(primary: Optional[str], fallback: str) -> str:
@@ -14,27 +12,17 @@ def safe_get_url(primary: Optional[str], fallback: str) -> str:
     return fallback
 
 
-async def check_user_payment(user_id: Optional[int]) -> bool:
-    """Check DB / API if the user has a valid and active payment (ASYNC)."""
-    if not user_id:
-        return False
+def check_user_payment(user_id: Optional[int]) -> bool:
+    """Placeholder: in the future query DB / API.
 
-    logger.debug("Starting check_user_payment DB call...")
-    
-    try:
-        # הקריאה חייבת להיות עם await
-        has_paid = await is_user_premium(user_id) 
-        logger.debug(f"check_user_payment result for {user_id}: {has_paid}")
-        return has_paid
-    except Exception as e:
-        logger.error(f"DB check failed for user {user_id}: {e}")
-        return False 
+    For now always False so everyone sees the '39₪' path.
+    """
+    logger.info("check_user_payment called", user_id=user_id)
+    return False
 
 
-def create_main_keyboard(has_paid: bool) -> InlineKeyboardMarkup:
-    """Creates the main keyboard based on the user's payment status (requires has_paid as input)."""
-    # 💡 DEBUG: מראה איזה מקלדת נוצרה
-    logger.debug(f"Creating keyboard with has_paid={has_paid}")
+def create_main_keyboard(user_id: int | None = None) -> InlineKeyboardMarkup:
+    has_paid = check_user_payment(user_id) if user_id else False
 
     buttons: list[list[InlineKeyboardButton]] = []
 
