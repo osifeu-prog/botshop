@@ -4,7 +4,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 from bot.config import Config
 from core.logging import logger
-# הייבוא הזה חיוני, וודא שהפונקציה קיימת ב-core/db.py!
+# ייבוא חובה מ-core/db.py
 from core.db import is_user_premium 
 
 
