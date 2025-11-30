@@ -909,3 +909,55 @@ def fetch_token_sales(limit: int = 50) -> List[Dict[str, Any]]:
             }
         )
     return sales
+
+# =========================
+# payment helpers
+# =========================
+
+def has_approved_payment(user_id: int) -> bool:
+    """בודק אם למשתמש יש תשלום מאושר כלשהו."""
+    with db_cursor() as (conn, cur):
+        if cur is None:
+            return False
+        cur.execute(
+            """
+            SELECT EXISTS (
+                SELECT 1
+                FROM payments
+                WHERE user_id = %s
+                  AND status = 'approved'
+            )
+            """,
+            (user_id,),
+        )
+        row = cur.fetchone()
+        return bool(row[0]) if row else False
+
+
+def get_pending_payments(limit: int = 20) -> List[Dict[str, Any]]:
+    """מחזיר רשימת תשלומים במצב 'pending' לתצוגה באדמין."""
+    with db_cursor() as (conn, cur):
+        if cur is None:
+            return []
+        cur.execute(
+            """
+            SELECT id, user_id, username, pay_method, status, created_at
+            FROM payments
+            WHERE status = 'pending'
+            ORDER BY created_at DESC
+            LIMIT %s
+            """,
+            (limit,),
+        )
+        rows = cur.fetchall()
+        return [
+            {
+                "id": r["id"],
+                "user_id": r["user_id"],
+                "username": r["username"],
+                "pay_method": r["pay_method"],
+                "status": r["status"],
+                "created_at": r["created_at"],
+            }
+            for r in rows
+        ]

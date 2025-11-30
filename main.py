@@ -1,4 +1,4 @@
-﻿from telegram.ext import MessageHandler, filters, CallbackQueryHandler
+from telegram.ext import MessageHandler, filters, CallbackQueryHandler
 import os
 import json
 import logging
@@ -8,7 +8,7 @@ from typing import Optional, Dict, Any, List
 from decimal import Decimal, InvalidOperation
 
 from datetime import datetime
-from db import init_schema, get_approval_stats, get_monthly_payments, get_reserve_stats
+from db import init_schema, get_approval_stats, get_monthly_payments, get_reserve_stats, log_payment, update_payment_status, has_approved_payment, get_pending_payments
 from slh_internal_wallets import (
     init_internal_wallet_schema,
     ensure_internal_wallet,
@@ -274,6 +274,19 @@ class HealthResponse(BaseModel):
 # =========================
 # קונפיגורציה ומשתני סביבה
 # =========================
+
+def is_admin(user_id: int) -> bool:
+    """בודק אם המשתמש הוא אדמין לפי ADMIN_OWNER_IDS"""
+    raw = os.getenv("ADMIN_OWNER_IDS", "")
+    for part in raw.replace(",", " ").split():
+        try:
+            if int(part) == int(user_id):
+                return True
+        except ValueError:
+            continue
+    return False
+
+
 class Config:
     """מחלקה לניהול קונפיגורציה"""
     BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
@@ -331,14 +344,30 @@ class TelegramAppManager:
         
         # רישום handlers
         handlers = [
+            # פקודות כניסה ומידע
             CommandHandler("start", start_command),
             CommandHandler("whoami", whoami_command),
             CommandHandler("stats", stats_command),
+
+            # פקודות ניהול תשלומים
+            CommandHandler("admin", admin_command),
+            CommandHandler("pending", pending_command),
+            CommandHandler("approve", approve_command),
+            CommandHandler("reject", reject_command),
+
+            # ארנק פנימי וסטייקינג
             CommandHandler("wallet", wallet_command),
             CommandHandler("send_slh", send_slh_command),
             CommandHandler("stake", stake_command),
             CommandHandler("mystakes", mystakes_command),
+
+            # Callback queries (תפריטים וכפתורים)
             CallbackQueryHandler(callback_query_handler),
+
+            # אישורי תשלום (תמונות / קבצים)
+            MessageHandler(filters.PHOTO | filters.Document.ALL, payment_proof_handler),
+
+            # טקסט חופשי + פקודות לא מוכרות
             MessageHandler(filters.TEXT & ~filters.COMMAND, echo_message),
             MessageHandler(filters.COMMAND, unknown_command),
         ]
@@ -468,6 +497,7 @@ def safe_get_url(url: str, fallback: str) -> str:
 # =========================
 
 
+
 async def send_start_screen(update: Update, context: ContextTypes.DEFAULT_TYPE, referrer: Optional[int] = None) -> None:
     """מציג מסך start עם כל אפשרויות התשלום וההצטרפות"""
     user = update.effective_user
@@ -506,13 +536,29 @@ async def send_start_screen(update: Update, context: ContextTypes.DEFAULT_TYPE, 
 
     # כפתורי פעולה
     pay_url = safe_get_url(Config.PAYBOX_URL, Config.LANDING_URL + "#join39")
+    group_url = safe_get_url(Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL)
+    more_info_url = safe_get_url(Config.LANDING_URL, Config.LANDING_URL)
 
-    keyboard = [
+    has_paid = False
+    try:
+        if user:
+            has_paid = has_approved_payment(user.id)
+    except Exception as e:
+        logger.error(f"Error checking approved payment for user {user.id}: {e}")
+
+    keyboard: List[List[InlineKeyboardButton]] = [
         [InlineKeyboardButton("💳 תשלום 39 ₪ – PayBox", url=pay_url)],
-        [InlineKeyboardButton("📤 איך לשלם ולשלוח אישור", callback_data="send_proof")],
         [InlineKeyboardButton("ℹ️ מה אני מקבל?", callback_data="info_benefits")],
-        [InlineKeyboardButton("📈 מידע למשקיעים", callback_data="open_investor")],
     ]
+
+    if has_paid:
+        keyboard.append([InlineKeyboardButton("👥 כניסה לקבוצת העסקים", url=group_url)])
+    else:
+        keyboard.append([InlineKeyboardButton("📤 איך לשלם ולשלוח אישור", callback_data="send_proof")])
+
+    keyboard.append([InlineKeyboardButton("📈 מידע למשקיעים", callback_data="open_investor")])
+    keyboard.append([InlineKeyboardButton("🔗 דף מידע מלא", url=more_info_url)])
+
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await chat.send_message(text=body, reply_markup=reply_markup, parse_mode="Markdown")
@@ -587,6 +633,241 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
 
 
+
+
+# =========================
+# פקודות ניהול ותשלומים – 39 ₪
+# =========================
+
+async def payment_proof_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """קבלת צילום/קובץ כאישור תשלום והעברת הלוג לקבוצת הניהול."""
+    user = update.effective_user
+    chat = update.effective_chat
+    message = update.message
+
+    if not user or not chat or not message:
+        return
+
+    # נוודא שזה בפרטי מול הבוט בלבד
+    if chat.type != "private":
+        return
+
+    caption = message.caption or ""
+    text_lower = caption.lower()
+
+    # ניסיון לזהות את סוג אמצעי התשלום
+    if "paybox" in text_lower or "פייבוקס" in text_lower:
+        pay_method = "paybox"
+    elif "paypal" in text_lower or "פייפאל" in text_lower:
+        pay_method = "paypal"
+    elif "העברה" in caption or "bank" in text_lower or "בנק" in text_lower:
+        pay_method = "bank-transfer"
+    else:
+        pay_method = "screenshot"
+
+    try:
+        log_payment(user.id, user.username, pay_method)
+    except Exception as e:
+        logger.error(f"Error logging payment for user {user.id}: {e}")
+
+    # העתקת ההודעה לקבוצת הלוגים/ניהול
+    if Config.LOGS_GROUP_CHAT_ID:
+        try:
+            admin_chat_id = int(Config.LOGS_GROUP_CHAT_ID)
+            await context.bot.copy_message(
+                chat_id=admin_chat_id,
+                from_chat_id=chat.id,
+                message_id=message.message_id,
+            )
+
+            # כפתורי אישור/דחייה לאדמין
+            keyboard = InlineKeyboardMarkup([
+                [
+                    InlineKeyboardButton("✅ אישור תשלום", callback_data=f"approve:{user.id}"),
+                    InlineKeyboardButton("❌ דחיית תשלום", callback_data=f"reject:{user.id}"),
+                ]
+            ])
+
+            admin_text = (
+                "📥 התקבל אישור תשלום חדש.\n\n"
+                f"user_id = {user.id}\n"
+                f"username = @{user.username or 'לא ידוע'}\n"
+                f"from chat_id = {chat.id}\n"
+                f"שיטת תשלום: {pay_method}\n\n"
+                "לאישור (עבור אדמין ראשי):\n"
+                f"/approve {user.id}\n"
+                f"/reject {user.id} <סיבה>\n"
+                "(או להשתמש בכפתורי האישור/דחייה מתחת להודעה זו)"
+            )
+
+            await context.bot.send_message(
+                chat_id=admin_chat_id,
+                text=admin_text,
+                reply_markup=keyboard,
+            )
+        except Exception as e:
+            logger.error(f"Error sending payment log to admin group: {e}")
+
+    await chat.send_message(
+        "📥 קיבלנו את אישור התשלום שלך!\n"
+        "ההודעה הועברה לצוות הניהול. לאחר אישור, ישלח אליך קישור לקבוצת העסקים.",
+    )
+
+
+async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """פאנל ניהול בסיסי למנהלים בלבד."""
+    user = update.effective_user
+    chat = update.effective_chat
+
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /admin מיועדת למנהלי המערכת בלבד.")
+        return
+
+    approval_stats = get_approval_stats() or {}
+    reserve_stats = get_reserve_stats() or {}
+
+    text_lines = [
+        "🛠 *פאנל ניהול SLHNET*",
+        "",
+        "💳 *סטטוס תשלומים:*",
+        f" - ממתינים: {approval_stats.get('pending', 0)}",
+        f" - אושרו: {approval_stats.get('approved', 0)}",
+        f" - נדחו: {approval_stats.get('rejected', 0)}",
+        "",
+        "🏦 *רזרבות ותזרים (Demo מה-DB):*",
+        f" - סכום רזרבה מצטבר: {reserve_stats.get('total_reserve', 0)}",
+        f" - סך נטו: {reserve_stats.get('total_net', 0)}",
+        f" - סך תשלומים: {reserve_stats.get('total_payments', 0)}",
+        "",
+        "📋 *פקודות ניהול זמינות:*",
+        " - /pending  – רשימת תשלומים ממתינים",
+        " - /approve <user_id>  – אישור תשלום ושליחת קישור לקבוצה",
+        " - /reject <user_id> <סיבה>  – דחיית תשלום והודעה ללקוח",
+    ]
+
+    await chat.send_message("\n".join(text_lines), parse_mode="Markdown")
+
+
+async def pending_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """רשימת תשלומים ממתינים – למנהלים בלבד."""
+    user = update.effective_user
+    chat = update.effective_chat
+
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /pending מיועדת למנהלי המערכת בלבד.")
+        return
+
+    pending = get_pending_payments(limit=30)
+    if not pending:
+        await chat.send_message("✅ אין תשלומים ממתינים כרגע.")
+        return
+
+    lines = ["💳 *תשלומים ממתינים:*", ""]
+    for p in pending:
+        lines.append(
+            f"• user_id={p['user_id']} | username=@{p['username'] or 'לא ידוע'} | שיטה={p['pay_method']} | id={p['id']}"
+        )
+
+    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+
+
+async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """אישור תשלום ידני לפי user_id – למנהלים בלבד."""
+    user = update.effective_user
+    chat = update.effective_chat
+
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /approve מיועדת למנהלי המערכת בלבד.")
+        return
+
+    if not context.args:
+        await chat.send_message("שימוש: /approve <user_id>")
+        return
+
+    try:
+        target_id = int(context.args[0])
+    except ValueError:
+        await chat.send_message("user_id לא תקין.")
+        return
+
+    try:
+        update_payment_status(target_id, "approved", "approved via /approve")
+    except Exception as e:
+        logger.error(f"Error updating payment status for {target_id}: {e}")
+        await chat.send_message("❌ שגיאה בעדכון סטטוס התשלום.")
+        return
+
+    group_url = safe_get_url(Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL)
+
+    try:
+        await context.bot.send_message(
+            chat_id=target_id,
+            text=(
+                "✅ התשלום שלך אושר!\n\n"
+                "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
+                f"{group_url}\n\n"
+                "ברוך הבא 🙌"
+            ),
+        )
+    except Exception as e:
+        logger.error(f"Error sending approval message to user {target_id}: {e}")
+
+    await chat.send_message(f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה.")
+
+
+async def reject_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """דחיית תשלום ידנית לפי user_id – למנהלים בלבד."""
+    user = update.effective_user
+    chat = update.effective_chat
+
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /reject מיועדת למנהלי המערכת בלבד.")
+        return
+
+    if len(context.args) < 1:
+        await chat.send_message("שימוש: /reject <user_id> <סיבה>")
+        return
+
+    try:
+        target_id = int(context.args[0])
+    except ValueError:
+        await chat.send_message("user_id לא תקין.")
+        return
+
+    reason = " ".join(context.args[1:]) if len(context.args) > 1 else "ללא סיבה מפורטת"
+
+    try:
+        update_payment_status(target_id, "rejected", reason)
+    except Exception as e:
+        logger.error(f"Error updating payment status for {target_id}: {e}")
+        await chat.send_message("❌ שגיאה בעדכון סטטוס התשלום.")
+        return
+
+    try:
+        await context.bot.send_message(
+            chat_id=target_id,
+            text=(
+                "❌ התשלום שלך נדחה.\n"
+                f"סיבה: {reason}\n\n"
+                "אם לדעתך מדובר בטעות, ניתן לפנות לתמיכה."
+            ),
+        )
+    except Exception as e:
+        logger.error(f"Error sending rejection message to user {target_id}: {e}")
+
+    await chat.send_message(f"🚫 התשלום של המשתמש {target_id} נדחה ונשלחה לו הודעה.")
 
 # =========================
 # ארנק פנימי וסטייקינג – פקודות טלגרם
@@ -828,8 +1109,9 @@ async def mystakes_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
 
     await chat.send_message("\n".join(lines), parse_mode="Markdown")
 
+
 async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מטפל ב-callback queries של תפריט ההתחלה"""
+    """מטפל ב-callback queries של תפריט ההתחלה והאדמין"""
     query = update.callback_query
     if not query:
         return
@@ -839,15 +1121,80 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
 
     if data == "open_investor":
         await handle_investor_callback(update, context)
-    elif data == "send_proof":
+    elif data in ("send_proof", "send_payment_instructions"):
+        # מסך הסבר איך לשלם ולאן לשלוח אישור
         await handle_send_proof_callback(update, context)
     elif data == "info_benefits":
         await handle_benefits_callback(update, context)
     elif data == "back_to_main":
         # חזרה למסך הראשי
         await send_start_screen(update, context)
+    elif data.startswith("approve:"):
+        # אישור תשלום דרך כפתור אינליין
+        if not is_admin(query.from_user.id):
+            await query.answer("רק מנהל יכול לאשר תשלום.", show_alert=True)
+            return
+        try:
+            target_id = int(data.split(":", 1)[1])
+        except ValueError:
+            await query.answer("user_id לא תקין.", show_alert=True)
+            return
+
+        try:
+            update_payment_status(target_id, "approved", "approved via inline button")
+        except Exception as e:
+            logger.error(f"Error updating payment status for {target_id}: {e}")
+            await query.answer("שגיאה בעדכון סטטוס התשלום.", show_alert=True)
+            return
+
+        group_url = safe_get_url(Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL)
+        try:
+            await context.bot.send_message(
+                chat_id=target_id,
+                text=(
+                    "✅ התשלום שלך אושר!\n\n"
+                    "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
+                    f"{group_url}\n\n"
+                    "ברוך הבא 🙌"
+                ),
+            )
+        except Exception as e:
+            logger.error(f"Error sending approval message to user {target_id}: {e}")
+
+        await query.edit_message_text(f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה.")
+    elif data.startswith("reject:"):
+        # דחיית תשלום דרך כפתור אינליין
+        if not is_admin(query.from_user.id):
+            await query.answer("רק מנהל יכול לדחות תשלום.", show_alert=True)
+            return
+        try:
+            target_id = int(data.split(":", 1)[1])
+        except ValueError:
+            await query.answer("user_id לא תקין.", show_alert=True)
+            return
+
+        try:
+            update_payment_status(target_id, "rejected", "rejected via inline button")
+        except Exception as e:
+            logger.error(f"Error updating payment status (reject) for {target_id}: {e}")
+            await query.answer("שגיאה בעדכון סטטוס התשלום.", show_alert=True)
+            return
+
+        try:
+            await context.bot.send_message(
+                chat_id=target_id,
+                text=(
+                    "❌ התשלום שלך נדחה.\n"
+                    "אם לדעתך מדובר בטעות, ניתן לפנות לתמיכה."
+                ),
+            )
+        except Exception as e:
+            logger.error(f"Error sending rejection message to user {target_id}: {e}")
+
+        await query.edit_message_text(f"🚫 התשלום של המשתמש {target_id} נדחה ונשלחה לו הודעה.")
     else:
         await query.edit_message_text("❌ פעולה לא מוכרת.")
+
 
 
 async def handle_investor_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
