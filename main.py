@@ -300,6 +300,7 @@ class Config:
     PAYPAL_URL: str = os.getenv("PAYPAL_URL", "")
     START_IMAGE_PATH: str = os.getenv("START_IMAGE_PATH", "assets/start_banner.jpg")
     TON_WALLET_ADDRESS: str = os.getenv("TON_WALLET_ADDRESS", "")
+    SUPPORT_GROUP_LINK: str = os.getenv("SUPPORT_GROUP_LINK", "")  # NEW
     LOGS_GROUP_CHAT_ID: str = os.getenv("LOGS_GROUP_CHAT_ID", ADMIN_ALERT_CHAT_ID or "")
 
     @classmethod
