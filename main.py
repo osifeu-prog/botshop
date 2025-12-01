@@ -1,20 +1,15 @@
 from telegram.ext import (
-    Application,
-    CommandHandler,
     MessageHandler,
-    CallbackQueryHandler,
-    ContextTypes,
     filters,
-)
-from telegram import (
-    InlineKeyboardButton,
-    InlineKeyboardMarkup,
-    InputFile,
-    Update,
+    CallbackQueryHandler,
+    CommandHandler,
+    ContextTypes,
+    Application,
 )
 import os
 import json
 import logging
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, InputFile, Update
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from decimal import Decimal, InvalidOperation
@@ -27,9 +22,10 @@ from fastapi.templating import Jinja2Templates
 from fastapi.middleware.cors import CORSMiddleware
 
 from pydantic import BaseModel
+
 from prometheus_client import generate_latest, CONTENT_TYPE_LATEST
 
-# ==== יבואי DB / ארנקים פנימיים ====
+# ===== DB & SLH internal wallet imports =====
 from db import (
     init_schema,
     get_approval_stats,
@@ -51,7 +47,7 @@ from slh_internal_wallets import (
     mint_slh_from_payment,
 )
 
-# ==== רואטרים חיצוניים (עטופים ב-try למקרה שלא קיימים) ====
+# ===== Optional routers =====
 try:
     from slh_public_api import router as public_router
 except Exception:
@@ -72,9 +68,8 @@ try:
 except Exception:
     slhnet_extra_router = None
 
-
 # =========================
-# קונפיגורציית לוגינג
+# Logging
 # =========================
 logging.basicConfig(
     level=logging.INFO,
@@ -95,7 +90,7 @@ app = FastAPI(
     version="2.0.0",
 )
 
-# CORS – מאפשר גישה לדשבורד מהדומיין slh-nft.com
+# CORS – לאפשר דשבורד מהדומיין
 allowed_origins = [
     os.getenv("FRONTEND_ORIGIN", "").rstrip("/") or "https://slh-nft.com",
     "https://slh-nft.com",
@@ -110,7 +105,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# אתחול סכמת בסיס הנתונים (טבלאות + רזרבות 49%) + ארנקים פנימיים וסטייקינג
+# אתחול סכמת DB + ארנקים פנימיים
 try:
     init_schema()
     init_internal_wallet_schema()
@@ -119,7 +114,7 @@ except Exception as e:
 
 BASE_DIR = Path(__file__).resolve().parent
 
-# סטטיק וטמפלטס
+# סטטיק + טמפלטים
 try:
     static_dir = BASE_DIR / "static"
     templates_dir = BASE_DIR / "templates"
@@ -138,7 +133,7 @@ except Exception as e:
     logger.error(f"Error setting up static/templates: {e}")
     templates = None
 
-# רואטרים של API
+# רואטרים חיצוניים
 try:
     if public_router is not None:
         app.include_router(public_router, prefix="/api/public", tags=["public"])
@@ -152,24 +147,14 @@ except Exception as e:
     logger.error(f"Error including routers: {e}")
 
 # =========================
-# ניהול referral + פרופילים
+# Referrals – JSON store
 # =========================
 DATA_DIR = BASE_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
 REF_FILE = DATA_DIR / "referrals.json"
-PROFILES_FILE = DATA_DIR / "profiles.json"
-
-# מצב זמני לשאלות פרופיל (אזור אישי)
-PROFILE_SESSIONS: Dict[int, Dict[str, Any]] = {}
-PROFILE_QUESTIONS = [
-    "איך קוראים לך / שם העסק שלך?",
-    "מה אתה עושה / מה אתה מציע בקהילה (תחום פעילות / התמחות)?",
-    "איך הכי טוב ליצור איתך קשר? (טלפון / טלגרם / אתר / מייל)",
-]
 
 
 def load_referrals() -> Dict[str, Any]:
-    """טוען נתוני referrals עם הגנת שגיאות"""
     if not REF_FILE.exists():
         return {"users": {}, "statistics": {"total_users": 0}}
 
@@ -179,20 +164,17 @@ def load_referrals() -> Dict[str, Any]:
         if "users" not in data:
             data["users"] = {}
         if "statistics" not in data:
-            data["statistics"] = {"total_users": len(data["users"])}
+            data["statistics"] = {"total_users": 0}
         return data
-    except (json.JSONDecodeError, Exception) as e:
+    except Exception as e:
         logger.error(f"Error loading referrals: {e}")
         return {"users": {}, "statistics": {"total_users": 0}}
 
 
 def save_referrals(data: Dict[str, Any]) -> None:
-    """שומר נתוני referrals עם הגנת שגיאות"""
     try:
-        data.setdefault("users", {})
         data.setdefault("statistics", {})
-        data["statistics"]["total_users"] = len(data["users"])
-
+        data["statistics"]["total_users"] = len(data.get("users", {}))
         with open(REF_FILE, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
     except Exception as e:
@@ -200,89 +182,54 @@ def save_referrals(data: Dict[str, Any]) -> None:
 
 
 def register_referral(user_id: int, referrer_id: Optional[int] = None) -> bool:
-    """רושם משתמש חדש עם referral (אם עדיין לא קיים)"""
+    """
+    רושם משתמש חדש עם referrer (אם קיים).
+    אם המשתמש כבר קיים – לא דורס.
+    """
     try:
         data = load_referrals()
         suid = str(user_id)
 
         if suid in data["users"]:
-            return False  # כבר רשום
+            return False
 
         user_data = {
             "referrer": str(referrer_id) if referrer_id else None,
             "joined_at": datetime.now().isoformat(),
             "referral_count": 0,
         }
-
         data["users"][suid] = user_data
 
-        # עדכון סטטיסטיקה של המפנה אם קיים
         if referrer_id:
-            referrer_str = str(referrer_id)
-            if referrer_str in data["users"]:
-                data["users"][referrer_str]["referral_count"] = (
-                    data["users"][referrer_str].get("referral_count", 0) + 1
+            rid = str(referrer_id)
+            if rid in data["users"]:
+                data["users"][rid]["referral_count"] = (
+                    data["users"][rid].get("referral_count", 0) + 1
                 )
 
         save_referrals(data)
         logger.info(f"Registered new user {user_id} with referrer {referrer_id}")
         return True
-
     except Exception as e:
         logger.error(f"Error registering referral: {e}")
         return False
 
 
-def build_referral_link(user_id: int) -> str:
-    """יוצר קישור הפניה אישי לבוט: https://t.me/<bot>?start=<user_id>"""
-    bot_username = os.getenv("BOT_USERNAME", "Buy_My_Shop_bot").lstrip("@")
-    return f"https://t.me/{bot_username}?start={user_id}"
-
-
-def load_profiles() -> Dict[str, Any]:
-    """טוען פרופילים מאזור אישי"""
-    if not PROFILES_FILE.exists():
-        return {"profiles": {}}
-    try:
-        with open(PROFILES_FILE, "r", encoding="utf-8") as f:
-            data = json.load(f)
-        if "profiles" not in data:
-            data["profiles"] = {}
-        return data
-    except (json.JSONDecodeError, Exception) as e:
-        logger.error(f"Error loading profiles: {e}")
-        return {"profiles": {}}
-
-
-def save_profiles(data: Dict[str, Any]) -> None:
-    """שומר פרופילים לאזור אישי"""
-    try:
-        data.setdefault("profiles", {})
-        with open(PROFILES_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        logger.error(f"Error saving profiles: {e}")
-
-
 # =========================
-# ניהול הודעות (בלוקים מטקסט)
+# Messages file (blocks)
 # =========================
 MESSAGES_FILE = BASE_DIR / "bot_messages_slhnet.txt"
 
 
 def load_message_block(block_name: str, fallback: str = "") -> str:
-    """
-    טוען בלוק טקסט מהקובץ עם הגנות וטקסט ברירת מחדל
-    """
     if not MESSAGES_FILE.exists():
         logger.warning(f"Messages file not found: {MESSAGES_FILE}")
-        return fallback or "[שגיאה: קובץ הודעות לא נמצא]"
+        return fallback or f"[שגיאה: קובץ הודעות לא נמצא]"
 
     try:
         content = MESSAGES_FILE.read_text(encoding="utf-8")
         lines = content.splitlines()
-
-        result_lines = []
+        result_lines: List[str] = []
         in_block = False
         found_block = False
 
@@ -305,14 +252,13 @@ def load_message_block(block_name: str, fallback: str = "") -> str:
             return fallback
 
         return "\n".join(result_lines).strip() or fallback
-
     except Exception as e:
         logger.error(f"Error loading message block '{block_name}': {e}")
         return fallback or f"[שגיאה בטעינת בלוק {block_name}]"
 
 
 # =========================
-# מודלים של Webhook + Health
+# Pydantic models
 # =========================
 class TelegramWebhookUpdate(BaseModel):
     update_id: int
@@ -329,10 +275,9 @@ class HealthResponse(BaseModel):
 
 
 # =========================
-# קונפיגורציה ומשתני סביבה
+# Config & Admin logic
 # =========================
 def is_admin(user_id: int) -> bool:
-    """בודק אם המשתמש הוא אדמין לפי ADMIN_OWNER_IDS"""
     raw = os.getenv("ADMIN_OWNER_IDS", "")
     for part in raw.replace(",", " ").split():
         try:
@@ -344,9 +289,8 @@ def is_admin(user_id: int) -> bool:
 
 
 class Config:
-    """מחלקה לניהול קונפיגורציה"""
-
     BOT_TOKEN: str = os.getenv("BOT_TOKEN", "")
+    BOT_USERNAME: str = os.getenv("BOT_USERNAME", "")
     WEBHOOK_URL: str = os.getenv("WEBHOOK_URL", "")
     ADMIN_ALERT_CHAT_ID: str = os.getenv("ADMIN_ALERT_CHAT_ID", "")
     LANDING_URL: str = os.getenv("LANDING_URL", "https://slh-nft.com")
@@ -360,20 +304,20 @@ class Config:
     LOGS_GROUP_CHAT_ID: str = os.getenv(
         "LOGS_GROUP_CHAT_ID", ADMIN_ALERT_CHAT_ID or ""
     )
-    SUPPORT_GROUP_LINK: str = os.getenv(
-        "SUPPORT_GROUP_LINK", os.getenv("SUPPORT_GROUP_URL", "")
-    )
+    SUPPORT_GROUP_LINK: str = os.getenv("SUPPORT_GROUP_LINK", "")
+    REF_BASE_URL: str = os.getenv("REF_BASE_URL", "")
 
     @classmethod
     def validate(cls) -> List[str]:
-        """בודק תקינות קונפיגורציה ומחזיר רשימת אזהרות"""
-        warnings = []
+        warnings: List[str] = []
         if not cls.BOT_TOKEN:
             warnings.append("⚠️ BOT_TOKEN לא מוגדר")
         if not cls.WEBHOOK_URL:
             warnings.append("⚠️ WEBHOOK_URL לא מוגדר")
         if not cls.ADMIN_ALERT_CHAT_ID:
             warnings.append("⚠️ ADMIN_ALERT_CHAT_ID לא מוגדר")
+        if not cls.BOT_USERNAME:
+            warnings.append("⚠️ BOT_USERNAME לא מוגדר – חשוב עבור /my_link")
         return warnings
 
 
@@ -381,8 +325,6 @@ class Config:
 # Telegram Application Manager
 # =========================
 class TelegramAppManager:
-    """מנהל אפליקציית הטלגרם (Singleton)"""
-
     _instance: Optional[Application] = None
     _initialized: bool = False
     _started: bool = False
@@ -392,36 +334,30 @@ class TelegramAppManager:
         if cls._instance is None:
             if not Config.BOT_TOKEN:
                 raise RuntimeError("BOT_TOKEN is not set")
-
             cls._instance = Application.builder().token(Config.BOT_TOKEN).build()
             logger.info("Telegram Application instance created")
-
         return cls._instance
 
     @classmethod
     def initialize_handlers(cls) -> None:
-        """מאתחל handlers פעם אחת בלבד"""
         if cls._initialized:
             return
 
         app_instance = cls.get_app()
 
         handlers = [
-            # פקודות כניסה ומידע
+            # כניסה ומידע
             CommandHandler("start", start_command),
             CommandHandler("whoami", whoami_command),
             CommandHandler("stats", stats_command),
+            CommandHandler("portfolio", portfolio_command),
 
-            # פקודות הפניות / לינק אישי
+            # הפניות / רפרלים
             CommandHandler("my_link", my_link_command),
             CommandHandler("my_referrals", my_referrals_command),
-
-            # תפריט חברים / אזור אישי
-            CommandHandler("member", member_command),
             CommandHandler("my_card", my_card_command),
-            CommandHandler("profile", my_card_command),
 
-            # פקודות ניהול תשלומים
+            # ניהול תשלומים
             CommandHandler("admin", admin_command),
             CommandHandler("pending", pending_command),
             CommandHandler("approve", approve_command),
@@ -433,10 +369,10 @@ class TelegramAppManager:
             CommandHandler("stake", stake_command),
             CommandHandler("mystakes", mystakes_command),
 
-            # Callback queries (תפריטים וכפתורים)
+            # Callback queries
             CallbackQueryHandler(callback_query_handler),
 
-            # אישורי תשלום (תמונות / קבצים)
+            # אישורי תשלום (תמונות/מסמכים)
             MessageHandler(filters.PHOTO | filters.Document.ALL, payment_proof_handler),
 
             # טקסט חופשי + פקודות לא מוכרות
@@ -444,18 +380,16 @@ class TelegramAppManager:
             MessageHandler(filters.COMMAND, unknown_command),
         ]
 
-        for handler in handlers:
-            app_instance.add_handler(handler)
+        for h in handlers:
+            app_instance.add_handler(h)
 
         cls._initialized = True
         logger.info("Telegram handlers initialized")
 
     @classmethod
     async def start(cls) -> None:
-        """אתחול מלא של אפליקציית הטלגרם + Webhook"""
         cls.initialize_handlers()
         app_instance = cls.get_app()
-
         if not cls._started:
             await app_instance.initialize()
             await app_instance.start()
@@ -470,7 +404,6 @@ class TelegramAppManager:
 
     @classmethod
     async def shutdown(cls) -> None:
-        """עצירת האפליקציה בצורה נקייה"""
         try:
             app_instance = cls.get_app()
             await app_instance.stop()
@@ -482,12 +415,14 @@ class TelegramAppManager:
 # =========================
 # Utilities
 # =========================
+def safe_get_url(url: str, fallback: str) -> str:
+    return url if url and url.startswith(("http://", "https://")) else fallback
+
+
 async def send_log_message(text: str) -> None:
-    """שולח הודעת לוג לקבוצת לוגים/אדמין"""
     if not Config.LOGS_GROUP_CHAT_ID:
         logger.warning("LOGS_GROUP_CHAT_ID not set; skipping log message")
         return
-
     try:
         app_instance = TelegramAppManager.get_app()
         await app_instance.bot.send_message(
@@ -497,22 +432,20 @@ async def send_log_message(text: str) -> None:
         logger.error(f"Failed to send log message: {e}")
 
 
-def safe_get_url(url: str, fallback: str) -> str:
-    """מחזיר URL עם הגנות"""
-    return url if url and url.startswith(("http://", "https://")) else fallback
+def build_payment_overview_text() -> str:
+    """
+    טקסט קצר שמסביר על כל אפשרויות התשלום (לשימוש במסך הכללי של "איך לשלם").
+    """
+    parts: List[str] = []
 
-
-def build_payment_instructions() -> str:
-    """טקסט כללי על אמצעי תשלום"""
-    bank_details = (
+    # בנק
+    parts.append(
         "🏦 *העברה בנקאית:*\n"
         "בנק הפועלים\n"
         "סניף כפר גנים (153)\n"
         "חשבון 73462\n"
         "המוטב: קאופמן צביקה\n\n"
     )
-
-    parts = [bank_details]
 
     if Config.PAYBOX_URL:
         parts.append(f"📲 *PayBox*: [לינק לתשלום]({Config.PAYBOX_URL})\n")
@@ -522,81 +455,243 @@ def build_payment_instructions() -> str:
         parts.append(f"🌍 *PayPal*: [לינק לתשלום]({Config.PAYPAL_URL})\n")
     if Config.TON_WALLET_ADDRESS:
         parts.append(
-            f"🔐 *ארנק TON*: `{Config.TON_WALLET_ADDRESS}`\n"
+            f"🔐 *ארנק TON (קריפטו):*\n`{Config.TON_WALLET_ADDRESS}`\n"
         )
 
-    footer = (
-        "\nלאחר התשלום, שלח צילום מסך של האישור כאן בבוט, "
-        "והמערכת תעביר אותו אוטומטית לאישור אצלנו.\n"
-        "אחרי האישור תקבל קישור לקבוצת העסקים + גישה לכל הכלים הדיגיטליים."
+    parts.append(
+        "\nלאחר ביצוע תשלום באחד הערוצים – שלח צילום מסך של האישור כאן בבוט.\n"
+        "המערכת תעביר את האישור אוטומטית לקבוצת הניהול לאישור ידני.\n"
+        "אחרי אישור – תקבל קישור לקבוצת העסקים + כל הכלים הדיגיטליים."
     )
-
-    parts.append(footer)
     return "".join(parts)
 
 
-def build_payment_method_text(method: str) -> str:
-    """טקסט מפורט לכל אמצעי תשלום + הוראות צילום ושליחה"""
+def build_start_keyboard(has_paid: bool) -> InlineKeyboardMarkup:
+    """
+    תפריט התחלה:
+    1. מה אני מקבל?
+    2. איך לשלם ולשלוח אישור
+    3. תשלום מהיר (PayBox) אם קיים
+    4. כניסה לקבוצת העסקים (אם אושר)
+    5. מידע למשקיעים
+    6. אזור אישי
+    7. תמיכה
+    """
+    buttons: List[List[InlineKeyboardButton]] = []
 
-    base_footer = (
-        "\nלאחר ביצוע התשלום:\n"
-        "1️⃣ שמור צילום מסך ברור של אישור התשלום (או קובץ PDF / מסמך מהבנק).\n"
-        "2️⃣ שלח את צילום המסך כאן בצ׳אט עם הבוט.\n"
-        "3️⃣ המערכת תעביר את האישור לקבוצת הניהול, ולאחר האישור תקבל קישור לקבוצת העסקים.\n"
+    # מה אני מקבל
+    buttons.append(
+        [InlineKeyboardButton("ℹ️ מה אני מקבל?", callback_data="info_benefits")]
     )
 
-    if method == "bank":
-        details = (
-            "🏦 *תשלום בהעברה בנקאית*\n\n"
-            "בנק הפועלים\n"
-            "סניף כפר גנים (153)\n"
-            "חשבון 73462\n"
-            "המוטב: קאופמן צביקה\n"
+    # איך לשלם ולשלוח אישור – פותח תפריט אמצעי תשלום
+    buttons.append(
+        [
+            InlineKeyboardButton(
+                "💳 איך לשלם ולשלוח אישור", callback_data="send_proof_menu"
+            )
+        ]
+    )
+
+    # תשלום מהיר PayBox (אם יש URL)
+    if Config.PAYBOX_URL:
+        buttons.append(
+            [
+                InlineKeyboardButton(
+                    "⚡ תשלום מהיר – PayBox", url=Config.PAYBOX_URL
+                )
+            ]
         )
-    elif method == "paybox":
-        details = (
-            "📲 *תשלום דרך PayBox*\n\n"
-            f"השתמש בקישור הבא לביצוע תשלום 39 ₪:\n{Config.PAYBOX_URL}\n"
+
+    # כפתור כניסה לקבוצה אם המשתמש כבר אושר
+    group_url = safe_get_url(
+        Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL
+    )
+    if has_paid:
+        buttons.append(
+            [InlineKeyboardButton("👥 כניסה לקבוצת העסקים", url=group_url)]
         )
-    elif method == "bit":
-        details = (
-            "📲 *תשלום דרך Bit*\n\n"
-            f"השתמש בקישור הבא לביצוע תשלום 39 ₪:\n{Config.BIT_URL}\n"
-        )
-    elif method == "paypal":
-        details = (
-            "🌍 *תשלום דרך PayPal*\n\n"
-            f"השתמש בקישור הבא לביצוע תשלום 39 ₪:\n{Config.PAYPAL_URL}\n"
-        )
-    elif method == "ton":
-        details = (
-            "🔐 *תשלום בקריפטו – ארנק TON*\n\n"
-            f"שלח 39 ₪ (או שוויו בקריפטו) אל הכתובת:\n`{Config.TON_WALLET_ADDRESS}`\n"
+
+    # מידע למשקיעים
+    buttons.append(
+        [
+            InlineKeyboardButton(
+                "📈 מידע למשקיעים", callback_data="open_investor"
+            )
+        ]
+    )
+
+    # אזור אישי
+    buttons.append(
+        [
+            InlineKeyboardButton(
+                "👤 האזור האישי שלי", callback_data="open_personal_area"
+            )
+        ]
+    )
+
+    # תמיכה
+    support_url = safe_get_url(
+        Config.SUPPORT_GROUP_LINK or Config.LANDING_URL, Config.LANDING_URL
+    )
+    buttons.append(
+        [InlineKeyboardButton("🆘 תמיכה / צור קשר", url=support_url)]
+    )
+
+    return InlineKeyboardMarkup(buttons)
+
+
+def build_payment_menu_keyboard() -> InlineKeyboardMarkup:
+    """
+    תפריט כפתורים של אמצעי תשלום.
+    """
+    rows: List[List[InlineKeyboardButton]] = []
+
+    if Config.PAYBOX_URL:
+        rows.append(
+            [
+                InlineKeyboardButton(
+                    "📲 תשלום ב-PayBox", callback_data="pay_paybox"
+                ),
+                InlineKeyboardButton("📲 תשלום ב-Bit", callback_data="pay_bit"),
+            ]
         )
     else:
-        details = "אמצעי תשלום לא מוכר."
+        # גם אם אין PayBox, עדיין אפשר להציג Bit (אם קיים)
+        if Config.BIT_URL:
+            rows.append(
+                [
+                    InlineKeyboardButton(
+                        "📲 תשלום ב-Bit", callback_data="pay_bit"
+                    )
+                ]
+            )
 
-    return details + "\n" + base_footer
+    # PayPal
+    if Config.PAYPAL_URL:
+        rows.append(
+            [
+                InlineKeyboardButton(
+                    "🌍 תשלום ב-PayPal", callback_data="pay_paypal"
+                )
+            ]
+        )
+
+    # העברה בנקאית
+    rows.append(
+        [
+            InlineKeyboardButton(
+                "🏦 העברה בנקאית", callback_data="pay_bank"
+            )
+        ]
+    )
+
+    # TON
+    if Config.TON_WALLET_ADDRESS:
+        rows.append(
+            [
+                InlineKeyboardButton(
+                    "🔐 תשלום בקריפטו (TON)", callback_data="pay_ton"
+                )
+            ]
+        )
+
+    # איך לשלוח אישור
+    rows.append(
+        [
+            InlineKeyboardButton(
+                "📤 איך לשלוח צילום אישור", callback_data="send_proof_instructions"
+            )
+        ]
+    )
+
+    # חזרה
+    rows.append(
+        [
+            InlineKeyboardButton(
+                "🔙 חזרה לתפריט הראשי", callback_data="back_to_main"
+            )
+        ]
+    )
+
+    return InlineKeyboardMarkup(rows)
+
+
+async def credit_user_after_approval(
+    user_id: int, context: ContextTypes.DEFAULT_TYPE
+) -> str:
+    """
+    מנסה לזכות את המשתמש ב-SLH פנימיים אחרי אישור תשלום.
+    מחזיר טקסט קצר שיוסף להודעת האישור (או "" אם לא הצליח/לא רלוונטי).
+    הכל עטוף ב-try/except כדי לא להפיל את הבוט.
+    """
+    try:
+        ensure_internal_wallet(user_id, None)
+
+        minted = None
+        try:
+            # נסיון 1 – אולי הפונקציה מוגדרת כמו mint_slh_from_payment(user_id)
+            minted = mint_slh_from_payment(user_id)
+        except TypeError:
+            try:
+                # נסיון 2 – אולי צריך גם סכום 39
+                minted = mint_slh_from_payment(user_id, Decimal("39"))
+            except Exception as e2:
+                logger.error(
+                    f"mint_slh_from_payment signature mismatch for {user_id}: {e2}"
+                )
+                minted = None
+        except Exception as e:
+            logger.error(f"mint_slh_from_payment error for {user_id}: {e}")
+            minted = None
+
+        if minted is None:
+            return ""
+
+        # אם חזרה מילון
+        if isinstance(minted, dict):
+            amount = minted.get("minted_slh") or minted.get("amount") or None
+        else:
+            amount = minted
+
+        if amount is None:
+            return ""
+
+        try:
+            amount_dec = Decimal(str(amount))
+        except Exception:
+            amount_dec = None
+
+        display_amount = amount_dec if amount_dec is not None else amount
+
+        return (
+            f"\n\n💰 בנוסף, זוכית ב-*{display_amount}* SLH פנימיים בתוך המערכת.\n"
+            "בדוק את היתרה שלך בפקודה /wallet."
+        )
+
+    except Exception as e:
+        logger.error(f"Error crediting SLH after approval for {user_id}: {e}")
+        return ""
 
 
 # =========================
-# Handlers – START / מידע
+# Telegram Handlers
 # =========================
 async def send_start_screen(
-    update: Update, context: ContextTypes.DEFAULT_TYPE, referrer: Optional[int] = None
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    referrer: Optional[int] = None,
 ) -> None:
-    """מסך פתיחה: מה מקבלים + איך לשלם"""
+    """מסך התחלה כולל תשלום 39 ₪, הפניות ותפריט בסיסי."""
     user = update.effective_user
     chat = update.effective_chat
-
     if not user or not chat:
-        logger.error("No user or chat in update")
+        logger.error("No user or chat in update for start screen")
         return
 
-    # רישום referral (גם אם referrer=None)
+    # רישום referral
     register_referral(user.id, referrer)
 
-    # כותרת וטקסט גוף
     title = load_message_block("START_TITLE", "🚀 ברוך הבא ל-SLHNET!")
     body = load_message_block(
         "START_BODY",
@@ -607,67 +702,30 @@ async def send_start_screen(
         ),
     )
 
-    # שליחת תמונה / טקסט
     image_path = BASE_DIR / Config.START_IMAGE_PATH
     try:
         if image_path.exists() and image_path.is_file():
             with image_path.open("rb") as f:
                 await chat.send_photo(photo=InputFile(f), caption=title)
         else:
-            logger.warning(f"Start image not found: {image_path}")
             await chat.send_message(text=title)
     except Exception as e:
         logger.error(f"Error sending start image: {e}")
         await chat.send_message(text=title)
 
-    # בדיקה אם המשתמש כבר אושר תשלום
     has_paid = False
     try:
         has_paid = has_approved_payment(user.id)
     except Exception as e:
         logger.error(f"Error checking approved payment for user {user.id}: {e}")
 
-    group_url = safe_get_url(
-        Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL
-    )
-    more_info_url = safe_get_url(Config.LANDING_URL, Config.LANDING_URL)
-
-    # כפתורים – קודם מה מקבלים, אח"כ איך לשלם
-    keyboard: List[List[InlineKeyboardButton]] = [
-        [InlineKeyboardButton("ℹ️ מה אני מקבל?", callback_data="info_benefits")],
-        [InlineKeyboardButton("💳 איך לשלם ולשלוח אישור", callback_data="send_proof")],
-    ]
-
-    if has_paid:
-        keyboard.append(
-            [InlineKeyboardButton("👥 כניסה לקבוצת העסקים", url=group_url)]
-        )
-        keyboard.append(
-            [InlineKeyboardButton("🔗 הקישור האישי שלי", callback_data="open_my_link")]
-        )
-        keyboard.append(
-            [
-                InlineKeyboardButton(
-                    "🎛 תפריט לחברים (Member Panel)",
-                    callback_data="open_member_panel",
-                )
-            ]
-        )
-
-    keyboard.append(
-        [InlineKeyboardButton("📈 מידע למשקיעים", callback_data="open_investor")]
-    )
-    keyboard.append(
-        [InlineKeyboardButton("🔗 דף מידע מלא", url=more_info_url)]
-    )
-
-    reply_markup = InlineKeyboardMarkup(keyboard)
+    reply_markup = build_start_keyboard(has_paid=has_paid)
 
     await chat.send_message(text=body, reply_markup=reply_markup, parse_mode="Markdown")
 
-    # לוגים – כל משתמש חדש / חזרה ל-start
+    # לוג לקבוצת לוגים
     log_text = (
-        "📥 משתמש הפעיל את /start\n"
+        "📥 משתמש חדש הפעיל את הבוט\n"
         f"👤 User ID: {user.id}\n"
         f"📛 Username: @{user.username or 'לא מוגדר'}\n"
         f"🔰 שם: {user.full_name}\n"
@@ -677,43 +735,36 @@ async def send_start_screen(
 
 
 async def start_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """פקודת start עם referral"""
     referrer = None
     if context.args:
         try:
             referrer = int(context.args[0])
-            logger.info(f"Start command with referrer: {referrer}")
         except (ValueError, TypeError):
-            logger.warning(f"Invalid referrer ID: {context.args[0]}")
-
+            logger.warning(f"Invalid referrer ID in /start args: {context.args[0]}")
     await send_start_screen(update, context, referrer=referrer)
 
 
 async def whoami_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """פקודת whoami – פרטי משתמש + הפניות"""
     user = update.effective_user
     chat = update.effective_chat
-
     if not user or not chat:
         return
 
     referrals_data = load_referrals()
-    user_ref_data = referrals_data.get("users", {}).get(str(user.id), {})
+    user_data = referrals_data.get("users", {}).get(str(user.id), {})
 
     text = (
-        "👤 **פרטי המשתמש שלך:**\n"
+        "👤 *פרטי המשתמש שלך:*\n"
         f"🆔 ID: `{user.id}`\n"
         f"📛 שם משתמש: @{user.username or 'לא מוגדר'}\n"
         f"🔰 שם מלא: {user.full_name}\n"
-        f"🔄 מספר הפניות: {user_ref_data.get('referral_count', 0)}\n"
-        f"📅 הצטרף: {user_ref_data.get('joined_at', 'לא ידוע')}"
+        f"🔄 מספר הפניות: {user_data.get('referral_count', 0)}\n"
+        f"📅 הצטרף: {user_data.get('joined_at', 'לא ידוע')}"
     )
-
     await chat.send_message(text=text, parse_mode="Markdown")
 
 
 async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """סטטיסטיקות קהילה בסיסיות – /stats"""
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
@@ -721,68 +772,52 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     referrals_data = load_referrals()
     stats = referrals_data.get("statistics", {})
+    total_users = stats.get("total_users", 0)
     users_dict = referrals_data.get("users", {})
-
-    total_users = stats.get("total_users", len(users_dict))
-    active_users = len(users_dict)
     total_referrals = sum(
         u.get("referral_count", 0) for u in users_dict.values()
     )
 
     text = (
-        "📊 **סטטיסטיקות קהילה:**\n"
+        "📊 סטטיסטיקות קהילה:\n"
         f"👥 סה״כ משתמשים: {total_users}\n"
-        f"📈 משתמשים פעילים: {active_users}\n"
+        f"📈 משתמשים פעילים: {len(users_dict)}\n"
         f"🔄 הפניות כוללות: {total_referrals}"
     )
+    await chat.send_message(text=text)
 
-    await chat.send_message(text=text, parse_mode="Markdown")
 
-
-# =========================
-# הפניות – /my_link /my_referrals
-# =========================
+# ===== הפניות / רפררים =====
 async def my_link_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מחזיר למשתמש את קישור ההפניה האישי שלו"""
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
         return
 
-    # וידוא שהמשתמש רשום בקובץ referrals (אם לא – נרשום אותו בלי referrer)
-    data = load_referrals()
-    if str(user.id) not in data.get("users", {}):
-        register_referral(user.id)
+    # ודא שהמשתמש רשום ב-referrals (גם אם בלי referrer)
+    register_referral(user.id, None)
 
-    data = load_referrals()
-    user_ref_data = data.get("users", {}).get(str(user.id), {})
-    count = user_ref_data.get("referral_count", 0)
+    if Config.REF_BASE_URL:
+        base = Config.REF_BASE_URL.rstrip("/")
+    else:
+        # בסיס לפי שם הבוט
+        if Config.BOT_USERNAME:
+            base = f"https://t.me/{Config.BOT_USERNAME}"
+        else:
+            base = "https://t.me"
 
-    ref_link = build_referral_link(user.id)
+    personal_link = f"{base}?start={user.id}"
 
     text = (
-        "🔗 *הקישור האישי שלך להצטרפות לקהילת SLHNET:*\n\n"
-        f"`{ref_link}`\n\n"
-        "כל מי שיכנס דרך הקישור הזה וילחץ /start יירשם כהפניה שלך.\n\n"
-        f"עד עכשיו רשומות על שמך *{count}* הפניות."
+        "🔗 *הלינק האישי שלך להזמנת חברים:*\n\n"
+        f"`{personal_link}`\n\n"
+        "כל מי שנכנס דרך הקישור הזה ונרשם – נספר כהפניה על שמך.\n"
+        "בדוק את הסטטוס ב-/my_referrals."
     )
-
-    keyboard = InlineKeyboardMarkup(
-        [
-            [InlineKeyboardButton("📤 שיתוף הקישור", url=ref_link)],
-            [
-                InlineKeyboardButton(
-                    "👥 לראות את רשימת ההפניות", callback_data="open_my_referrals"
-                )
-            ],
-        ]
-    )
-
-    await chat.send_message(text=text, parse_mode="Markdown", reply_markup=keyboard)
+    await chat.send_message(text=text, parse_mode="Markdown")
 
 
 async def my_referrals_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מציג סטטוס הפניות של המשתמש + הקישור שלו"""
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
@@ -790,183 +825,56 @@ async def my_referrals_command(update: Update, context: ContextTypes.DEFAULT_TYP
 
     data = load_referrals()
     users = data.get("users", {})
+    suid = str(user.id)
+    me = users.get(suid)
 
-    # אם המשתמש עדיין לא מופיע – נרשום אותו בלי referrer
-    if str(user.id) not in users:
-        register_referral(user.id)
-        data = load_referrals()
-        users = data.get("users", {})
-
-    user_ref_data = users.get(str(user.id), {})
-    count = user_ref_data.get("referral_count", 0)
-    joined_at = user_ref_data.get("joined_at", "לא ידוע")
-
-    ref_link = build_referral_link(user.id)
-
-    text = (
-        "👥 *הפניות אישיות – סטטוס*\n\n"
-        f"📅 הצטרפת למערכת: {joined_at}\n"
-        f"🔄 סך הכל הפניות על שמך: *{count}*\n\n"
-        "🔗 *הקישור האישי שלך:*\n"
-        f"`{ref_link}`\n\n"
-        "העתק את הקישור או לחץ על כפתור השיתוף כדי לשלוח לחברים/עסקים."
-    )
-
-    keyboard = InlineKeyboardMarkup(
-        [
-            [InlineKeyboardButton("📤 שיתוף הקישור", url=ref_link)],
-            [
-                InlineKeyboardButton(
-                    "🔗 לקבל שוב את הקישור /my_link", callback_data="open_my_link"
-                )
-            ],
-            [InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")],
-        ]
-    )
-
-    await chat.send_message(text=text, parse_mode="Markdown", reply_markup=keyboard)
-
-
-# =========================
-# תפריט חברים + אזור אישי
-# =========================
-async def member_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """תפריט לחברים אחרי אישור תשלום – /member"""
-    user = update.effective_user
-    chat = update.effective_chat
-    if not user or not chat:
-        return
-
-    paid = False
-    try:
-        paid = has_approved_payment(user.id)
-    except Exception as e:
-        logger.error(f"Error checking approved payment in /member for {user.id}: {e}")
-
-    if not paid:
+    if not me:
         await chat.send_message(
-            "כדי לקבל גישה לתפריט החברים, צריך קודם להשלים תשלום 39 ₪ ולאשר אותו.\n"
-            "השתמש ב-/start כדי לראות איך מצטרפים.",
+            "עדיין לא רשומות הפניות על שמך.\n"
+            "השתמש ב-/my_link כדי לקבל קישור אישי ולהתחיל להזמין אנשים."
         )
         return
 
-    ref_link = build_referral_link(user.id)
-    group_url = safe_get_url(
-        Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL
-    )
-    support_url = (
-        Config.SUPPORT_GROUP_LINK or Config.BUSINESS_GROUP_URL or Config.LANDING_URL
-    )
+    my_count = me.get("referral_count", 0)
+
+    referred_ids = [
+        uid for uid, info in users.items() if info.get("referrer") == suid
+    ]
+    sample_ids = ", ".join(referred_ids[:10]) if referred_ids else "אין עדיין רשומות."
 
     text = (
-        "🎛 *תפריט חבר בקהילת SLHNET*\n\n"
-        "מכאן אפשר להגיע לכל מה שחשוב לחבר חדש:\n\n"
-        "• 🔗 הקישור האישי שלך לשיתוף והפניות.\n"
-        "• 👤 יצירת / עדכון כרטיס אישי (אזור אישי).\n"
-        "• 💼 ארנק SLH פנימי וסטייקינג.\n"
-        "• 📊 סטטוס הפניות.\n"
-        "• 👥 מעבר מהיר לקבוצת העסקים.\n"
-        "• 🆘 תמיכה / קשר אישי.\n\n"
-        f"להפצה מיידית – הקישור שלך:\n`{ref_link}`"
+        "👥 *הפניות על שמך:*\n"
+        f"🔢 סה\"כ הפניות: *{my_count}*\n\n"
+        "רשימה (עד 10 ראשונים, לפי ID):\n"
+        f"{sample_ids}\n\n"
+        "המשך להזמין אנשים דרך הקישור האישי שלך!"
     )
-
-    keyboard = InlineKeyboardMarkup(
-        [
-            [
-                InlineKeyboardButton(
-                    "🔗 הקישור האישי שלי", callback_data="open_my_link"
-                )
-            ],
-            [
-                InlineKeyboardButton(
-                    "👤 אזור אישי / כרטיס עסקי", callback_data="open_profile"
-                )
-            ],
-            [InlineKeyboardButton("💼 ארנק פנימי /wallet", callback_data="hint_wallet")],
-            [
-                InlineKeyboardButton(
-                    "📊 סטטוס הפניות", callback_data="open_my_referrals"
-                )
-            ],
-            [InlineKeyboardButton("👥 קבוצת העסקים", url=group_url)],
-            [InlineKeyboardButton("🆘 תמיכה / קשר אישי", url=support_url)],
-            [InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")],
-        ]
-    )
-
-    await chat.send_message(text=text, parse_mode="Markdown", reply_markup=keyboard)
+    await chat.send_message(text=text, parse_mode="Markdown")
 
 
 async def my_card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מתחיל תהליך יצירת/עדכון כרטיס אישי (אזור אישי)"""
-    user = update.effective_user
+    """
+    גרסה ראשונית – מסבירה למשתמש איך לבנות כרטיס אישי.
+    (אפשר להרחיב בעתיד לשמירת פרופיל מלא ב-JSON).
+    """
     chat = update.effective_chat
-    if not user or not chat:
+    if not chat:
         return
-
-    paid = False
-    try:
-        paid = has_approved_payment(user.id)
-    except Exception as e:
-        logger.error(f"Error checking approved payment in /my_card for {user.id}: {e}")
-
-    if not paid:
-        await chat.send_message(
-            "כרטיס אישי זמין לחברי קהילה אחרי אישור תשלום.\n"
-            "השתמש ב-/start כדי לראות איך מצטרפים.",
-        )
-        return
-
-    # אתחול סשן פרופיל
-    PROFILE_SESSIONS[user.id] = {"step": 0, "answers": []}
-
-    await chat.send_message(
-        "👤 *כרטיס אישי לחבר בקהילת SLHNET*\n\n"
-        "אענה איתך על כמה שאלות קצרות, כדי ליצור כרטיס עסקי יפה שתוכל לשתף בקהילה.\n\n"
-        "נתחיל:",
-        parse_mode="Markdown",
-    )
-
-    await chat.send_message(PROFILE_QUESTIONS[0])
-
-
-def build_profile_card_text(user_id: int) -> str:
-    """בונה טקסט כרטיס אישי על בסיס הנתונים השמורים"""
-    profiles_data = load_profiles()
-    profile = profiles_data.get("profiles", {}).get(str(user_id))
-    ref_link = build_referral_link(user_id)
-
-    if not profile:
-        return (
-            "עדיין לא הגדרת כרטיס אישי.\n"
-            "השתמש ב-/my_card כדי להתחיל.\n"
-        )
-
-    name = profile.get("name", "לא צוין")
-    about = profile.get("about", "לא צוין")
-    contact = profile.get("contact", "לא צוין")
-    updated_at = profile.get("updated_at", "לא ידוע")
 
     text = (
-        "👤 *כרטיס אישי – SLHNET*\n\n"
-        f"📛 *שם / עסק*: {name}\n"
-        f"💼 *מה אני עושה*: {about}\n"
-        f"☎️ *איך ליצור קשר*: {contact}\n"
-        f"🕒 עודכן לאחרונה: {updated_at}\n\n"
-        "🔗 *הקישור האישי שלי להצטרפות:*\n"
-        f"`{ref_link}`\n\n"
-        "אפשר להעתיק את הטקסט הזה ולשתף אותו בקבוצת העסקים / ברשתות.\n"
+        "📇 *כרטיס אישי – גרסה ראשונית*\n\n"
+        "בשלב זה, כדי לבנות כרטיס אישי לפרסום בקהילה:\n"
+        "1️⃣ כתוב בקצרה: מי אתה, מה העסק שלך, למי אתה יכול לעזור.\n"
+        "2️⃣ הוסף לינקים חשובים (אתר, ווטסאפ, טלגרם, אינסטגרם וכו').\n"
+        "3️⃣ שלח את הטקסט כאן בצ׳אט, ותוכל להשתמש בו לפרסום בקבוצה.\n\n"
+        "בהמשך נוסיף שמירה אוטומטית, תצוגה יפה ושליחת הכרטיס בלחיצת כפתור."
     )
-    return text
+    await chat.send_message(text=text, parse_mode="Markdown")
 
 
-# =========================
-# פקודות ניהול ותשלומים – 39 ₪
-# =========================
-async def payment_proof_handler(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
-    """קבלת צילום/קובץ כאישור תשלום והעברת הלוג לקבוצת הניהול."""
+# ===== תשלומים 39 ₪ =====
+async def payment_proof_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """קבלת צילום/מסמך של אישור תשלום והעברת הלוג לקבוצת הניהול."""
     user = update.effective_user
     chat = update.effective_chat
     message = update.message
@@ -974,22 +882,22 @@ async def payment_proof_handler(
     if not user or not chat or not message:
         return
 
-    # נוודא שזה בפרטי מול הבוט בלבד
     if chat.type != "private":
         return
 
     caption = message.caption or ""
     text_lower = caption.lower()
 
-    # ניסיון לזהות את סוג אמצעי התשלום
     if "paybox" in text_lower or "פייבוקס" in text_lower:
         pay_method = "paybox"
-    elif "paypal" in text_lower or "פייפאל" in text_lower:
-        pay_method = "paypal"
     elif "bit" in text_lower or "ביט" in text_lower:
         pay_method = "bit"
+    elif "paypal" in text_lower or "פייפאל" in text_lower:
+        pay_method = "paypal"
     elif "העברה" in caption or "bank" in text_lower or "בנק" in text_lower:
         pay_method = "bank-transfer"
+    elif "ton" in text_lower:
+        pay_method = "ton"
     else:
         pay_method = "screenshot"
 
@@ -998,7 +906,6 @@ async def payment_proof_handler(
     except Exception as e:
         logger.error(f"Error logging payment for user {user.id}: {e}")
 
-    # העתקת ההודעה לקבוצת הלוגים/ניהול
     if Config.LOGS_GROUP_CHAT_ID:
         try:
             admin_chat_id = int(Config.LOGS_GROUP_CHAT_ID)
@@ -1008,15 +915,16 @@ async def payment_proof_handler(
                 message_id=message.message_id,
             )
 
-            # כפתורי אישור/דחייה לאדמין
             keyboard = InlineKeyboardMarkup(
                 [
                     [
                         InlineKeyboardButton(
-                            "✅ אישור תשלום", callback_data=f"approve:{user.id}"
+                            "✅ אישור תשלום",
+                            callback_data=f"approve:{user.id}",
                         ),
                         InlineKeyboardButton(
-                            "❌ דחיית תשלום", callback_data=f"reject:{user.id}"
+                            "❌ דחיית תשלום",
+                            callback_data=f"reject:{user.id}",
                         ),
                     ]
                 ]
@@ -1035,7 +943,9 @@ async def payment_proof_handler(
             )
 
             await context.bot.send_message(
-                chat_id=admin_chat_id, text=admin_text, reply_markup=keyboard
+                chat_id=admin_chat_id,
+                text=admin_text,
+                reply_markup=keyboard,
             )
         except Exception as e:
             logger.error(f"Error sending payment log to admin group: {e}")
@@ -1047,10 +957,8 @@ async def payment_proof_handler(
 
 
 async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """פאנל ניהול בסיסי למנהלים בלבד."""
     user = update.effective_user
     chat = update.effective_chat
-
     if not user or not chat:
         return
 
@@ -1076,18 +984,15 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         "",
         "📋 *פקודות ניהול זמינות:*",
         " - /pending  – רשימת תשלומים ממתינים",
-        " - /approve <user_id>  – אישור תשלום ושליחת קישור לקבוצה + קישור אישי",
+        " - /approve <user_id>  – אישור תשלום ושליחת קישור לקבוצה",
         " - /reject <user_id> <סיבה>  – דחיית תשלום והודעה ללקוח",
     ]
-
     await chat.send_message("\n".join(text_lines), parse_mode="Markdown")
 
 
 async def pending_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """רשימת תשלומים ממתינים – למנהלים בלבד."""
     user = update.effective_user
     chat = update.effective_chat
-
     if not user or not chat:
         return
 
@@ -1103,35 +1008,17 @@ async def pending_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     lines = ["💳 *תשלומים ממתינים:*", ""]
     for p in pending:
         lines.append(
-            f"• user_id={p['user_id']} | username=@{p['username'] or 'לא ידוע'} | שיטה={p['pay_method']} | id={p['id']}"
+            f"• user_id={p['user_id']} | username=@{p['username'] or 'לא ידוע'} "
+            f"| שיטה={p['pay_method']} | id={p['id']}"
         )
 
     await chat.send_message("\n".join(lines), parse_mode="Markdown")
 
 
-async def _send_approval_package(
-    bot, target_id: int, group_url: str
-) -> None:
-    """שולח למשתמש חבילת אישור: קישור קבוצה + קישור אישי + המלצה על /member ו-/my_card"""
-    ref_link = build_referral_link(target_id)
-    text = (
-        "✅ התשלום שלך אושר!\n\n"
-        "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
-        f"{group_url}\n\n"
-        "ברוך הבא 🙌\n\n"
-        "🔗 *הקישור האישי שלך לשיתוף עם חברים ועסקים:*\n"
-        f"`{ref_link}`\n\n"
-        "מומלץ עכשיו לפתוח את *תפריט החברים* עם הפקודה /member\n"
-        "ולהגדיר כרטיס אישי דרך /my_card.\n"
-    )
-    await bot.send_message(chat_id=target_id, text=text, parse_mode="Markdown")
-
-
 async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """אישור תשלום ידני לפי user_id – למנהלים בלבד."""
+    """אישור תשלום ידני לפי user_id."""
     user = update.effective_user
     chat = update.effective_chat
-
     if not user or not chat:
         return
 
@@ -1160,21 +1047,32 @@ async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL
     )
 
+    bonus_text = await credit_user_after_approval(target_id, context)
+
     try:
-        await _send_approval_package(context.bot, target_id, group_url)
+        await context.bot.send_message(
+            chat_id=target_id,
+            text=(
+                "✅ התשלום שלך אושר!\n\n"
+                "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
+                f"{group_url}\n\n"
+                "ברוך הבא 🙌"
+                f"{bonus_text}"
+            ),
+            parse_mode="Markdown",
+        )
     except Exception as e:
-        logger.error(f"Error sending approval package to user {target_id}: {e}")
+        logger.error(f"Error sending approval message to user {target_id}: {e}")
 
     await chat.send_message(
-        f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה + קישור אישי."
+        f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה."
     )
 
 
 async def reject_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """דחיית תשלום ידנית לפי user_id – למנהלים בלבד."""
+    """דחיית תשלום ידנית לפי user_id."""
     user = update.effective_user
     chat = update.effective_chat
-
     if not user or not chat:
         return
 
@@ -1218,22 +1116,19 @@ async def reject_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     )
 
 
-# =========================
-# ארנק פנימי וסטייקינג – פקודות טלגרם
-# =========================
+# ===== ארנק פנימי + סטייקינג =====
 STAKING_DEFAULT_APY = Decimal(os.getenv("STAKING_DEFAULT_APY", "20"))
 STAKING_DEFAULT_DAYS = int(os.getenv("STAKING_DEFAULT_DAYS", "90"))
 
 
 async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מציג את ארנק ה-SLH הפנימי ומצבי הסטייקינג של המשתמש."""
+    """ארנק SLH פנימי + סיכום סטייקינג בסיסי."""
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
         return
 
     try:
-        # וידוא קיום ארנק
         ensure_internal_wallet(user.id, user.username or None)
         overview = get_wallet_overview(user.id) or {}
         stakes = get_user_stakes(user.id) or []
@@ -1244,25 +1139,15 @@ async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         )
         return
 
-    balance = overview.get("balance_slh", 0)
+    balance = Decimal(str(overview.get("balance_slh", "0")))
     wallet_id = overview.get("wallet_id", "?")
 
-    stakes_lines: List[str] = []
     total_staked = Decimal("0")
     for s in stakes:
-        amt = s.get("amount_slh") or Decimal("0")
-        total_staked += Decimal(str(amt))
-        pos_id = s.get("id", "?")
-        apy = s.get("apy", "?")
-        lock_days = s.get("lock_days", "?")
-        stakes_lines.append(
-            f"• #{pos_id}: {amt} SLH | APY {apy}% | {lock_days} ימים נעילה"
-        )
-
-    if not stakes_lines:
-        stakes_text = "אין לך עדיין עמדות סטייקינג פעילות."
-    else:
-        stakes_text = "\n".join(stakes_lines)
+        try:
+            total_staked += Decimal(str(s.get("amount_slh", "0")))
+        except Exception:
+            continue
 
     msg = (
         "💼 *ארנק SLH פנימי*\n\n"
@@ -1272,22 +1157,22 @@ async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "כדי לפתוח סטייקינג חדש:\n"
         "*/stake <סכום_SLH> <ימי_נעילה>* לדוגמה:\n"
         "`/stake 100 30` – סטייקינג על 100 SLH ל-30 ימים.\n\n"
-        "מצבי סטייקינג:\n"
-        f"{stakes_text}"
+        "לצפייה בכל הסטייקים הפעילים:\n"
+        "השתמש ב-/mystakes."
     )
 
     await chat.send_message(text=msg, parse_mode="Markdown")
 
 
 async def send_slh_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מעביר SLH פנימי למשתמש אחר: /send_slh <amount> <@username|user_id>"""
+    """העברת SLH פנימיים: /send_slh <amount> <user_id>"""
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
         return
 
     if len(context.args) < 2:
-        await chat.send_message("שימוש: /send_slh <amount> <@username|user_id>")
+        await chat.send_message("שימוש: /send_slh <amount> <user_id>")
         return
 
     amount_str, target = context.args[0], context.args[1]
@@ -1297,13 +1182,6 @@ async def send_slh_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await chat.send_message("סכום לא תקין. נסה שוב עם מספר תקין.")
         return
 
-    # נסה לפענח user_id
-    if target.startswith("@"):
-        await chat.send_message(
-            "בגרסה הנוכחית יש להשתמש ב-user_id מספרי, לא בשם משתמש. "
-            "קבל את ה-ID מהפקודה /whoami אצל הצד השני."
-        )
-        return
     try:
         to_user_id = int(target)
     except ValueError:
@@ -1315,89 +1193,177 @@ async def send_slh_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         await chat.send_message(f"❌ העברה נכשלה: {msg}")
         return
 
-    await chat.send_message(f"✅ הועברו {amount} SLH פנימיים למשתמש {to_user_id}.")
+    await chat.send_message(
+        f"✅ הועברו {amount} SLH פנימיים למשתמש {to_user_id}."
+    )
 
 
 async def stake_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """פותח עמדת סטייקינג חדשה על בסיס ארנק פנימי."""
+    """סטייקינג: /stake <amount> [days]"""
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
         return
 
-    args = context.args or []
-    if len(args) < 2:
-        help_text = (
-            "כדי לפתוח סטייקינג השתמש:\n"
-            "*/stake <סכום_SLH> <ימי_נעילה>* לדוגמה:\n"
-            "`/stake 100 30` – סטייקינג על 100 SLH ל-30 ימים.\n\n"
-            "לפני כן ודא שיש לך יתרה בארנק דרך הפקודה /wallet."
-        )
-        await chat.send_message(help_text, parse_mode="Markdown")
-        return
-
-    try:
-        amount_slh = Decimal(str(args[0]).replace(",", "."))
-        lock_days = int(args[1])
-    except (InvalidOperation, ValueError):
+    if not context.args:
         await chat.send_message(
-            "❌ פורמט לא תקין. נסה שוב: `/stake 100 30`.",
+            "שימוש: /stake <amount> [days]\n"
+            f"ברירת מחדל ימים: {STAKING_DEFAULT_DAYS}, APY: {STAKING_DEFAULT_APY}%.",
             parse_mode="Markdown",
         )
         return
 
-    if amount_slh <= 0 or lock_days <= 0:
-        await chat.send_message("❌ הסכום וימי הנעילה חייבים להיות חיוביים.")
-        return
+    amount_str = context.args[0]
+    days = STAKING_DEFAULT_DAYS
+    if len(context.args) >= 2:
+        try:
+            days = int(context.args[1])
+        except ValueError:
+            await chat.send_message(
+                "ערך ימים לא תקין, משתמש בברירת המחדל."
+            )
 
     try:
-        apy_percent = Decimal(os.getenv("INTERNAL_STAKING_APY", "15"))
+        amount = Decimal(amount_str.replace(",", "."))
     except InvalidOperation:
-        apy_percent = Decimal("15")
+        await chat.send_message(
+            "סכום לא תקין. נסה שוב עם מספר תקין."
+        )
+        return
 
-    ok, message = create_stake_position(
-        user_id=user.id,
-        amount_slh=amount_slh,
-        apy=apy_percent,
-        lock_days=lock_days,
+    ok, msg = create_stake_position(user.id, amount, STAKING_DEFAULT_APY, days)
+    if not ok:
+        await chat.send_message(f"❌ סטייקינג נכשל: {msg}")
+        return
+
+    await chat.send_message(
+        f"✅ פתחת סטייקינג על {amount} SLH ל-{days} ימים.\n"
+        f"APY נוכחי: {STAKING_DEFAULT_APY}%.",
+        parse_mode="Markdown",
     )
-
-    await chat.send_message(message)
 
 
 async def mystakes_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מציג עמדות סטייקינג פעילות/סגורות"""
+    """מציג עמדות סטייקינג עם תשואה משוערת."""
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
         return
 
-    stakes = get_user_stakes(user.id)
+    try:
+        stakes = get_user_stakes(user.id) or []
+    except Exception as e:
+        logger.error(f"mystakes_command error: {e}")
+        await chat.send_message(
+            "❌ לא ניתן לטעון את הסטייקינג כרגע. נסה שוב מאוחר יותר."
+        )
+        return
+
     if not stakes:
         await chat.send_message("אין לך עדיין עמדות סטייקינג.")
         return
 
     lines = ["📊 *עמדות הסטייקינג שלך:*\n"]
     for st in stakes:
+        try:
+            amount = Decimal(str(st.get("amount_slh", "0")))
+        except Exception:
+            amount = Decimal("0")
+
+        try:
+            apy = Decimal(str(st.get("apy", STAKING_DEFAULT_APY)))
+        except Exception:
+            apy = STAKING_DEFAULT_APY
+
+        try:
+            lock_days = int(st.get("lock_days", STAKING_DEFAULT_DAYS))
+        except Exception:
+            lock_days = STAKING_DEFAULT_DAYS
+
         status = st.get("status", "unknown")
-        amount = st.get("amount_slh", Decimal("0"))
-        apy = st.get("apy", Decimal("0"))
-        lock_days = st.get("lock_days", 0)
-        started = st.get("started_at")
+        started_raw = st.get("started_at")
+        started_str = str(started_raw) if started_raw else "לא ידוע"
+
+        expected_reward = (
+            amount * apy / Decimal("100") * Decimal(lock_days) / Decimal("365")
+        )
+
         lines.append(
-            f"• {amount} SLH | {apy}% | {lock_days} ימים | סטטוס: {status} | התחלה: {started}"
+            f"• {amount} SLH | {apy}% | {lock_days} ימים | סטטוס: {status}\n"
+            f"  התחלה: {started_str}\n"
+            f"  רווח משוער לסוף התקופה: ~{expected_reward:.4f} SLH\n"
         )
 
     await chat.send_message("\n".join(lines), parse_mode="Markdown")
 
 
-# =========================
-# Callback Query Handler
-# =========================
-async def callback_query_handler(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
-    """מטפל ב-callback queries של תפריט ההתחלה והאדמין"""
+async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """אזור אישי פיננסי – ארנק + סטייקינג + הפניות."""
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    # ארנק וסטייקינג
+    try:
+        ensure_internal_wallet(user.id, user.username or None)
+        overview = get_wallet_overview(user.id) or {}
+        stakes = get_user_stakes(user.id) or []
+    except Exception as e:
+        logger.error(f"portfolio wallet error: {e}")
+        overview = {}
+        stakes = []
+
+    balance = Decimal(str(overview.get("balance_slh", "0")))
+    total_staked = Decimal("0")
+    total_expected = Decimal("0")
+
+    for st in stakes:
+        try:
+            amount = Decimal(str(st.get("amount_slh", "0")))
+        except Exception:
+            amount = Decimal("0")
+        try:
+            apy = Decimal(str(st.get("apy", STAKING_DEFAULT_APY)))
+        except Exception:
+            apy = STAKING_DEFAULT_APY
+        try:
+            lock_days = int(st.get("lock_days", STAKING_DEFAULT_DAYS))
+        except Exception:
+            lock_days = STAKING_DEFAULT_DAYS
+
+        total_staked += amount
+        total_expected += (
+            amount * apy / Decimal("100") * Decimal(lock_days) / Decimal("365")
+        )
+
+    # הפניות
+    refs = load_referrals()
+    users = refs.get("users", {})
+    me = users.get(str(user.id), {})
+    my_ref_count = me.get("referral_count", 0)
+
+    text = (
+        "📊 *האזור האישי שלך – SLHNET*\n\n"
+        "💼 *ארנק פנימי:*\n"
+        f"• יתרה זמינה: *{balance}* SLH\n"
+        f"• בסטייקינג: *{total_staked}* SLH\n"
+        f"• רווח משוער מכל הסטייקים (לסוף התקופות): ~{total_expected:.4f} SLH\n\n"
+        "👥 *הפניות:*\n"
+        f"• סה\"כ הפניות על שמך: *{my_ref_count}*\n"
+        "• קבל לינק אישי בפקודה: /my_link\n"
+        "• פירוט הפניות: /my_referrals\n\n"
+        "🔗 *כלי עזר:*\n"
+        "• /wallet – פירוט ארנק SLH\n"
+        "• /mystakes – פירוט סטייקינג\n"
+        "• /my_link – קישור אישי להזמנת חברים\n"
+        "• /my_referrals – פירוט הפניות\n"
+    )
+    await chat.send_message(text=text, parse_mode="Markdown")
+
+
+# ===== Callback queries =====
+async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     if not query:
         return
@@ -1405,551 +1371,346 @@ async def callback_query_handler(
     data = query.data or ""
     await query.answer()
 
-    # תפריט משקיעים / יתרונות / חזרה
     if data == "open_investor":
         await handle_investor_callback(update, context)
-
     elif data == "info_benefits":
         await handle_benefits_callback(update, context)
-
     elif data == "back_to_main":
         await send_start_screen(update, context)
-
-    # תפריט חברים
-    elif data == "open_member_panel":
-        await member_command(update, context)
-
-    elif data == "open_profile":
-        text = (
-            "👤 *אזור אישי / כרטיס עסקי*\n\n"
-            "כאן יוצרים כרטיס קצר שמציג מי אתה, מה אתה עושה ואיך ליצור איתך קשר.\n"
-            "לאחר מכן אפשר להעתיק את הכרטיס ולשתף בקבוצת העסקים.\n\n"
-            "לחץ על הכפתור כדי להתחיל:"
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "✏️ יצירת / עדכון כרטיס אישי", callback_data="start_profile"
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לתפריט החברים", callback_data="open_member_panel"
-                    )
-                ],
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
-    elif data == "start_profile":
-        # מפעיל את אותו flow של /my_card
-        await my_card_command(update, context)
-
-    elif data == "hint_wallet":
-        text = (
-            "כדי לראות את ארנק ה-SLH הפנימי שלך, השתמש בפקודה:\n"
-            "`/wallet`\n\n"
-            "ולפתיחת סטייקינג:\n"
-            "`/stake 100 30` (לדוגמה)."
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לתפריט החברים", callback_data="open_member_panel"
-                    )
-                ]
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
-    # תשלום – תפריט ראשי "איך לשלם"
-    elif data in ("send_proof", "send_payment_instructions"):
-        await handle_send_proof_callback(update, context)
-
-    # דריל־דאון לפי אמצעי תשלום
-    elif data == "pay_bank":
-        text = build_payment_method_text("bank")
-        support_url = (
-            Config.SUPPORT_GROUP_LINK
-            or Config.BUSINESS_GROUP_URL
-            or Config.LANDING_URL
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "📤 שליחת צילום מסך של האישור",
-                        callback_data="upload_proof",
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🆘 תמיכה / מענה אישי", url=support_url
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לשיטות תשלום", callback_data="send_proof"
-                    )
-                ],
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
+    elif data == "send_proof_menu":
+        await handle_send_proof_menu(update, context)
+    elif data == "send_proof_instructions":
+        await handle_send_proof_instructions(update, context)
     elif data == "pay_paybox":
-        text = build_payment_method_text("paybox")
-        support_url = (
-            Config.SUPPORT_GROUP_LINK
-            or Config.BUSINESS_GROUP_URL
-            or Config.LANDING_URL
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "📤 שליחת צילום מסך של האישור",
-                        callback_data="upload_proof",
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🆘 תמיכה / מענה אישי", url=support_url
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לשיטות תשלום", callback_data="send_proof"
-                    )
-                ],
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
+        await handle_paybox_callback(update, context)
     elif data == "pay_bit":
-        text = build_payment_method_text("bit")
-        support_url = (
-            Config.SUPPORT_GROUP_LINK
-            or Config.BUSINESS_GROUP_URL
-            or Config.LANDING_URL
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "📤 שליחת צילום מסך של האישור",
-                        callback_data="upload_proof",
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🆘 תמיכה / מענה אישי", url=support_url
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לשיטות תשלום", callback_data="send_proof"
-                    )
-                ],
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
+        await handle_bit_callback(update, context)
     elif data == "pay_paypal":
-        text = build_payment_method_text("paypal")
-        support_url = (
-            Config.SUPPORT_GROUP_LINK
-            or Config.BUSINESS_GROUP_URL
-            or Config.LANDING_URL
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "📤 שליחת צילום מסך של האישור",
-                        callback_data="upload_proof",
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🆘 תמיכה / מענה אישי", url=support_url
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לשיטות תשלום", callback_data="send_proof"
-                    )
-                ],
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
+        await handle_paypal_callback(update, context)
+    elif data == "pay_bank":
+        await handle_bank_callback(update, context)
     elif data == "pay_ton":
-        text = build_payment_method_text("ton")
-        support_url = (
-            Config.SUPPORT_GROUP_LINK
-            or Config.BUSINESS_GROUP_URL
-            or Config.LANDING_URL
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "📤 שליחת צילום מסך של האישור",
-                        callback_data="upload_proof",
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🆘 תמיכה / מענה אישי", url=support_url
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לשיטות תשלום", callback_data="send_proof"
-                    )
-                ],
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
-    elif data == "upload_proof":
-        support_url = (
-            Config.SUPPORT_GROUP_LINK
-            or Config.BUSINESS_GROUP_URL
-            or Config.LANDING_URL
-        )
-        text = (
-            "📤 *איך לשלוח צילום מסך של אישור התשלום*\n\n"
-            "1️⃣ לחץ על כפתור ה־📎 (או אייקון המצלמה) כאן בצ׳אט עם הבוט.\n"
-            "2️⃣ בחר את צילום המסך של אישור התשלום (או קובץ PDF / מסמך מהבנק).\n"
-            "3️⃣ שלח את הקובץ.\n\n"
-            "המערכת תעביר את האישור לקבוצת הניהול, ולאחר האישור תקבל קישור לקבוצת העסקים.\n"
-        )
-        keyboard = InlineKeyboardMarkup(
-            [
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לשיטות תשלום", callback_data="send_proof"
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🆘 תמיכה / מענה אישי", url=support_url
-                    )
-                ],
-                [
-                    InlineKeyboardButton(
-                        "🔙 חזרה לתפריט הראשי", callback_data="back_to_main"
-                    )
-                ],
-            ]
-        )
-        await query.edit_message_text(
-            text=text, reply_markup=keyboard, parse_mode="Markdown"
-        )
-
-    # כפתורי ניהול אישור/דחייה מתוך הלוגים
+        await handle_ton_callback(update, context)
+    elif data == "open_personal_area":
+        await handle_personal_area_callback(update, context)
     elif data.startswith("approve:"):
-        if not is_admin(query.from_user.id):
-            await query.answer("רק מנהל יכול לאשר תשלום.", show_alert=True)
-            return
-        try:
-            target_id = int(data.split(":", 1)[1])
-        except ValueError:
-            await query.answer("user_id לא תקין.", show_alert=True)
-            return
-
-        try:
-            update_payment_status(target_id, "approved", "approved via inline button")
-        except Exception as e:
-            logger.error(f"Error updating payment status for {target_id}: {e}")
-            await query.answer("שגיאה בעדכון סטטוס התשלום.", show_alert=True)
-            return
-
-        group_url = safe_get_url(
-            Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE,
-            Config.LANDING_URL,
-        )
-        try:
-            await _send_approval_package(context.bot, target_id, group_url)
-        except Exception as e:
-            logger.error(f"Error sending approval package to user {target_id}: {e}")
-
-        await query.edit_message_text(
-            f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה + קישור אישי."
-        )
-
+        await handle_inline_approve(update, context, data)
     elif data.startswith("reject:"):
-        if not is_admin(query.from_user.id):
-            await query.answer("רק מנהל יכול לדחות תשלום.", show_alert=True)
-            return
-        try:
-            target_id = int(data.split(":", 1)[1])
-        except ValueError:
-            await query.answer("user_id לא תקין.", show_alert=True)
-            return
-
-        try:
-            update_payment_status(target_id, "rejected", "rejected via inline button")
-        except Exception as e:
-            logger.error(f"Error updating payment status (reject) for {target_id}: {e}")
-            await query.answer("שגיאה בעדכון סטטוס התשלום.", show_alert=True)
-            return
-
-        try:
-            await context.bot.send_message(
-                chat_id=target_id,
-                text=(
-                    "❌ התשלום שלך נדחה.\n"
-                    "אם לדעתך מדובר בטעות, ניתן לפנות לתמיכה."
-                ),
-            )
-        except Exception as e:
-            logger.error(f"Error sending rejection message to user {target_id}: {e}")
-
-        await query.edit_message_text(
-            f"🚫 התשלום של המשתמש {target_id} נדחה ונשלחה לו הודעה."
-        )
-
-    # פתיחת מסכים של /my_link /my_referrals מתוך כפתור אינליין
-    elif data == "open_my_link":
-        await my_link_command(update, context)
-
-    elif data == "open_my_referrals":
-        await my_referrals_command(update, context)
-
+        await handle_inline_reject(update, context, data)
     else:
         await query.edit_message_text("❌ פעולה לא מוכרת.")
 
 
-async def handle_investor_callback(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
-    """מטפל בכפתור מידע למשקיעים"""
+async def handle_investor_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     investor_text = load_message_block(
         "INVESTOR_INFO",
-        "📈 **מידע למשקיעים**\n\n"
-        "מערכת SLHNET מחברת בין טלגרם, חוזים חכמים על Binance Smart Chain, "
-        "קבלות דיגיטליות ו-NFT, כך שכל עסקה מתועדת וניתנת למעקב.\n\n"
-        "ניתן להצטרף כשותף, להחזיק טוקן SLH ולקבל חלק מהתנועה במערכת.",
+        (
+            "📈 *מידע למשקיעים*\n\n"
+            "מערכת SLHNET מחברת בין טלגרם, חוזים חכמים על Binance Smart Chain, "
+            "קבלות דיגיטליות ו-NFT, כך שכל עסקה מתועדת וניתנת למעקב.\n\n"
+            "ניתן להצטרף כשותף, להחזיק טוקן SLH ולקבל חלק מהתנועה במערכת."
+        ),
     )
-
     keyboard = InlineKeyboardMarkup(
         [[InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")]]
     )
-
     await query.edit_message_text(
         text=investor_text, reply_markup=keyboard, parse_mode="Markdown"
     )
 
 
-async def handle_send_proof_callback(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
-    """מסביר איך לשלם – ונותן כפתורים לכל אמצעי תשלום + שליחת אישור"""
-    query = update.callback_query
-
-    text = (
-        "💳 *איך לשלם 39 ₪ ולהצטרף לקהילה*\n\n"
-        "בחר את אמצעי התשלום המתאים לך מהכפתורים למטה.\n"
-        "בכל אמצעי תקבל הסבר מדויק איך לבצע את התשלום ואיך לשלוח צילום מסך של האישור.\n"
-    )
-
-    buttons: List[List[InlineKeyboardButton]] = []
-
-    # אמצעי התשלום השונים
-    buttons.append(
-        [InlineKeyboardButton("🏦 העברה בנקאית", callback_data="pay_bank")]
-    )
-
-    if Config.PAYBOX_URL:
-        buttons.append(
-            [InlineKeyboardButton("📲 PayBox", callback_data="pay_paybox")]
-        )
-    if Config.BIT_URL:
-        buttons.append([InlineKeyboardButton("📲 Bit", callback_data="pay_bit")])
-    if Config.PAYPAL_URL:
-        buttons.append(
-            [InlineKeyboardButton("🌍 PayPal", callback_data="pay_paypal")]
-        )
-    if Config.TON_WALLET_ADDRESS:
-        buttons.append(
-            [
-                InlineKeyboardButton(
-                    "🔐 ארנק TON (קריפטו)", callback_data="pay_ton"
-                )
-            ]
-        )
-
-    # כפתור כללי לשליחת צילום מסך + תמיכה
-    buttons.append(
-        [
-            InlineKeyboardButton(
-                "📤 איך לשלוח צילום מסך", callback_data="upload_proof"
-            )
-        ]
-    )
-
-    support_url = (
-        Config.SUPPORT_GROUP_LINK
-        or Config.BUSINESS_GROUP_URL
-        or Config.LANDING_URL
-    )
-    buttons.append(
-        [InlineKeyboardButton("🆘 תמיכה / מענה אישי", url=support_url)]
-    )
-
-    buttons.append(
-        [InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")]
-    )
-
-    reply_markup = InlineKeyboardMarkup(buttons)
-
-    await query.edit_message_text(
-        text=text, reply_markup=reply_markup, parse_mode="Markdown"
-    )
-
-
-async def handle_benefits_callback(
-    update: Update, context: ContextTypes.DEFAULT_TYPE
-) -> None:
-    """מסביר ללקוח מה הוא מקבל מהמערכת"""
+async def handle_benefits_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     query = update.callback_query
     benefits_text = load_message_block(
         "BENEFITS_INFO",
-        "🎁 **מה מקבלים בתשלום 39 ₪?**\n\n"
-        "• גישה לקבוצת עסקים חכמה בטלגרם עם תכנים, הדרכות וקהילה פעילה.\n"
-        "• פתיחה וחיבור של ארנק SLH על רשת Binance Smart Chain (BSC).\n"
-        "• אפשרות לקבל תשלומים דיגיטליים ועמלות הפנייה דרך המערכת.\n"
-        "• חיבור לחוזים חכמים, קבלות דיגיטליות ו-NFT שמייצגים עסקאות ושערי כניסה.\n"
-        "• בסיס לעתיד – סטייקינג, חסכונות והשקעות מתקדמות בתוך אקו־סיסטם SLHNET.\n\n"
-        "אחרי התשלום ושליחת האישור – אתה מקבל קישור לקבוצה + סט כלים דיגיטליים להתחלה.",
+        (
+            "🎁 *מה מקבלים בתשלום 39 ₪?*\n\n"
+            "• גישה לקבוצת עסקים חכמה בטלגרם עם תכנים, הדרכות וקהילה פעילה.\n"
+            "• פתיחה וחיבור של ארנק SLH על רשת Binance Smart Chain (BSC).\n"
+            "• אפשרות לקבל תשלומים דיגיטליים ועמלות הפנייה דרך המערכת.\n"
+            "• חיבור לחוזים חכמים, קבלות דיגיטליות ו-NFT שמייצגים עסקאות ושערי כניסה.\n"
+            "• בסיס לעתיד – סטייקינג, חסכונות והשקעות מתקדמות בתוך אקו־סיסטם SLHNET.\n\n"
+            "אחרי התשלום ושליחת האישור – אתה מקבל קישור לקבוצה + סט כלים דיגיטליים להתחלה."
+        ),
     )
-
     keyboard = InlineKeyboardMarkup(
         [[InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")]]
     )
-
     await query.edit_message_text(
         text=benefits_text, reply_markup=keyboard, parse_mode="Markdown"
     )
 
 
-# =========================
-# הודעות טקסט רגילות / פקודות לא מוכרות
-# =========================
-async def echo_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מטפל בהודעות טקסט רגילות – כולל המשך של אזור אישי אם יש סשן פתוח"""
-    user = update.effective_user
-    chat = update.effective_chat
-    message = update.message
-    if not user or not chat or not message:
+async def handle_send_proof_menu(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    text = (
+        "💳 *איך לשלם ולשלוח אישור:*\n\n"
+        "בחר את אמצעי התשלום שמתאים לך מהתפריט למטה.\n"
+        "לאחר ביצוע התשלום – שלח כאן לבוט צילום מסך ברור של האישור.\n\n"
+        "אפשרויות זמינות בשלבים הנוכחיים:"
+    )
+    keyboard = build_payment_menu_keyboard()
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
+
+
+async def handle_send_proof_instructions(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    query = update.callback_query
+    text = (
+        "📤 *איך לשלוח אישור תשלום:*\n\n"
+        "1️⃣ בצע תשלום באחד מאמצעי התשלום הזמינים.\n"
+        "2️⃣ קח *צילום מסך ברור* של האישור (או PDF מהבנק).\n"
+        "3️⃣ חזור לצ׳אט עם הבוט ושלח את התמונה/הקובץ כהודעה רגילה.\n"
+        "4️⃣ המערכת תעביר את האישור אוטומטית לקבוצת הניהול לאישור.\n\n"
+        "אחרי שהאדמין יאשר – תקבל קישור לקבוצת העסקים + גישה לכל הכלים."
+    )
+    keyboard = build_payment_menu_keyboard()
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
+
+
+async def handle_paybox_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    url = Config.PAYBOX_URL
+    if not url:
+        await query.answer("קישור PayBox לא מוגדר כרגע.", show_alert=True)
         return
 
-    text = message.text or ""
+    text = (
+        "📲 *תשלום דרך PayBox*\n\n"
+        f"1️⃣ לחץ על הקישור: {url}\n"
+        "2️⃣ בצע תשלום חד־פעמי של *39 ₪*.\n"
+        "3️⃣ שמור צילום מסך של אישור התשלום.\n"
+        "4️⃣ שלח את צילום המסך כאן לבוט.\n\n"
+        "המערכת תעביר את האישור לקבוצת הניהול, ולאחר אישור תקבל קישור לקבוצה."
+    )
+    keyboard = build_payment_menu_keyboard()
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
 
-    # אם המשתמש באמצע תהליך כרטיס אישי – נטפל בזה קודם
-    session = PROFILE_SESSIONS.get(user.id)
-    if session is not None:
-        step = session.get("step", 0)
-        answers = session.get("answers", [])
 
-        # שמירת התשובה
-        answers.append(text.strip())
-        step += 1
-        session["step"] = step
-        session["answers"] = answers
-        PROFILE_SESSIONS[user.id] = session
+async def handle_bit_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    url = Config.BIT_URL
+    if not url:
+        await query.answer("קישור Bit לא מוגדר כרגע.", show_alert=True)
+        return
 
-        if step < len(PROFILE_QUESTIONS):
-            # שאלה הבאה
-            await chat.send_message(PROFILE_QUESTIONS[step])
-            return
-        else:
-            # סיום – בניית כרטיס ושמירה
-            profiles_data = load_profiles()
-            profiles = profiles_data.setdefault("profiles", {})
-            profiles[str(user.id)] = {
-                "name": answers[0] if len(answers) > 0 else "",
-                "about": answers[1] if len(answers) > 1 else "",
-                "contact": answers[2] if len(answers) > 2 else "",
-                "updated_at": datetime.now().isoformat(),
-            }
-            save_profiles(profiles_data)
-            PROFILE_SESSIONS.pop(user.id, None)
+    text = (
+        "📲 *תשלום דרך Bit*\n\n"
+        f"1️⃣ לחץ על הקישור: {url}\n"
+        "2️⃣ בצע תשלום חד־פעמי של *39 ₪*.\n"
+        "3️⃣ שמור צילום מסך של אישור התשלום.\n"
+        "4️⃣ שלח את צילום המסך כאן לבוט.\n\n"
+        "המערכת תעביר את האישור לקבוצת הניהול, ולאחר אישור תקבל קישור לקבוצה."
+    )
+    keyboard = build_payment_menu_keyboard()
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
 
-            card_text = build_profile_card_text(user.id)
 
-            keyboard = InlineKeyboardMarkup(
-                [
-                    [
-                        InlineKeyboardButton(
-                            "📤 שיתוף בקבוצת העסקים",
-                            url=safe_get_url(
-                                Config.BUSINESS_GROUP_URL or Config.LANDING_URL,
-                                Config.LANDING_URL,
-                            ),
-                        )
-                    ],
-                    [
-                        InlineKeyboardButton(
-                            "🎛 פתיחת תפריט החברים", callback_data="open_member_panel"
-                        )
-                    ],
-                ]
-            )
+async def handle_paypal_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    url = Config.PAYPAL_URL
+    if not url:
+        await query.answer("קישור PayPal לא מוגדר כרגע.", show_alert=True)
+        return
 
-            await chat.send_message(
-                "🎉 הכרטיס האישי שלך נשמר בהצלחה!\n\n" + card_text,
-                parse_mode="Markdown",
-                reply_markup=keyboard,
-            )
-            return
+    text = (
+        "🌍 *תשלום דרך PayPal*\n\n"
+        f"1️⃣ לחץ על הקישור: {url}\n"
+        "2️⃣ בצע תשלום חד־פעמי של *39 ₪* (או סכום מוסכם מראש).\n"
+        "3️⃣ שמור צילום מסך של אישור התשלום.\n"
+        "4️⃣ שלח את צילום המסך כאן לבוט.\n\n"
+        "המערכת תעביר את האישור לקבוצת הניהול, ולאחר אישור תקבל קישור לקבוצה."
+    )
+    keyboard = build_payment_menu_keyboard()
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
 
-    # אם לא באזור אישי – הודעת דיפולט
-    logger.info(f"Message from {user.id}: {text}")
+
+async def handle_bank_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    text = (
+        "🏦 *תשלום בהעברה בנקאית*\n\n"
+        "פרטי החשבון:\n"
+        "בנק הפועלים\n"
+        "סניף כפר גנים (153)\n"
+        "חשבון 73462\n"
+        "המוטב: קאופמן צביקה\n\n"
+        "1️⃣ בצע העברה של *39 ₪* לחשבון לעיל.\n"
+        "2️⃣ שמור צילום מסך ברור / PDF של אישור ההעברה.\n"
+        "3️⃣ שלח את האישור כאן לבוט.\n\n"
+        "המערכת תעביר את האישור לקבוצת הניהול, ולאחר אישור תקבל קישור לקבוצה."
+    )
+    keyboard = build_payment_menu_keyboard()
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
+
+
+async def handle_ton_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    query = update.callback_query
+    if not Config.TON_WALLET_ADDRESS:
+        await query.answer("ארנק TON לא מוגדר כרגע.", show_alert=True)
+        return
+
+    text = (
+        "🔐 *תשלום בקריפטו – TON*\n\n"
+        "שלח תשלום לכתובת הארנק:\n"
+        f"`{Config.TON_WALLET_ADDRESS}`\n\n"
+        "1️⃣ בצע תשלום בסכום שסוכם (לדוגמה, ערך מקביל ל-39 ₪).\n"
+        "2️⃣ שמור צילום מסך של הטרנזקציה (או לינק ל-TonScan).\n"
+        "3️⃣ שלח את צילום המסך / הלינק כאן לבוט.\n\n"
+        "לאחר אישור בצד הניהול – תקבל קישור לקבוצה + כל הכלים הדיגיטליים."
+    )
+    keyboard = build_payment_menu_keyboard()
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
+
+
+async def handle_personal_area_callback(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    """פותח למשתמש תיאור קצר של האזור האישי והפקודות הרלוונטיות."""
+    query = update.callback_query
+    text = (
+        "👤 *האזור האישי שלך – סיכום:*\n\n"
+        "• /portfolio – סיכום ארנק + סטייקינג + הפניות.\n"
+        "• /wallet – פירוט הארנק הפנימי.\n"
+        "• /mystakes – פירוט הסטייקים הפיננסיים.\n"
+        "• /my_link – קישור אישי להזמנת חברים.\n"
+        "• /my_referrals – רשימת הפניות.\n"
+        "• /my_card – כרטיס אישי בסיסי לפרסום בקהילה.\n\n"
+        "המשך להתקדם – כל צעד כאן בונה את הכלכלה האישית והקהילתית שלך."
+    )
+    keyboard = InlineKeyboardMarkup(
+        [[InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")]]
+    )
+    await query.edit_message_text(
+        text=text, reply_markup=keyboard, parse_mode="Markdown"
+    )
+
+
+async def handle_inline_approve(
+    update: Update, context: ContextTypes.DEFAULT_TYPE, data: str
+) -> None:
+    query = update.callback_query
+    if not is_admin(query.from_user.id):
+        await query.answer("רק מנהל יכול לאשר תשלום.", show_alert=True)
+        return
+
+    try:
+        target_id = int(data.split(":", 1)[1])
+    except ValueError:
+        await query.answer("user_id לא תקין.", show_alert=True)
+        return
+
+    try:
+        update_payment_status(target_id, "approved", "approved via inline button")
+    except Exception as e:
+        logger.error(f"Error updating payment status for {target_id}: {e}")
+        await query.answer("שגיאה בעדכון סטטוס התשלום.", show_alert=True)
+        return
+
+    group_url = safe_get_url(
+        Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL
+    )
+    bonus_text = await credit_user_after_approval(target_id, context)
+
+    try:
+        await context.bot.send_message(
+            chat_id=target_id,
+            text=(
+                "✅ התשלום שלך אושר!\n\n"
+                "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
+                f"{group_url}\n\n"
+                "ברוך הבא 🙌"
+                f"{bonus_text}"
+            ),
+            parse_mode="Markdown",
+        )
+    except Exception as e:
+        logger.error(f"Error sending approval message to user {target_id}: {e}")
+
+    await query.edit_message_text(
+        f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה."
+    )
+
+
+async def handle_inline_reject(
+    update: Update, context: ContextTypes.DEFAULT_TYPE, data: str
+) -> None:
+    query = update.callback_query
+    if not is_admin(query.from_user.id):
+        await query.answer("רק מנהל יכול לדחות תשלום.", show_alert=True)
+        return
+
+    try:
+        target_id = int(data.split(":", 1)[1])
+    except ValueError:
+        await query.answer("user_id לא תקין.", show_alert=True)
+        return
+
+    try:
+        update_payment_status(target_id, "rejected", "rejected via inline button")
+    except Exception as e:
+        logger.error(f"Error updating payment status (reject) for {target_id}: {e}")
+        await query.answer("שגיאה בעדכון סטטוס התשלום.", show_alert=True)
+        return
+
+    try:
+        await context.bot.send_message(
+            chat_id=target_id,
+            text=(
+                "❌ התשלום שלך נדחה.\n"
+                "אם לדעתך מדובר בטעות, ניתן לפנות לתמיכה."
+            ),
+        )
+    except Exception as e:
+        logger.error(f"Error sending rejection message to user {target_id}: {e}")
+
+    await query.edit_message_text(
+        f"🚫 התשלום של המשתמש {target_id} נדחה ונשלחה לו הודעה."
+    )
+
+
+# ===== טקסט חופשי / פקודות לא מוכרות =====
+async def echo_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    user = update.effective_user
+    text = update.message.text if update.message else ""
+    logger.info(f"Message from {user.id if user else '?'}: {text}")
 
     response = load_message_block(
         "ECHO_RESPONSE",
-        "✅ תודה על ההודעה! אנחנו כאן כדי לעזור.\nהשתמש ב-/start כדי לראות את התפריט הראשי.",
+        "✅ תודה על ההודעה! אנחנו כאן כדי לעזור.\n"
+        "השתמש ב-/start כדי לראות את התפריט הראשי.",
     )
-
-    await message.reply_text(response)
+    await update.message.reply_text(response)
 
 
 async def unknown_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מטפל בפקודות לא מוכרות"""
     await update.message.reply_text(
         "❓ פקודה לא מוכרת. השתמש ב-/start כדי לראות את התפריט הזמין."
     )
 
 
 # =========================
-# Routes של FastAPI
+# FastAPI Routes
 # =========================
 @app.get("/api/metrics/finance")
 async def finance_metrics():
-    """סטטוס כספי כולל – הכנסות, רזרבות, נטו ואישורים."""
     reserve_stats = get_reserve_stats() or {}
     approval_stats = get_approval_stats() or {}
-
     return {
         "timestamp": datetime.utcnow().isoformat() + "Z",
         "reserve": reserve_stats,
@@ -1959,13 +1720,11 @@ async def finance_metrics():
 
 @app.get("/metrics")
 async def metrics():
-    """Prometheus scrape endpoint for SLHNET metrics."""
     return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
 @app.get("/health", response_model=HealthResponse)
 async def health() -> HealthResponse:
-    """Endpoint לבריאות המערכת"""
     return HealthResponse(
         status="ok",
         service="slhnet-telegram-gateway",
@@ -1976,7 +1735,6 @@ async def health() -> HealthResponse:
 
 @app.get("/", response_class=HTMLResponse)
 async def landing(request: Request):
-    """דף נחיתה"""
     if not templates:
         return HTMLResponse("<h1>SLHNET Bot - Template Engine Not Available</h1>")
 
@@ -1984,11 +1742,10 @@ async def landing(request: Request):
         "landing.html",
         {
             "request": request,
-            "landing_url": safe_get_url(
-                Config.LANDING_URL, "https://slh-nft.com"
-            ),
+            "landing_url": safe_get_url(Config.LANDING_URL, "https://slh-nft.com"),
             "business_group_url": safe_get_url(
-                Config.BUSINESS_GROUP_URL, "https://slh-nft.com"
+                Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE,
+                "https://slh-nft.com",
             ),
         },
     )
@@ -1996,7 +1753,6 @@ async def landing(request: Request):
 
 @app.post("/webhook")
 async def telegram_webhook(update: TelegramWebhookUpdate):
-    """Webhook endpoint עם הגנות"""
     try:
         TelegramAppManager.initialize_handlers()
         app_instance = TelegramAppManager.get_app()
@@ -2009,7 +1765,6 @@ async def telegram_webhook(update: TelegramWebhookUpdate):
             return JSONResponse({"status": "processed"})
         else:
             return JSONResponse({"status": "no_update"}, status_code=400)
-
     except Exception as e:
         logger.error(f"Webhook error: {e}")
         return JSONResponse({"status": "error", "detail": str(e)}, status_code=500)
@@ -2017,15 +1772,14 @@ async def telegram_webhook(update: TelegramWebhookUpdate):
 
 @app.on_event("startup")
 async def startup_event():
-    """אתחול during startup"""
     try:
         init_internal_wallet_schema()
     except Exception as e:
         logger.error(f"init_internal_wallet_schema failed: {e}")
 
     warnings = Config.validate()
-    for warning in warnings:
-        logger.warning(warning)
+    for w in warnings:
+        logger.warning(w)
     if warnings:
         await send_log_message("⚠️ **אזהרות אתחול:**\n" + "\n".join(warnings))
 
@@ -2036,7 +1790,7 @@ async def startup_event():
 
 
 # =========================
-# הרצה מקומית
+# Local run
 # =========================
 if __name__ == "__main__":
     import uvicorn
@@ -2044,8 +1798,8 @@ if __name__ == "__main__":
     warnings = Config.validate()
     if warnings:
         print("⚠️ אזהרות קונפיגורציה:")
-        for warning in warnings:
-            print(f"  {warning}")
+        for w in warnings:
+            print(f"  {w}")
 
     port = int(os.getenv("PORT", "8080"))
     print(f"🚀 Starting SLHNET Bot on port {port}")
