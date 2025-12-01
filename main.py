@@ -453,43 +453,83 @@ def safe_get_url(url: str, fallback: str) -> str:
     return url if url and url.startswith(("http://", "https://")) else fallback
 
 
-def build_payment_instructions() -> str:
-    """בונה טקסט מסודר לכל אפשרויות התשלום והוראות שליחת האישור"""
-    bank_details = (
-        "🏦 *העברה בנקאית:*\n"
+# ====== הודעות מפורטות לכל אמצעי תשלום ======
+
+def base_upload_instructions() -> str:
+    return (
+        "לאחר שביצעת תשלום:\n"
+        "1️⃣ שמור צילום מסך ברור של אישור התשלום (או קובץ PDF / מסמך מהבנק).\n"
+        "2️⃣ חזור לצ׳אט עם הבוט.\n"
+        "3️⃣ לחץ על *סיכת הקבצים* (או אייקון המצלמה) בטלגרם.\n"
+        "4️⃣ בחר את צילום המסך / הקובץ ושלח כהודעה לבוט.\n\n"
+        "המערכת תעביר את האישור אוטומטית לצוות הניהול.\n"
+        "לאחר אישור – תקבל קישור לקבוצת העסקים + גישה לכל הכלים הדיגיטליים."
+    )
+
+
+def build_bank_instructions() -> str:
+    return (
+        "🏦 *תשלום בהעברה בנקאית*\n\n"
         "בנק הפועלים\n"
         "סניף כפר גנים (153)\n"
         "חשבון 73462\n"
         "המוטב: קאופמן צביקה\n\n"
+        + base_upload_instructions()
     )
 
-    parts = [bank_details]
 
-    if Config.PAYBOX_URL:
-        parts.append(f"📲 *PayBox*: [לינק לתשלום]({Config.PAYBOX_URL})\n")
-
-    if Config.BIT_URL:
-        parts.append(f"📲 *Bit*: [לינק לתשלום]({Config.BIT_URL})\n")
-
-    if Config.PAYPAL_URL:
-        parts.append(f"🌍 *PayPal*: [לינק לתשלום]({Config.PAYPAL_URL})\n")
-
-    if Config.TON_WALLET_ADDRESS:
-        parts.append(
-            "🔐 *ארנק TON (תשלום בקריפטו):*\n"
-            f"`{Config.TON_WALLET_ADDRESS}`\n\n"
-        )
-
-    footer = (
-        "לאחר שביצעת תשלום באחד האמצעים למעלה:\n"
-        "1️⃣ שמור צילום מסך ברור של אישור התשלום (או קובץ PDF / מסמך מהבנק).\n"
-        "2️⃣ שלח את צילום המסך כאן בצ׳אט עם הבוט.\n"
-        "3️⃣ המערכת תעביר את האישור אוטומטית לקבוצת הניהול.\n\n"
-        "אחרי שהאדמין יאשר – תקבל קישור לקבוצת העסקים + גישה לכל הכלים הדיגיטליים."
+def build_paybox_instructions() -> str:
+    if not Config.PAYBOX_URL:
+        return "לא הוגדר קישור PayBox במערכת."
+    return (
+        "📲 *תשלום דרך PayBox*\n\n"
+        f"היכנס לקישור:\n{Config.PAYBOX_URL}\n\n"
+        "בצע תשלום בסך *39 ₪* לפי ההוראות באפליקציה.\n\n"
+        + base_upload_instructions()
     )
 
-    parts.append("\n" + footer)
-    return "".join(parts)
+
+def build_bit_instructions() -> str:
+    if not Config.BIT_URL:
+        return "לא הוגדר קישור Bit במערכת."
+    return (
+        "📲 *תשלום דרך Bit*\n\n"
+        f"היכנס לקישור:\n{Config.BIT_URL}\n\n"
+        "בצע תשלום בסך *39 ₪* לפי ההוראות.\n\n"
+        + base_upload_instructions()
+    )
+
+
+def build_paypal_instructions() -> str:
+    if not Config.PAYPAL_URL:
+        return "לא הוגדר קישור PayPal במערכת."
+    return (
+        "🌍 *תשלום דרך PayPal*\n\n"
+        f"היכנס לקישור:\n{Config.PAYPAL_URL}\n\n"
+        "בצע תשלום בסך *39 ₪* במטבע המוצג.\n\n"
+        + base_upload_instructions()
+    )
+
+
+def build_ton_instructions() -> str:
+    if not Config.TON_WALLET_ADDRESS:
+        return "לא הוגדר ארנק TON במערכת."
+    return (
+        "🔐 *תשלום בקריפטו – TON*\n\n"
+        "שלח את הסכום המוסכם לארנק הבא:\n"
+        f"`{Config.TON_WALLET_ADDRESS}`\n\n"
+        "הכי טוב לצרף בהערות התשלום את השם שלך / טלפון, כדי שנזהה מהר.\n\n"
+        + base_upload_instructions()
+    )
+
+
+def build_payment_overview() -> str:
+    """טקסט כללי שמופיע לפני בחירת אמצעי התשלום"""
+    return (
+        "בחר את אמצעי התשלום המועדף עליך מתוך הכפתורים למטה.\n\n"
+        "לאחר ביצוע התשלום – תתבקש לשלוח צילום מסך של האישור כאן לבוט, "
+        "והאישור יעבור אוטומטית לצוות הניהול."
+    )
 
 
 # =========================
@@ -564,7 +604,7 @@ async def send_start_screen(
         [InlineKeyboardButton("ℹ️ מה אני מקבל?", callback_data="info_benefits")]
     )
     keyboard.append(
-        [InlineKeyboardButton("📤 איך לשלם ולשלוח אישור", callback_data="send_proof")]
+        [InlineKeyboardButton("📤 איך לשלם ולשלוח אישור", callback_data="menu_payments")]
     )
 
     if has_paid:
@@ -615,9 +655,13 @@ async def my_link_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     if not user or not chat:
         return
 
-    bot_username = context.bot.username or os.getenv(
-        "BOT_USERNAME", "Buy_My_Shop_bot"
-    )
+    try:
+        me = await context.bot.get_me()
+        bot_username = me.username or os.getenv("BOT_USERNAME", "Buy_My_Shop_bot")
+    except Exception as e:
+        logger.error(f"get_me failed in /my_link: {e}")
+        bot_username = os.getenv("BOT_USERNAME", "Buy_My_Shop_bot")
+
     invite_link = f"https://t.me/{bot_username}?start={user.id}"
 
     text = (
@@ -722,7 +766,7 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     text = (
         "📊 **סטטיסטיקות קהילה:**\n"
-        f"👥 סה״כ משתמשים: {stats.get('total_users', 0)}\n"
+        f"👥 סה״כ משתמשים: {stats.get("total_users", 0)}\n"
         f"📈 משתמשים פעילים: {len(referrals_data.get('users', {}))}\n"
         "🔄 הפניות כוללות: "
         f"{sum(u.get('referral_count', 0) for u in referrals_data.get('users', {}).values())}"
@@ -1246,10 +1290,10 @@ async def handle_investor_callback(update: Update, context: ContextTypes.DEFAULT
     )
 
 
-async def handle_send_proof_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מסביר איך לשלם ולאן לשלוח אישור, כולל כל אמצעי התשלום"""
+async def handle_payment_menu_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """תפריט אמצעי תשלום – אחרי לחיצה על 'איך לשלם ולשלוח אישור'"""
     query = update.callback_query
-    text = build_payment_instructions()
+    text = build_payment_overview()
 
     support_url = safe_get_url(
         Config.SUPPORT_GROUP_LINK
@@ -1258,15 +1302,92 @@ async def handle_send_proof_callback(update: Update, context: ContextTypes.DEFAU
         Config.LANDING_URL,
     )
 
-    keyboard = [
-        [InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")],
-        [InlineKeyboardButton("🆘 תמיכה / צור קשר", url=support_url)],
-    ]
+    keyboard: List[List[InlineKeyboardButton]] = []
+
+    # תמיד יש העברה בנקאית
+    keyboard.append(
+        [InlineKeyboardButton("🏦 העברה בנקאית", callback_data="pay_bank")]
+    )
+
+    if Config.PAYBOX_URL:
+        keyboard.append(
+            [InlineKeyboardButton("📲 תשלום ב-PayBox", callback_data="pay_paybox")]
+        )
+    if Config.BIT_URL:
+        keyboard.append(
+            [InlineKeyboardButton("📲 תשלום ב-Bit", callback_data="pay_bit")]
+        )
+    if Config.PAYPAL_URL:
+        keyboard.append(
+            [InlineKeyboardButton("🌍 תשלום ב-PayPal", callback_data="pay_paypal")]
+        )
+    if Config.TON_WALLET_ADDRESS:
+        keyboard.append(
+            [InlineKeyboardButton("🔐 תשלום בקריפטו (TON)", callback_data="pay_ton")]
+        )
+
+    keyboard.append(
+        [
+            InlineKeyboardButton(
+                "📤 איך לשלוח צילום אישור", callback_data="pay_upload_help"
+            )
+        ]
+    )
+
+    keyboard.append(
+        [InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")]
+    )
+    keyboard.append(
+        [InlineKeyboardButton("🆘 תמיכה / צור קשר", url=support_url)]
+    )
+
     reply_markup = InlineKeyboardMarkup(keyboard)
 
     await query.edit_message_text(
         text=text, reply_markup=reply_markup, parse_mode="Markdown"
     )
+
+
+async def handle_payment_method_callback(
+    update: Update, context: ContextTypes.DEFAULT_TYPE, method: str
+) -> None:
+    """מסכי הוראות נפרדים לכל אמצעי תשלום"""
+    query = update.callback_query
+
+    if method == "bank":
+        text = build_bank_instructions()
+    elif method == "paybox":
+        text = build_paybox_instructions()
+    elif method == "bit":
+        text = build_bit_instructions()
+    elif method == "paypal":
+        text = build_paypal_instructions()
+    elif method == "ton":
+        text = build_ton_instructions()
+    elif method == "upload_help":
+        text = base_upload_instructions()
+    else:
+        text = "אמצעי תשלום לא מוכר."
+
+    keyboard = [
+        [
+            InlineKeyboardButton(
+                "📤 איך לשלוח צילום אישור", callback_data="pay_upload_help"
+            )
+        ],
+        [InlineKeyboardButton("🔙 חזרה לתפריט תשלומים", callback_data="menu_payments")],
+        [InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")],
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    await query.edit_message_text(
+        text=text, reply_markup=reply_markup, parse_mode="Markdown"
+    )
+
+
+async def handle_send_proof_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """שמירה לאחור compatibility – מפנה לתפריט התשלומים"""
+    await handle_payment_menu_callback(update, context)
 
 
 async def handle_benefits_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1304,12 +1425,24 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
 
     if data == "open_investor":
         await handle_investor_callback(update, context)
-    elif data in ("send_proof", "send_payment_instructions"):
-        await handle_send_proof_callback(update, context)
+    elif data in ("send_proof", "send_payment_instructions", "menu_payments"):
+        await handle_payment_menu_callback(update, context)
     elif data == "info_benefits":
         await handle_benefits_callback(update, context)
     elif data == "back_to_main":
         await send_start_screen(update, context)
+    elif data == "pay_bank":
+        await handle_payment_method_callback(update, context, "bank")
+    elif data == "pay_paybox":
+        await handle_payment_method_callback(update, context, "paybox")
+    elif data == "pay_bit":
+        await handle_payment_method_callback(update, context, "bit")
+    elif data == "pay_paypal":
+        await handle_payment_method_callback(update, context, "paypal")
+    elif data == "pay_ton":
+        await handle_payment_method_callback(update, context, "ton")
+    elif data == "pay_upload_help":
+        await handle_payment_method_callback(update, context, "upload_help")
     elif data.startswith("approve:"):
         if not is_admin(query.from_user.id):
             await query.answer("רק מנהל יכול לאשר תשלום.", show_alert=True)
