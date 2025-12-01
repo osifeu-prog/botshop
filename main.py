@@ -152,11 +152,20 @@ except Exception as e:
     logger.error(f"Error including routers: {e}")
 
 # =========================
-# ניהול referral משופר
+# ניהול referral + פרופילים
 # =========================
 DATA_DIR = BASE_DIR / "data"
 DATA_DIR.mkdir(exist_ok=True)
 REF_FILE = DATA_DIR / "referrals.json"
+PROFILES_FILE = DATA_DIR / "profiles.json"
+
+# מצב זמני לשאלות פרופיל (אזור אישי)
+PROFILE_SESSIONS: Dict[int, Dict[str, Any]] = {}
+PROFILE_QUESTIONS = [
+    "איך קוראים לך / שם העסק שלך?",
+    "מה אתה עושה / מה אתה מציע בקהילה (תחום פעילות / התמחות)?",
+    "איך הכי טוב ליצור איתך קשר? (טלפון / טלגרם / אתר / מייל)",
+]
 
 
 def load_referrals() -> Dict[str, Any]:
@@ -228,6 +237,31 @@ def build_referral_link(user_id: int) -> str:
     """יוצר קישור הפניה אישי לבוט: https://t.me/<bot>?start=<user_id>"""
     bot_username = os.getenv("BOT_USERNAME", "Buy_My_Shop_bot").lstrip("@")
     return f"https://t.me/{bot_username}?start={user_id}"
+
+
+def load_profiles() -> Dict[str, Any]:
+    """טוען פרופילים מאזור אישי"""
+    if not PROFILES_FILE.exists():
+        return {"profiles": {}}
+    try:
+        with open(PROFILES_FILE, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        if "profiles" not in data:
+            data["profiles"] = {}
+        return data
+    except (json.JSONDecodeError, Exception) as e:
+        logger.error(f"Error loading profiles: {e}")
+        return {"profiles": {}}
+
+
+def save_profiles(data: Dict[str, Any]) -> None:
+    """שומר פרופילים לאזור אישי"""
+    try:
+        data.setdefault("profiles", {})
+        with open(PROFILES_FILE, "w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        logger.error(f"Error saving profiles: {e}")
 
 
 # =========================
@@ -381,6 +415,11 @@ class TelegramAppManager:
             # פקודות הפניות / לינק אישי
             CommandHandler("my_link", my_link_command),
             CommandHandler("my_referrals", my_referrals_command),
+
+            # תפריט חברים / אזור אישי
+            CommandHandler("member", member_command),
+            CommandHandler("my_card", my_card_command),
+            CommandHandler("profile", my_card_command),
 
             # פקודות ניהול תשלומים
             CommandHandler("admin", admin_command),
@@ -603,6 +642,17 @@ async def send_start_screen(
         keyboard.append(
             [InlineKeyboardButton("👥 כניסה לקבוצת העסקים", url=group_url)]
         )
+        keyboard.append(
+            [InlineKeyboardButton("🔗 הקישור האישי שלי", callback_data="open_my_link")]
+        )
+        keyboard.append(
+            [
+                InlineKeyboardButton(
+                    "🎛 תפריט לחברים (Member Panel)",
+                    callback_data="open_member_panel",
+                )
+            ]
+        )
 
     keyboard.append(
         [InlineKeyboardButton("📈 מידע למשקיעים", callback_data="open_investor")]
@@ -778,6 +828,139 @@ async def my_referrals_command(update: Update, context: ContextTypes.DEFAULT_TYP
 
 
 # =========================
+# תפריט חברים + אזור אישי
+# =========================
+async def member_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """תפריט לחברים אחרי אישור תשלום – /member"""
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    paid = False
+    try:
+        paid = has_approved_payment(user.id)
+    except Exception as e:
+        logger.error(f"Error checking approved payment in /member for {user.id}: {e}")
+
+    if not paid:
+        await chat.send_message(
+            "כדי לקבל גישה לתפריט החברים, צריך קודם להשלים תשלום 39 ₪ ולאשר אותו.\n"
+            "השתמש ב-/start כדי לראות איך מצטרפים.",
+        )
+        return
+
+    ref_link = build_referral_link(user.id)
+    group_url = safe_get_url(
+        Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL
+    )
+    support_url = (
+        Config.SUPPORT_GROUP_LINK or Config.BUSINESS_GROUP_URL or Config.LANDING_URL
+    )
+
+    text = (
+        "🎛 *תפריט חבר בקהילת SLHNET*\n\n"
+        "מכאן אפשר להגיע לכל מה שחשוב לחבר חדש:\n\n"
+        "• 🔗 הקישור האישי שלך לשיתוף והפניות.\n"
+        "• 👤 יצירת / עדכון כרטיס אישי (אזור אישי).\n"
+        "• 💼 ארנק SLH פנימי וסטייקינג.\n"
+        "• 📊 סטטוס הפניות.\n"
+        "• 👥 מעבר מהיר לקבוצת העסקים.\n"
+        "• 🆘 תמיכה / קשר אישי.\n\n"
+        f"להפצה מיידית – הקישור שלך:\n`{ref_link}`"
+    )
+
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "🔗 הקישור האישי שלי", callback_data="open_my_link"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "👤 אזור אישי / כרטיס עסקי", callback_data="open_profile"
+                )
+            ],
+            [InlineKeyboardButton("💼 ארנק פנימי /wallet", callback_data="hint_wallet")],
+            [
+                InlineKeyboardButton(
+                    "📊 סטטוס הפניות", callback_data="open_my_referrals"
+                )
+            ],
+            [InlineKeyboardButton("👥 קבוצת העסקים", url=group_url)],
+            [InlineKeyboardButton("🆘 תמיכה / קשר אישי", url=support_url)],
+            [InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")],
+        ]
+    )
+
+    await chat.send_message(text=text, parse_mode="Markdown", reply_markup=keyboard)
+
+
+async def my_card_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """מתחיל תהליך יצירת/עדכון כרטיס אישי (אזור אישי)"""
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    paid = False
+    try:
+        paid = has_approved_payment(user.id)
+    except Exception as e:
+        logger.error(f"Error checking approved payment in /my_card for {user.id}: {e}")
+
+    if not paid:
+        await chat.send_message(
+            "כרטיס אישי זמין לחברי קהילה אחרי אישור תשלום.\n"
+            "השתמש ב-/start כדי לראות איך מצטרפים.",
+        )
+        return
+
+    # אתחול סשן פרופיל
+    PROFILE_SESSIONS[user.id] = {"step": 0, "answers": []}
+
+    await chat.send_message(
+        "👤 *כרטיס אישי לחבר בקהילת SLHNET*\n\n"
+        "אענה איתך על כמה שאלות קצרות, כדי ליצור כרטיס עסקי יפה שתוכל לשתף בקהילה.\n\n"
+        "נתחיל:",
+        parse_mode="Markdown",
+    )
+
+    await chat.send_message(PROFILE_QUESTIONS[0])
+
+
+def build_profile_card_text(user_id: int) -> str:
+    """בונה טקסט כרטיס אישי על בסיס הנתונים השמורים"""
+    profiles_data = load_profiles()
+    profile = profiles_data.get("profiles", {}).get(str(user_id))
+    ref_link = build_referral_link(user_id)
+
+    if not profile:
+        return (
+            "עדיין לא הגדרת כרטיס אישי.\n"
+            "השתמש ב-/my_card כדי להתחיל.\n"
+        )
+
+    name = profile.get("name", "לא צוין")
+    about = profile.get("about", "לא צוין")
+    contact = profile.get("contact", "לא צוין")
+    updated_at = profile.get("updated_at", "לא ידוע")
+
+    text = (
+        "👤 *כרטיס אישי – SLHNET*\n\n"
+        f"📛 *שם / עסק*: {name}\n"
+        f"💼 *מה אני עושה*: {about}\n"
+        f"☎️ *איך ליצור קשר*: {contact}\n"
+        f"🕒 עודכן לאחרונה: {updated_at}\n\n"
+        "🔗 *הקישור האישי שלי להצטרפות:*\n"
+        f"`{ref_link}`\n\n"
+        "אפשר להעתיק את הטקסט הזה ולשתף אותו בקבוצת העסקים / ברשתות.\n"
+    )
+    return text
+
+
+# =========================
 # פקודות ניהול ותשלומים – 39 ₪
 # =========================
 async def payment_proof_handler(
@@ -893,7 +1076,7 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         "",
         "📋 *פקודות ניהול זמינות:*",
         " - /pending  – רשימת תשלומים ממתינים",
-        " - /approve <user_id>  – אישור תשלום ושליחת קישור לקבוצה",
+        " - /approve <user_id>  – אישור תשלום ושליחת קישור לקבוצה + קישור אישי",
         " - /reject <user_id> <סיבה>  – דחיית תשלום והודעה ללקוח",
     ]
 
@@ -924,6 +1107,24 @@ async def pending_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         )
 
     await chat.send_message("\n".join(lines), parse_mode="Markdown")
+
+
+async def _send_approval_package(
+    bot, target_id: int, group_url: str
+) -> None:
+    """שולח למשתמש חבילת אישור: קישור קבוצה + קישור אישי + המלצה על /member ו-/my_card"""
+    ref_link = build_referral_link(target_id)
+    text = (
+        "✅ התשלום שלך אושר!\n\n"
+        "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
+        f"{group_url}\n\n"
+        "ברוך הבא 🙌\n\n"
+        "🔗 *הקישור האישי שלך לשיתוף עם חברים ועסקים:*\n"
+        f"`{ref_link}`\n\n"
+        "מומלץ עכשיו לפתוח את *תפריט החברים* עם הפקודה /member\n"
+        "ולהגדיר כרטיס אישי דרך /my_card.\n"
+    )
+    await bot.send_message(chat_id=target_id, text=text, parse_mode="Markdown")
 
 
 async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -960,20 +1161,12 @@ async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     )
 
     try:
-        await context.bot.send_message(
-            chat_id=target_id,
-            text=(
-                "✅ התשלום שלך אושר!\n\n"
-                "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
-                f"{group_url}\n\n"
-                "ברוך הבא 🙌"
-            ),
-        )
+        await _send_approval_package(context.bot, target_id, group_url)
     except Exception as e:
-        logger.error(f"Error sending approval message to user {target_id}: {e}")
+        logger.error(f"Error sending approval package to user {target_id}: {e}")
 
     await chat.send_message(
-        f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה."
+        f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה + קישור אישי."
     )
 
 
@@ -1105,19 +1298,17 @@ async def send_slh_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
         return
 
     # נסה לפענח user_id
-    to_user_id = None
     if target.startswith("@"):
         await chat.send_message(
             "בגרסה הנוכחית יש להשתמש ב-user_id מספרי, לא בשם משתמש. "
             "קבל את ה-ID מהפקודה /whoami אצל הצד השני."
         )
         return
-    else:
-        try:
-            to_user_id = int(target)
-        except ValueError:
-            await chat.send_message("user_id חייב להיות מספרי.")
-            return
+    try:
+        to_user_id = int(target)
+    except ValueError:
+        await chat.send_message("user_id חייב להיות מספרי.")
+        return
 
     ok, msg = transfer_between_users(user.id, to_user_id, amount)
     if not ok:
@@ -1223,6 +1414,59 @@ async def callback_query_handler(
 
     elif data == "back_to_main":
         await send_start_screen(update, context)
+
+    # תפריט חברים
+    elif data == "open_member_panel":
+        await member_command(update, context)
+
+    elif data == "open_profile":
+        text = (
+            "👤 *אזור אישי / כרטיס עסקי*\n\n"
+            "כאן יוצרים כרטיס קצר שמציג מי אתה, מה אתה עושה ואיך ליצור איתך קשר.\n"
+            "לאחר מכן אפשר להעתיק את הכרטיס ולשתף בקבוצת העסקים.\n\n"
+            "לחץ על הכפתור כדי להתחיל:"
+        )
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "✏️ יצירת / עדכון כרטיס אישי", callback_data="start_profile"
+                    )
+                ],
+                [
+                    InlineKeyboardButton(
+                        "🔙 חזרה לתפריט החברים", callback_data="open_member_panel"
+                    )
+                ],
+            ]
+        )
+        await query.edit_message_text(
+            text=text, reply_markup=keyboard, parse_mode="Markdown"
+        )
+
+    elif data == "start_profile":
+        # מפעיל את אותו flow של /my_card
+        await my_card_command(update, context)
+
+    elif data == "hint_wallet":
+        text = (
+            "כדי לראות את ארנק ה-SLH הפנימי שלך, השתמש בפקודה:\n"
+            "`/wallet`\n\n"
+            "ולפתיחת סטייקינג:\n"
+            "`/stake 100 30` (לדוגמה)."
+        )
+        keyboard = InlineKeyboardMarkup(
+            [
+                [
+                    InlineKeyboardButton(
+                        "🔙 חזרה לתפריט החברים", callback_data="open_member_panel"
+                    )
+                ]
+            ]
+        )
+        await query.edit_message_text(
+            text=text, reply_markup=keyboard, parse_mode="Markdown"
+        )
 
     # תשלום – תפריט ראשי "איך לשלם"
     elif data in ("send_proof", "send_payment_instructions"):
@@ -1443,20 +1687,12 @@ async def callback_query_handler(
             Config.LANDING_URL,
         )
         try:
-            await context.bot.send_message(
-                chat_id=target_id,
-                text=(
-                    "✅ התשלום שלך אושר!\n\n"
-                    "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
-                    f"{group_url}\n\n"
-                    "ברוך הבא 🙌"
-                ),
-            )
+            await _send_approval_package(context.bot, target_id, group_url)
         except Exception as e:
-            logger.error(f"Error sending approval message to user {target_id}: {e}")
+            logger.error(f"Error sending approval package to user {target_id}: {e}")
 
         await query.edit_message_text(
-            f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה."
+            f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה + קישור אישי."
         )
 
     elif data.startswith("reject:"):
@@ -1620,18 +1856,82 @@ async def handle_benefits_callback(
 # הודעות טקסט רגילות / פקודות לא מוכרות
 # =========================
 async def echo_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    """מטפל בהודעות טקסט רגילות"""
+    """מטפל בהודעות טקסט רגילות – כולל המשך של אזור אישי אם יש סשן פתוח"""
     user = update.effective_user
-    text = update.message.text if update.message else ""
+    chat = update.effective_chat
+    message = update.message
+    if not user or not chat or not message:
+        return
 
-    logger.info(f"Message from {user.id if user else '?'}: {text}")
+    text = message.text or ""
+
+    # אם המשתמש באמצע תהליך כרטיס אישי – נטפל בזה קודם
+    session = PROFILE_SESSIONS.get(user.id)
+    if session is not None:
+        step = session.get("step", 0)
+        answers = session.get("answers", [])
+
+        # שמירת התשובה
+        answers.append(text.strip())
+        step += 1
+        session["step"] = step
+        session["answers"] = answers
+        PROFILE_SESSIONS[user.id] = session
+
+        if step < len(PROFILE_QUESTIONS):
+            # שאלה הבאה
+            await chat.send_message(PROFILE_QUESTIONS[step])
+            return
+        else:
+            # סיום – בניית כרטיס ושמירה
+            profiles_data = load_profiles()
+            profiles = profiles_data.setdefault("profiles", {})
+            profiles[str(user.id)] = {
+                "name": answers[0] if len(answers) > 0 else "",
+                "about": answers[1] if len(answers) > 1 else "",
+                "contact": answers[2] if len(answers) > 2 else "",
+                "updated_at": datetime.now().isoformat(),
+            }
+            save_profiles(profiles_data)
+            PROFILE_SESSIONS.pop(user.id, None)
+
+            card_text = build_profile_card_text(user.id)
+
+            keyboard = InlineKeyboardMarkup(
+                [
+                    [
+                        InlineKeyboardButton(
+                            "📤 שיתוף בקבוצת העסקים",
+                            url=safe_get_url(
+                                Config.BUSINESS_GROUP_URL or Config.LANDING_URL,
+                                Config.LANDING_URL,
+                            ),
+                        )
+                    ],
+                    [
+                        InlineKeyboardButton(
+                            "🎛 פתיחת תפריט החברים", callback_data="open_member_panel"
+                        )
+                    ],
+                ]
+            )
+
+            await chat.send_message(
+                "🎉 הכרטיס האישי שלך נשמר בהצלחה!\n\n" + card_text,
+                parse_mode="Markdown",
+                reply_markup=keyboard,
+            )
+            return
+
+    # אם לא באזור אישי – הודעת דיפולט
+    logger.info(f"Message from {user.id}: {text}")
 
     response = load_message_block(
         "ECHO_RESPONSE",
         "✅ תודה על ההודעה! אנחנו כאן כדי לעזור.\nהשתמש ב-/start כדי לראות את התפריט הראשי.",
     )
 
-    await update.message.reply_text(response)
+    await message.reply_text(response)
 
 
 async def unknown_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
