@@ -763,16 +763,21 @@ async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     referrals_data = load_referrals()
     stats = referrals_data.get("statistics", {})
+    users_dict = referrals_data.get("users", {})
+
+    total_users = stats.get("total_users", len(users_dict))
+    active_users = len(users_dict)
+    total_referrals = sum(u.get("referral_count", 0) for u in users_dict.values())
 
     text = (
         "📊 **סטטיסטיקות קהילה:**\n"
-        f"👥 סה״כ משתמשים: {stats.get("total_users", 0)}\n"
-        f"📈 משתמשים פעילים: {len(referrals_data.get('users', {}))}\n"
-        "🔄 הפניות כוללות: "
-        f"{sum(u.get('referral_count', 0) for u in referrals_data.get('users', {}).values())}"
+        f"👥 סה״כ משתמשים: {total_users}\n"
+        f"📈 משתמשים פעילים: {active_users}\n"
+        f"🔄 הפניות כוללות: {total_referrals}"
     )
 
     await chat.send_message(text=text, parse_mode="Markdown")
+
 
 
 # =========================
