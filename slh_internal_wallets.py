@@ -1,4 +1,3 @@
-
 from decimal import Decimal, InvalidOperation
 from typing import Optional, Dict, Any, List, Tuple
 import os
@@ -35,6 +34,7 @@ def _get_token_price_nis() -> Decimal:
 def _get_entry_price_nis() -> Decimal:
     """
     מחיר כניסה – תשלום בסיס בטלגרם (39 ש״ח כברירת מחדל).
+    ניתן לעדכן דרך SLH_ENTRY_PRICE_NIS.
     """
     try:
         return Decimal(os.getenv("SLH_ENTRY_PRICE_NIS", "39"))
@@ -164,7 +164,13 @@ def get_wallet_overview(user_id: int) -> Optional[Dict[str, Any]]:
         }
 
 
-def _add_ledger_entry(wallet_id: int, delta_slh: Decimal, reason: str, ref_type: Optional[str], ref_id: Optional[int]) -> None:
+def _add_ledger_entry(
+    wallet_id: int,
+    delta_slh: Decimal,
+    reason: str,
+    ref_type: Optional[str],
+    ref_id: Optional[int],
+) -> None:
     with db_cursor() as (conn, cur):
         if cur is None:
             raise RuntimeError("DB not available")
@@ -179,7 +185,14 @@ def _add_ledger_entry(wallet_id: int, delta_slh: Decimal, reason: str, ref_type:
         conn.commit()
 
 
-def credit_wallet(user_id: int, username: Optional[str], amount_slh: Decimal, reason: str, ref_type: Optional[str], ref_id: Optional[int]) -> Dict[str, Any]:
+def credit_wallet(
+    user_id: int,
+    username: Optional[str],
+    amount_slh: Decimal,
+    reason: str,
+    ref_type: Optional[str],
+    ref_id: Optional[int],
+) -> Dict[str, Any]:
     """
     מזכה ארנק של משתמש בכמות SLH נתונה.
     """
@@ -301,14 +314,14 @@ def transfer_between_users(from_user_id: int, to_user_id: int, amount_slh: Decim
             INSERT INTO internal_wallet_ledger (wallet_id, change_slh, reason, ref_type, ref_id)
             VALUES (%s, %s, %s, %s, %s);
             """,
-            (from_wallet_id, str(-amount_slh), "transfer to user {}".format(to_user_id), "transfer", to_user_id),
+            (from_wallet_id, str(-amount_slh), f"transfer to user {to_user_id}", "transfer", to_user_id),
         )
         cur.execute(
             """
             INSERT INTO internal_wallet_ledger (wallet_id, change_slh, reason, ref_type, ref_id)
             VALUES (%s, %s, %s, %s, %s);
             """,
-            (to_wallet_id, str(amount_slh), "transfer from user {}".format(from_user_id), "transfer", from_user_id),
+            (to_wallet_id, str(amount_slh), f"transfer from user {from_user_id}", "transfer", from_user_id),
         )
 
         conn.commit()
@@ -373,7 +386,7 @@ def create_stake_position(user_id: int, amount_slh: Decimal, apy: Decimal, lock_
             INSERT INTO internal_wallet_ledger (wallet_id, change_slh, reason, ref_type, ref_id)
             VALUES (%s, %s, %s, %s, %s);
             """,
-            (wallet_id, str(-amount_slh), "stake position {}".format(position_id), "stake", position_id),
+            (wallet_id, str(-amount_slh), f"stake position {position_id}", "stake", position_id),
         )
 
         conn.commit()
@@ -417,9 +430,55 @@ def get_user_stakes(user_id: int) -> List[Dict[str, Any]]:
 def mint_slh_from_payment(amount_nis: Decimal) -> Decimal:
     """
     מחשב כמה SLH מונפקים על סכום תשלום בש״ח.
-    כרגע: SLH = net_amount / TOKEN_PRICE.
+    כרגע: SLH = amount_nis / TOKEN_PRICE.
     """
     price = _get_token_price_nis()
     if price <= 0:
         return Decimal("0")
     return (amount_nis / price).quantize(Decimal("0.000000000000000001"))
+
+
+def credit_wallet_from_payment(
+    user_id: int,
+    username: Optional[str],
+    amount_nis: Decimal,
+    ref_type: str = "payment",
+    ref_id: Optional[int] = None,
+) -> Dict[str, Any]:
+    """
+    מזכה ארנק פנימי על בסיס סכום בש״ח:
+    - מחשב כמה SLH מגיעים לפי מחיר המטבע הנוכחי.
+    - מזכה את הארנק ומוסיף רשומת לוג.
+    """
+    slh_amount = mint_slh_from_payment(amount_nis)
+    if slh_amount <= 0:
+        raise ValueError("לא ניתן להנפיק SLH – מחיר מטבע לא תקין או סכום נמוך מדי.")
+
+    return credit_wallet(
+        user_id=user_id,
+        username=username,
+        amount_slh=slh_amount,
+        reason=f"mint from payment {amount_nis} NIS",
+        ref_type=ref_type,
+        ref_id=ref_id,
+    )
+
+
+def credit_wallet_from_entry_price(
+    user_id: int,
+    username: Optional[str],
+    ref_type: str = "entry_payment",
+    ref_id: Optional[int] = None,
+) -> Dict[str, Any]:
+    """
+    מזכה ארנק פנימי לפי מחיר הכניסה המוגדר (SLH_ENTRY_PRICE_NIS).
+    שימושי למקרה שבו כל כניסה לבוט היא, למשל, 39 ש״ח.
+    """
+    amount_nis = _get_entry_price_nis()
+    return credit_wallet_from_payment(
+        user_id=user_id,
+        username=username,
+        amount_nis=amount_nis,
+        ref_type=ref_type,
+        ref_id=ref_id,
+    )
