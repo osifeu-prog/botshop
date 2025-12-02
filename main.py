@@ -50,7 +50,7 @@ from slh_internal_wallets import (
     transfer_between_users,
     create_stake_position,
     get_user_stakes,
-    # mint_slh_from_payment,  # אפשר להחזיר בעתיד אם תרצה בונוס אוטומטי
+    mint_slh_from_payment,  # משמש למינט SLH אחרי תשלום / קרדיט אדמין
 )
 
 # === Optional routers ===
@@ -95,7 +95,7 @@ logger = logging.getLogger("slhnet")
 app = FastAPI(
     title="SLHNET Gateway Bot",
     description="בוט קהילה ושער API עבור SLHNET",
-    version="2.1.0",
+    version="2.2.0",
 )
 
 # CORS
@@ -143,7 +143,7 @@ try:
     if core_router is not None:
         app.include_router(core_router, prefix="/api/core", tags=["core"])
     if slhnet_extra_router is not None:
-        app.include_router(slhnet_extra_router, prefix="/api/extra", tags=["extra"])
+        app.include_router(shnet_extra_router, prefix="/api/extra", tags=["extra"])
 except Exception as e:
     logger.error(f"Error including routers: {e}")
 
@@ -347,6 +347,96 @@ def load_message_block(block_name: str, fallback: str = "") -> str:
 
 
 # =========================
+# Dynamic SLH price config (file-based)
+# =========================
+try:
+    DEFAULT_SLH_PRICE = Decimal(os.getenv("SLH_NIS_PRICE", "444"))
+except Exception:
+    DEFAULT_SLH_PRICE = Decimal("444")
+
+try:
+    DEFAULT_ENTRY_AMOUNT = Decimal(os.getenv("NIS_ENTRY_AMOUNT", "39"))
+except Exception:
+    DEFAULT_ENTRY_AMOUNT = Decimal("39")
+
+DYNAMIC_CONFIG_FILE = DATA_DIR / "slh_dynamic_config.json"
+
+
+def load_dynamic_config() -> Dict[str, Any]:
+    """
+    קובץ קונפיגורציה דינמי ל-SLH:
+    {
+      "slh_nis_price": float,      # מחיר SLH אחד בש"ח
+      "nis_entry_amount": float,   # סכום כניסה בש"ח (ברירת מחדל 39)
+      "total_slh_minted": float    # כמה SLH חולקו ללקוחות עד כה
+    }
+    """
+    base = {
+        "slh_nis_price": float(DEFAULT_SLH_PRICE),
+        "nis_entry_amount": float(DEFAULT_ENTRY_AMOUNT),
+        "total_slh_minted": 0.0,
+    }
+    if not DYNAMIC_CONFIG_FILE.exists():
+        return base
+    try:
+        with DYNAMIC_CONFIG_FILE.open("r", encoding="utf-8") as f:
+            data = json.load(f)
+        for k in base.keys():
+            if k in data:
+                base[k] = data[k]
+        return base
+    except Exception as e:
+        logger.error(f"Error loading dynamic SLH config: {e}")
+        return base
+
+
+def save_dynamic_config(cfg: Dict[str, Any]) -> None:
+    try:
+        tmp_path = DYNAMIC_CONFIG_FILE.with_suffix(".tmp")
+        with tmp_path.open("w", encoding="utf-8") as f:
+            json.dump(cfg, f, ensure_ascii=False, indent=2)
+        tmp_path.replace(DYNAMIC_CONFIG_FILE)
+    except Exception as e:
+        logger.error(f"Error saving dynamic SLH config: {e}")
+
+
+def get_current_price_and_entry() -> (Decimal, Decimal):
+    cfg = load_dynamic_config()
+    try:
+        price = Decimal(str(cfg.get("slh_nis_price", float(DEFAULT_SLH_PRICE))))
+    except Exception:
+        price = DEFAULT_SLH_PRICE
+    try:
+        entry = Decimal(str(cfg.get("nis_entry_amount", float(DEFAULT_ENTRY_AMOUNT))))
+    except Exception:
+        entry = DEFAULT_ENTRY_AMOUNT
+    return price, entry
+
+
+def record_mint_amount(amount_slh: Decimal) -> None:
+    try:
+        cfg = load_dynamic_config()
+        current_total = Decimal(str(cfg.get("total_slh_minted", 0.0)))
+        new_total = current_total + amount_slh
+        cfg["total_slh_minted"] = float(new_total)
+        save_dynamic_config(cfg)
+    except Exception as e:
+        logger.error(f"Error recording minted SLH: {e}")
+
+
+def compute_slh_for_entry(price_nis: Decimal, entry_nis: Decimal) -> Decimal:
+    """
+    מחשב כמה SLH מקבלים עבור סכום כניסה מסויים בש"ח.
+    """
+    if price_nis <= 0:
+        return Decimal("0")
+    try:
+        return (entry_nis / price_nis).quantize(Decimal("0.0001"))
+    except Exception:
+        return Decimal("0")
+
+
+# =========================
 # Pydantic models
 # =========================
 class TelegramWebhookUpdate(BaseModel):
@@ -375,10 +465,15 @@ class ConfigSnapshot(BaseModel):
     has_paypal: bool
     has_ton: bool
     logs_group_set: bool
+    slh_nis_price: float
+    nis_entry_amount: float
+    total_slh_minted: float
+    hot_wallet_address: str
+    cold_wallet_address: str
 
 
 # =========================
-# Config
+# Config & helpers
 # =========================
 def is_admin(user_id: int) -> bool:
     raw = os.getenv("ADMIN_OWNER_IDS", "")
@@ -409,6 +504,10 @@ class Config:
     STAKING_DEFAULT_APY: Decimal = Decimal(os.getenv("STAKING_DEFAULT_APY", "20"))
     STAKING_DEFAULT_DAYS: int = int(os.getenv("STAKING_DEFAULT_DAYS", "90"))
 
+    # ארנק חם / קר – להצגה ב-/wallet ו-/admin_wallet
+    HOT_WALLET_ADDRESS: str = os.getenv("HOT_WALLET_ADDRESS", "")
+    COLD_WALLET_ADDRESS: str = os.getenv("COLD_WALLET_ADDRESS", "")
+
     @classmethod
     def validate(cls) -> List[str]:
         warnings: List[str] = []
@@ -423,6 +522,7 @@ class Config:
     @classmethod
     def snapshot(cls) -> ConfigSnapshot:
         """החזרת תמונת מצב בטוחה (ללא טוקנים/סודות) לקונפיגורציה."""
+        cfg = load_dynamic_config()
         return ConfigSnapshot(
             bot_username=cls.BOT_USERNAME,
             landing_url=cls.LANDING_URL,
@@ -433,12 +533,16 @@ class Config:
             has_paypal=bool(cls.PAYPAL_URL),
             has_ton=bool(cls.TON_WALLET_ADDRESS),
             logs_group_set=bool(cls.LOGS_GROUP_CHAT_ID),
+            slh_nis_price=float(cfg.get("slh_nis_price", float(DEFAULT_SLH_PRICE))),
+            nis_entry_amount=float(
+                cfg.get("nis_entry_amount", float(DEFAULT_ENTRY_AMOUNT))
+            ),
+            total_slh_minted=float(cfg.get("total_slh_minted", 0.0)),
+            hot_wallet_address=cls.HOT_WALLET_ADDRESS,
+            cold_wallet_address=cls.COLD_WALLET_ADDRESS,
         )
 
 
-# =========================
-# Helpers
-# =========================
 def safe_get_url(url: str, fallback: str) -> str:
     return url if url and url.startswith(("http://", "https://")) else fallback
 
@@ -462,9 +566,37 @@ async def send_log_message(text: str) -> None:
         return
     try:
         app_instance = TelegramAppManager.get_app()
-        await app_instance.bot.send_message(chat_id=int(Config.LOGS_GROUP_CHAT_ID), text=text)
+        await app_instance.bot.send_message(
+            chat_id=int(Config.LOGS_GROUP_CHAT_ID), text=text
+        )
     except Exception as e:
         logger.error(f"Failed to send log message: {e}")
+
+
+async def send_bug_report(
+    feature_id: str,
+    user: Optional[Any],
+    chat: Optional[Any],
+) -> None:
+    """
+    שליחת דיווח באג לקבוצת הלוגים.
+    feature_id – מזהה קצר של המסך / כפתור.
+    """
+    if not Config.LOGS_GROUP_CHAT_ID:
+        return
+    try:
+        lines = [
+            "🐞 דיווח תקלה חדש מהבוט:",
+            f"📍 פיצ'ר: {feature_id}",
+        ]
+        if user is not None:
+            lines.append(f"👤 user_id={user.id}, username=@{user.username or 'N/A'}")
+            lines.append(f"👤 full_name={user.full_name}")
+        if chat is not None:
+            lines.append(f"💬 chat_id={chat.id}, type={chat.type}")
+        await send_log_message("\n".join(lines))
+    except Exception as e:
+        logger.error(f"Failed to send bug report: {e}")
 
 
 # =========================
@@ -501,10 +633,18 @@ class TelegramAppManager:
             CommandHandler("whoami", whoami_command),
             CommandHandler("stats", stats_command),
             CommandHandler("help", help_command),
+
+            # אדמין – בסיס + מתקדם
             CommandHandler("admin", admin_command),
             CommandHandler("pending", pending_command),
             CommandHandler("approve", approve_command),
             CommandHandler("reject", reject_command),
+            CommandHandler("set_price", set_price_command),
+            CommandHandler("admin_wallet", admin_wallet_command),
+            CommandHandler("admin_user", admin_user_command),
+            CommandHandler("admin_credit", admin_credit_command),
+
+            # ארנק & סטייקינג & הפניות
             CommandHandler("wallet", wallet_command),
             CommandHandler("send_slh", send_slh_command),
             CommandHandler("stake", stake_command),
@@ -512,6 +652,7 @@ class TelegramAppManager:
             CommandHandler("my_link", my_link_command),
             CommandHandler("my_referrals", my_referrals_command),
             CommandHandler("portfolio", portfolio_command),
+
             CallbackQueryHandler(callback_query_handler),
             MessageHandler(filters.PHOTO | filters.Document.ALL, payment_proof_handler),
             MessageHandler(filters.TEXT & ~filters.COMMAND, echo_message),
@@ -562,6 +703,7 @@ def build_start_keyboard(has_paid: bool) -> InlineKeyboardMarkup:
     4. מידע למשקיעים
     5. האזור האישי שלי
     6. תמיכה
+    7. דיווח באג
     """
     buttons: List[List[InlineKeyboardButton]] = []
 
@@ -606,6 +748,15 @@ def build_start_keyboard(has_paid: bool) -> InlineKeyboardMarkup:
     )
     buttons.append(
         [InlineKeyboardButton("🆘 תמיכה / צור קשר", url=support_url)]
+    )
+
+    # כפתור דיווח באג גלובלי – feature_id=start_menu
+    buttons.append(
+        [
+            InlineKeyboardButton(
+                "🐞 דיווח על תקלה / באג", callback_data="report_bug:start_menu"
+            )
+        ]
     )
 
     return InlineKeyboardMarkup(buttons)
@@ -781,8 +932,12 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "פקודות למנהלים בלבד:\n"
         "• /admin – פאנל ניהול\n"
         "• /pending – תשלומים ממתינים\n"
-        "• /approve <user_id> – אישור תשלום\n"
+        "• /approve <user_id> – אישור תשלום + מינט SLH פנימי\n"
         "• /reject <user_id> <סיבה> – דחיית תשלום\n"
+        "• /set_price <מחיר_ש\"ח_ל-SLH_1> – עדכון שער SLH\n"
+        "• /admin_wallet – סקירת ארנק מערכת ושערים\n"
+        "• /admin_user <user_id> – צילום מצב משתמש\n"
+        "• /admin_credit <user_id> <amount_slh> – קרדיט ידני של SLH\n"
     )
     await chat.send_message(text=text, parse_mode="Markdown")
 
@@ -867,13 +1022,13 @@ async def payment_proof_handler(update: Update, context: ContextTypes.DEFAULT_TY
 
     await chat.send_message(
         "📥 קיבלנו את אישור התשלום שלך!\n"
-        "ההודעה הועברה לצוות הניהול. לאחר אישור, ישלח אליך קישור לקבוצת העסקים."
+        "ההודעה הועברה לצוות הניהול. לאחר אישור, ישלח אליך קישור לקבוצת העסקים + זיכוי SLH בארנק הפנימי."
     )
 
 
 async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    פאנל ניהול בסיסי למנהלים בלבד.
+    פאנל ניהול בסיסי + מתקדם למנהלים בלבד.
     """
     user = update.effective_user
     chat = update.effective_chat
@@ -886,9 +1041,11 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
 
     approval_stats = get_approval_stats() or {}
     reserve_stats = get_reserve_stats() or {}
+    price_nis, entry_nis = get_current_price_and_entry()
+    cfg = load_dynamic_config()
 
     text_lines = [
-        "🛠 *פאנל ניהול SLHNET*",
+        "🛠 *פאנל ניהול SLHNET – תקציר מיידי*",
         "",
         "💳 *סטטוס תשלומים:*",
         f" - ממתינים: {approval_stats.get('pending', 0)}",
@@ -900,10 +1057,28 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         f" - סך נטו: {reserve_stats.get('total_net', 0)}",
         f" - סך תשלומים: {reserve_stats.get('total_payments', 0)}",
         "",
-        "📋 *פקודות ניהול זמינות:*",
+        "💎 *שער SLH ודינמיקת מינט:*",
+        f" - מחיר נוכחי ל-SLH 1: ~{format_decimal_pretty(price_nis)} ₪",
+        f" - סכום כניסה (NIS_ENTRY_AMOUNT): ~{format_decimal_pretty(entry_nis)} ₪",
+        f" - SLH מחושב לכל כניסה: ~{format_decimal_pretty(compute_slh_for_entry(price_nis, entry_nis))} SLH",
+        f" - סך SLH שחולקו ללקוחות: ~{format_decimal_pretty(Decimal(str(cfg.get('total_slh_minted', 0.0))))} SLH",
+        "",
+        "📋 *פקודות ניהול זמינות (לשימושך ולמסמך ללקוחות):*",
         " - /pending  – רשימת תשלומים ממתינים",
-        " - /approve <user_id>  – אישור תשלום ושליחת קישור לקבוצה + לינק אישי",
-        " - /reject <user_id> <סיבה>  – דחיית תשלום והודעה ללקוח",
+        " - /approve <user_id>  – אישור תשלום: סטטוס + שליחת קישור לקבוצה + מינט SLH אוטומטי",
+        " - /reject <user_id> <סיבה>  – דחיית תשלום: סטטוס + הודעה ללקוח",
+        "",
+        " - /set_price <מחיר_ש\"ח_ל-SLH_1>",
+        "     מעדכן את שער SLH בש\"ח. מכאן ואילך חישוב הכמות ללקוח משתנה בהתאם.",
+        "",
+        " - /admin_wallet",
+        "     מציג תמונת מצב מערכתית: שער נוכחי, סכום כניסה, סך SLH שחולקו, כתובות ארנק חם / קר.",
+        "",
+        " - /admin_user <user_id>",
+        "     מציג פרטי משתמש: ארנק פנימי, סטייקינג, הפניות – לצורך תמונת מצב לפני החלטות.",
+        "",
+        " - /admin_credit <user_id> <amount_slh>",
+        "     מאפשר לתת זיכוי SLH פנימי ידני למשתמש (לדוגמה: בונוס, תיקון טכני, מתנה).",
     ]
 
     await chat.send_message("\n".join(text_lines), parse_mode="Markdown")
@@ -933,10 +1108,49 @@ async def pending_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
     await chat.send_message("\n".join(lines), parse_mode="Markdown")
 
 
+async def auto_mint_slh_for_entry(user_id: int) -> Optional[Decimal]:
+    """
+    מינט SLH אוטומטי למשתמש בעקבות תשלום מאושר.
+    משתמש במחיר SLH נוכחי ובסכום כניסה NIS_ENTRY_AMOUNT.
+    """
+    try:
+        price_nis, entry_nis = get_current_price_and_entry()
+        amount_slh = compute_slh_for_entry(price_nis, entry_nis)
+        if amount_slh <= 0:
+            logger.warning("auto_mint_slh_for_entry: computed amount <= 0, skipping")
+            return None
+
+        reason = (
+            f"Entry payment {format_decimal_pretty(entry_nis)} NIS at price "
+            f"{format_decimal_pretty(price_nis)} NIS per SLH"
+        )
+
+        # מינט בפועל דרך מודול הארנקים
+        try:
+            mint_slh_from_payment(user_id, amount_slh, reason)
+        except TypeError:
+            # אם הפונקציה מוגדרת בגירסה ישנה עם פחות פרמטרים – נתמוך גם בה
+            mint_slh_from_payment(user_id, amount_slh)
+
+        record_mint_amount(amount_slh)
+
+        await send_log_message(
+            "💎 מינט SLH אוטומטי בעקבות תשלום מאושר:\n"
+            f"👤 user_id={user_id}\n"
+            f"📊 כמות: {format_decimal_pretty(amount_slh)} SLH\n"
+            f"🏷 סיבה: {reason}"
+        )
+
+        return amount_slh
+    except Exception as e:
+        logger.error(f"auto_mint_slh_for_entry error for user {user_id}: {e}")
+        return None
+
+
 async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
     אישור תשלום ידני לפי user_id – למנהלים בלבד.
-    שולח למשתמש גם קישור לקבוצה וגם קישור אישי להפניות.
+    שולח למשתמש גם קישור לקבוצה וגם קישור אישי להפניות + מינט SLH.
     """
     user = update.effective_user
     chat = update.effective_chat
@@ -965,12 +1179,21 @@ async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         await chat.send_message("❌ שגיאה בעדכון סטטוס התשלום.")
         return
 
+    # מינט SLH לפי שער נוכחי
+    minted = await auto_mint_slh_for_entry(target_id)
+    minted_str = format_decimal_pretty(minted) if minted else None
+
     group_url = safe_get_url(
         Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE, Config.LANDING_URL
     )
     referral_link = f"https://t.me/{Config.BOT_USERNAME}?start={target_id}"
 
     try:
+        extra_slh = (
+            f"\n\nכחלק מההצטרפות קיבלת *{minted_str}* SLH פנימי לארנק שלך."
+            if minted_str
+            else ""
+        )
         await context.bot.send_message(
             chat_id=target_id,
             text=(
@@ -978,17 +1201,23 @@ async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
                 f"{group_url}\n\n"
                 "בנוסף, זה הקישור האישי שלך להזמנת חברים:\n"
-                f"{referral_link}\n\n"
-                "תוכל תמיד לקבל אותו שוב בפקודה /my_link.\n"
+                f"{referral_link}\n"
+                f"{extra_slh}\n\n"
+                "תוכל תמיד לקבל את הקישור האישי שוב בפקודה /my_link.\n"
                 "ברוך הבא 🙌"
             ),
+            parse_mode="Markdown",
         )
     except Exception as e:
         logger.error(f"Error sending approval message to user {target_id}: {e}")
 
-    await chat.send_message(
+    admin_msg = (
         f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה + לינק אישי."
     )
+    if minted_str:
+        admin_msg += f"\nנמינטו לו {minted_str} SLH פנימיים."
+
+    await chat.send_message(admin_msg)
 
 
 async def reject_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1038,10 +1267,259 @@ async def reject_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     await chat.send_message(f"🚫 התשלום של המשתמש {target_id} נדחה ונשלחה לו הודעה.")
 
 
+async def set_price_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    /set_price <מחיר_ש\"ח_ל-SLH_1>
+    עדכון שער SLH – משפיע על כמות ה-SLH שמקבל כל לקוח בכניסה (39 ₪ כברירת מחדל).
+    """
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /set_price מיועדת למנהלי המערכת בלבד.")
+        return
+
+    if not context.args:
+        price_nis, entry_nis = get_current_price_and_entry()
+        await chat.send_message(
+            "ℹ️ שער SLH נוכחי:\n"
+            f"• מחיר ל-SLH 1: {format_decimal_pretty(price_nis)} ₪\n"
+            f"• סכום כניסה: {format_decimal_pretty(entry_nis)} ₪\n"
+            f"• SLH לכל כניסה: {format_decimal_pretty(compute_slh_for_entry(price_nis, entry_nis))} SLH\n\n"
+            "כדי לעדכן:\n"
+            "/set_price <מחיר_ש\"ח_ל-SLH_1>\n"
+            "לדוגמה: /set_price 500",
+            parse_mode="Markdown",
+        )
+        return
+
+    try:
+        new_price = Decimal(context.args[0].replace(",", "."))
+        if new_price <= 0:
+            raise InvalidOperation
+    except InvalidOperation:
+        await chat.send_message("מחיר לא תקין. השתמש במספר גדול מאפס, לדוגמה: 444")
+        return
+
+    cfg = load_dynamic_config()
+    old_price = Decimal(str(cfg.get("slh_nis_price", float(DEFAULT_SLH_PRICE))))
+    cfg["slh_nis_price"] = float(new_price)
+    save_dynamic_config(cfg)
+
+    await send_log_message(
+        "⚙️ עדכון שער SLH:\n"
+        f"👤 admin_id={user.id}\n"
+        f"ישן: {format_decimal_pretty(old_price)} ₪\n"
+        f"חדש: {format_decimal_pretty(new_price)} ₪"
+    )
+
+    price_nis, entry_nis = get_current_price_and_entry()
+    await chat.send_message(
+        "✅ שער SLH עודכן בהצלחה.\n\n"
+        f"מחיר חדש ל-SLH 1: *{format_decimal_pretty(price_nis)} ₪*\n"
+        f"סכום כניסה: *{format_decimal_pretty(entry_nis)} ₪*\n"
+        f"SLH מחושב לכל כניסה: *{format_decimal_pretty(compute_slh_for_entry(price_nis, entry_nis))}* SLH",
+        parse_mode="Markdown",
+    )
+
+
+async def admin_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    סקירת מצב מערכת: שערים, כמות SLH שחולקה, וארנק חם/קר.
+    """
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /admin_wallet מיועדת למנהלי המערכת בלבד.")
+        return
+
+    price_nis, entry_nis = get_current_price_and_entry()
+    cfg = load_dynamic_config()
+    total_minted = Decimal(str(cfg.get("total_slh_minted", 0.0)))
+
+    hot = Config.HOT_WALLET_ADDRESS or "לא הוגדר (HOT_WALLET_ADDRESS)"
+    cold = Config.COLD_WALLET_ADDRESS or "לא הוגדר (COLD_WALLET_ADDRESS)"
+
+    lines = [
+        "💼 *ארנק מערכת – תמונת מצב*",
+        "",
+        "💎 *שער SLH נוכחי:*",
+        f"• מחיר ל-SLH 1: *{format_decimal_pretty(price_nis)} ₪*",
+        f"• סכום כניסה: *{format_decimal_pretty(entry_nis)} ₪*",
+        f"• SLH לכל כניסה: *{format_decimal_pretty(compute_slh_for_entry(price_nis, entry_nis))}* SLH",
+        "",
+        f"📊 *סך SLH שחולקו ללקוחות:* *{format_decimal_pretty(total_minted)}* SLH",
+        "",
+        "🔥 *ארנק חם (On-chain):*",
+        f"• {hot}",
+        "",
+        "❄️ *ארנק קר / כספת קהילה:*",
+        f"• {cold}",
+        "",
+        "להגדרת הכתובות, עדכן משתני סביבה בשרת:\n"
+        "HOT_WALLET_ADDRESS, COLD_WALLET_ADDRESS",
+    ]
+
+    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+
+
+async def admin_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    /admin_user <user_id>
+    מציג למנהל תמונת מצב על משתמש: ארנק, סטייקינג, הפניות.
+    """
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /admin_user מיועדת למנהלי המערכת בלבד.")
+        return
+
+    if not context.args:
+        await chat.send_message("שימוש: /admin_user <user_id>")
+        return
+
+    try:
+        target_id = int(context.args[0])
+    except ValueError:
+        await chat.send_message("user_id לא תקין.")
+        return
+
+    try:
+        ensure_internal_wallet(target_id, None)
+        overview = get_wallet_overview(target_id) or {}
+        stakes = get_user_stakes(target_id) or []
+    except Exception as e:
+        logger.error(f"admin_user error for {target_id}: {e}")
+        await chat.send_message("❌ לא ניתן לטעון את נתוני המשתמש.")
+        return
+
+    # ארנק פנימי
+    try:
+        balance = Decimal(str(overview.get("balance_slh", "0")))
+    except Exception:
+        balance = Decimal("0")
+
+    wallet_id = overview.get("wallet_id", "?")
+
+    total_staked = Decimal("0")
+    for s in stakes:
+        try:
+            total_staked += Decimal(str(s.get("amount_slh", "0")))
+        except Exception:
+            continue
+
+    # הפניות
+    refs = load_referrals()
+    udata = refs.get("users", {}).get(str(target_id), {})
+    my_ref_count = udata.get("referral_count", 0)
+    joined_at = udata.get("joined_at", "לא ידוע")
+    referrer = udata.get("referrer", "N/A")
+
+    price_nis, _ = get_current_price_and_entry()
+    wallet_value_nis = balance * price_nis if price_nis > 0 else Decimal("0")
+
+    lines = [
+        "🔍 *צילום מצב משתמש – עבור אדמין*",
+        "",
+        f"🆔 user_id: `{target_id}`",
+        f"🔗 referrer: {referrer}",
+        f"📅 הצטרף: {joined_at}",
+        "",
+        "💼 *ארנק פנימי:*",
+        f"• wallet_id: `{wallet_id}`",
+        f"• יתרה זמינה: *{format_decimal_pretty(balance)}* SLH",
+        f"• בסטייקינג: *{format_decimal_pretty(total_staked)}* SLH",
+        f"• שווי משוער בש\"ח (לפי שער נוכחי): ~{format_decimal_pretty(wallet_value_nis)} ₪",
+        "",
+        "👥 *הפניות:*",
+        f"• סה\"כ הפניות על שמו: *{my_ref_count}*",
+        "",
+        f"🔢 מספר עמדות סטייקינג: {len(stakes)}",
+    ]
+
+    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+
+
+async def admin_credit_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    /admin_credit <user_id> <amount_slh>
+    קרדיט ידני של SLH פנימי למשתמש – לדוגמה בונוס / תיקון.
+    """
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    if not is_admin(user.id):
+        await chat.send_message("❌ הפקודה /admin_credit מיועדת למנהלי המערכת בלבד.")
+        return
+
+    if len(context.args) < 2:
+        await chat.send_message("שימוש: /admin_credit <user_id> <amount_slh>")
+        return
+
+    try:
+        target_id = int(context.args[0])
+    except ValueError:
+        await chat.send_message("user_id לא תקין.")
+        return
+
+    try:
+        amount = Decimal(context.args[1].replace(",", "."))
+        if amount <= 0:
+            raise InvalidOperation
+    except InvalidOperation:
+        await chat.send_message("סכום SLH לא תקין. השתמש במספר גדול מאפס.")
+        return
+
+    try:
+        ensure_internal_wallet(target_id, None)
+        reason = f"Manual admin credit by {user.id}"
+        try:
+            mint_slh_from_payment(target_id, amount, reason)
+        except TypeError:
+            mint_slh_from_payment(target_id, amount)
+
+        record_mint_amount(amount)
+
+        await context.bot.send_message(
+            chat_id=target_id,
+            text=(
+                "💎 קיבלת זיכוי SLH מהמנהל.\n"
+                f"סכום: *{format_decimal_pretty(amount)}* SLH\n"
+                "הזיכוי הועבר לארנק הפנימי שלך בבוט.",
+            ),
+            parse_mode="Markdown",
+        )
+
+        await chat.send_message(
+            f"✅ זוכו למשתמש {target_id} *{format_decimal_pretty(amount)}* SLH פנימיים.",
+            parse_mode="Markdown",
+        )
+
+        await send_log_message(
+            "💎 קרדיט אדמין:\n"
+            f"👤 admin_id={user.id}\n"
+            f"👤 target_id={target_id}\n"
+            f"📊 amount={format_decimal_pretty(amount)} SLH"
+        )
+    except Exception as e:
+        logger.error(f"admin_credit error for {target_id}: {e}")
+        await chat.send_message("❌ שגיאה בעת יצירת הקרדיט.")
+
+
 # ===== Wallet & staking =====
 async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    מציג למשתמש את ארנק ה-SLH הפנימי שלו + סכום בסטייקינג.
+    מציג למשתמש את ארנק ה-SLH הפנימי שלו + סכום בסטייקינג + מידע SLH/ש\"ח + ארנק חם/קר.
     """
     user = update.effective_user
     chat = update.effective_chat
@@ -1076,16 +1554,27 @@ async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     balance_str = format_decimal_pretty(balance)
     total_staked_str = format_decimal_pretty(total_staked)
 
+    price_nis, _ = get_current_price_and_entry()
+    value_nis = balance * price_nis if price_nis > 0 else Decimal("0")
+
+    hot = Config.HOT_WALLET_ADDRESS or "טרם הוגדר (HOT_WALLET_ADDRESS)"
+    cold = Config.COLD_WALLET_ADDRESS or "טרם הוגדר (COLD_WALLET_ADDRESS)"
+
     msg = (
         "💼 *ארנק SLH פנימי*\n\n"
-        f"🆔 ID ארנק: `{wallet_id}`\n"
+        f"🆔 ID ארנק פנימי: `{wallet_id}`\n"
         f"💰 יתרה זמינה: *{balance_str}* SLH\n"
-        f"🔒 סה״כ בסטייקינג: {total_staked_str} SLH\n\n"
+        f"🔒 סה״כ בסטייקינג: {total_staked_str} SLH\n"
+        f"💱 שווי משוער בש\"ח (לפי שער נוכחי): ~{format_decimal_pretty(value_nis)} ₪\n\n"
         "כדי לפתוח סטייקינג חדש:\n"
         "*/stake <סכום_SLH> <ימי_נעילה>* לדוגמה:\n"
         "`/stake 100 30` – סטייקינג על 100 SLH ל-30 ימים.\n\n"
         "לצפייה בכל הסטייקים הפעילים:\n"
-        "השתמש ב-/mystakes."
+        "השתמש ב-/mystakes.\n\n"
+        "🔥 *ארנק חם (On-chain / BSC / TON):*\n"
+        f"{hot}\n\n"
+        "❄️ *ארנק קר / כספת קהילה:*\n"
+        f"{cold}"
     )
 
     await chat.send_message(text=msg, parse_mode="Markdown")
@@ -1290,12 +1779,16 @@ async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
     udata = refs.get("users", {}).get(str(user.id), {})
     my_ref_count = udata.get("referral_count", 0)
 
+    price_nis, _ = get_current_price_and_entry()
+    value_nis = balance * price_nis if price_nis > 0 else Decimal("0")
+
     text = (
         "📊 *האזור האישי שלך – SLHNET*\n\n"
         "💼 *ארנק פנימי:*\n"
         f"• יתרה זמינה: *{balance_str}* SLH\n"
         f"• בסטייקינג: *{total_staked_str}* SLH\n"
-        f"• רווח משוער מכל הסטייקים (לסוף התקופות): ~{total_expected_str} SLH\n\n"
+        f"• רווח משוער מכל הסטייקים (לסוף התקופות): ~{total_expected_str} SLH\n"
+        f"• שווי משוער בש\"ח (לפי שער נוכחי): ~{format_decimal_pretty(value_nis)} ₪\n\n"
         "👥 *הפניות:*\n"
         f"• סה\"כ הפניות על שמך: *{my_ref_count}*\n"
         "• קבל לינק אישי בפקודה: /my_link\n"
@@ -1325,7 +1818,19 @@ async def handle_investor_callback(update: Update, context: ContextTypes.DEFAULT
         ),
     )
     keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")]]
+        [
+            [
+                InlineKeyboardButton(
+                    "🔙 חזרה לתפריט הראשי", callback_data="back_to_main"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "🐞 דיווח באג במסך זה",
+                    callback_data="report_bug:investor_screen",
+                )
+            ],
+        ]
     )
     await query.edit_message_text(
         text=investor_text, reply_markup=keyboard, parse_mode="Markdown"
@@ -1341,7 +1846,7 @@ def build_payment_instructions_text(method: str) -> str:
         "1️⃣ שמור צילום מסך ברור של אישור התשלום (או קובץ PDF / מסמך מהבנק).\n"
         "2️⃣ שלח את צילום המסך כאן בצ׳אט עם הבוט.\n"
         "3️⃣ המערכת תעביר את האישור אוטומטית לקבוצת הניהול.\n\n"
-        "אחרי שהאדמין יאשר – תקבל קישור לקבוצת העסקים + גישה לכל הכלים הדיגיטליים."
+        "אחרי שהאדמין יאשר – תקבל קישור לקבוצת העסקים + זיכוי SLH בארנק הפנימי."
     )
 
     if method == "bank":
@@ -1421,6 +1926,12 @@ async def handle_payment_method_callback(
                 )
             ],
             [InlineKeyboardButton("🏠 חזרה לתפריט הראשי", callback_data="back_to_main")],
+            [
+                InlineKeyboardButton(
+                    "🐞 דיווח באג במסך זה",
+                    callback_data=f"report_bug:pay_{method}",
+                )
+            ],
         ]
     )
     await query.edit_message_text(text=text, reply_markup=keyboard, parse_mode="Markdown")
@@ -1443,7 +1954,19 @@ async def handle_benefits_callback(update: Update, context: ContextTypes.DEFAULT
         ),
     )
     keyboard = InlineKeyboardMarkup(
-        [[InlineKeyboardButton("🔙 חזרה לתפריט הראשי", callback_data="back_to_main")]]
+        [
+            [
+                InlineKeyboardButton(
+                    "🔙 חזרה לתפריט הראשי", callback_data="back_to_main"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "🐞 דיווח באג במסך זה",
+                    callback_data="report_bug:benefits_screen",
+                )
+            ],
+        ]
     )
     await query.edit_message_text(
         text=benefits_text, reply_markup=keyboard, parse_mode="Markdown"
@@ -1465,7 +1988,47 @@ async def handle_personal_area_callback(update: Update, context: ContextTypes.DE
         "בהמשך נוסיף כאן שאלון קצר כדי להכיר אותך טוב יותר ולחבר אותך\n"
         "למומחים ולעסקים הרלוונטיים לך."
     )
-    await query.edit_message_text(text=text, parse_mode="Markdown")
+    keyboard = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "🏠 חזרה לתפריט הראשי", callback_data="back_to_main"
+                )
+            ],
+            [
+                InlineKeyboardButton(
+                    "🐞 דיווח באג במסך זה",
+                    callback_data="report_bug:personal_area",
+                )
+            ],
+        ]
+    )
+    await query.edit_message_text(text=text, reply_markup=keyboard, parse_mode="Markdown")
+
+
+async def handle_bug_report_callback(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    feature_id: str,
+) -> None:
+    """
+    כל callback_data שמתחיל ב-report_bug: מגיע לכאן.
+    שולח לוג לקבוצת ה-LOGS ומחזיר למשתמש תודה קצרה.
+    """
+    query = update.callback_query
+    if not query:
+        return
+
+    user = query.from_user
+    chat = query.message.chat if query.message else None
+
+    await send_bug_report(feature_id, user, chat)
+
+    await query.edit_message_text(
+        "🐞 תודה שדיווחת על תקלה!\n"
+        "הודעה נשלחה לצוות הפיתוח עם פרטי השלב שבו לחצת.\n"
+        "במידת הצורך נחזור אליך דרך הבוט או קבוצת התמיכה."
+    )
 
 
 async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1496,6 +2059,9 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
         await handle_payment_method_callback(update, context, "paypal")
     elif data == "pay_ton":
         await handle_payment_method_callback(update, context, "ton")
+    elif data.startswith("report_bug:"):
+        feature_id = data.split(":", 1)[1] or "unknown_feature"
+        await handle_bug_report_callback(update, context, feature_id)
     elif data.startswith("approve:"):
         if not is_admin(query.from_user.id):
             await query.answer("רק מנהל יכול לאשר תשלום.", show_alert=True)
@@ -1514,6 +2080,9 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
             await query.answer("שגיאה בעדכון סטטוס התשלום.", show_alert=True)
             return
 
+        minted = await auto_mint_slh_for_entry(target_id)
+        minted_str = format_decimal_pretty(minted) if minted else None
+
         group_url = safe_get_url(
             Config.BUSINESS_GROUP_URL or Config.GROUP_STATIC_INVITE,
             Config.LANDING_URL,
@@ -1521,6 +2090,11 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
         referral_link = f"https://t.me/{Config.BOT_USERNAME}?start={target_id}"
 
         try:
+            extra_slh = (
+                f"\n\nכחלק מההצטרפות קיבלת *{minted_str}* SLH פנימי לארנק שלך."
+                if minted_str
+                else ""
+            )
             await context.bot.send_message(
                 chat_id=target_id,
                 text=(
@@ -1528,17 +2102,22 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
                     "הנה הקישור להצטרפות לקהילת העסקים שלנו:\n"
                     f"{group_url}\n\n"
                     "בנוסף, זה הקישור האישי שלך להזמנת חברים:\n"
-                    f"{referral_link}\n\n"
+                    f"{referral_link}\n"
+                    f"{extra_slh}\n\n"
                     "תוכל תמיד לקבל אותו שוב בפקודה /my_link.\n"
                     "ברוך הבא 🙌"
                 ),
+                parse_mode="Markdown",
             )
         except Exception as e:
             logger.error(f"Error sending approval message to user {target_id}: {e}")
 
-        await query.edit_message_text(
+        admin_msg = (
             f"✅ התשלום של המשתמש {target_id} אושר ונשלח לו קישור לקבוצה + לינק אישי."
         )
+        if minted_str:
+            admin_msg += f"\nנמינטו לו {minted_str} SLH פנימיים."
+        await query.edit_message_text(admin_msg)
     elif data.startswith("reject:"):
         if not is_admin(query.from_user.id):
             await query.answer("רק מנהל יכול לדחות תשלום.", show_alert=True)
@@ -1637,6 +2216,7 @@ async def monthly_metrics():
 async def debug_config():
     """
     החזרת תמונת קונפיגורציה (ללא סודות) כדי שתוכל לבדוק מה נטען בשרת.
+    כולל שער SLH נוכחי ומידע ארנק חם/קר.
     """
     return Config.snapshot()
 
@@ -1662,13 +2242,13 @@ async def metrics():
 @app.get("/health", response_model=HealthResponse)
 async def health() -> HealthResponse:
     """
-    נקודת בריאות ל-Railway (/health) – כפי שביקשת.
+    נקודת בריאות ל-Railway (/health).
     """
     return HealthResponse(
         status="ok",
         service="slhnet-telegram-gateway",
         timestamp=datetime.now().isoformat(),
-        version="2.1.0",
+        version="2.2.0",
     )
 
 
