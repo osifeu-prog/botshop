@@ -24,6 +24,7 @@ def _get_token_price_nis() -> Decimal:
     """
     מחיר מטבע SLH בש״ח – ניתן לשינוי דרך משתני סביבה.
     ברירת מחדל: 444 ש״ח ל-1 SLH.
+    ENV: SLH_TOKEN_PRICE_NIS
     """
     try:
         return Decimal(os.getenv("SLH_TOKEN_PRICE_NIS", "444"))
@@ -34,7 +35,7 @@ def _get_token_price_nis() -> Decimal:
 def _get_entry_price_nis() -> Decimal:
     """
     מחיר כניסה – תשלום בסיס בטלגרם (39 ש״ח כברירת מחדל).
-    ניתן לעדכן דרך SLH_ENTRY_PRICE_NIS.
+    ENV: SLH_ENTRY_PRICE_NIS
     """
     try:
         return Decimal(os.getenv("SLH_ENTRY_PRICE_NIS", "39"))
@@ -64,6 +65,14 @@ def init_internal_wallet_schema() -> None:
                 updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
             );
             """
+        )
+
+        # שדות לכתובות on-chain (ארנק חם)
+        cur.execute(
+            "ALTER TABLE internal_wallets ADD COLUMN IF NOT EXISTS bsc_address TEXT;"
+        )
+        cur.execute(
+            "ALTER TABLE internal_wallets ADD COLUMN IF NOT EXISTS ton_address TEXT;"
         )
 
         # ספר תנועות ארנק
@@ -119,7 +128,8 @@ def ensure_internal_wallet(user_id: int, username: Optional[str]) -> Dict[str, A
             ON CONFLICT (user_id) DO UPDATE
               SET username = EXCLUDED.username,
                   updated_at = NOW()
-            RETURNING id, user_id, username, balance_slh, created_at, updated_at;
+            RETURNING id, user_id, username, balance_slh, created_at, updated_at,
+                      bsc_address, ton_address;
             """,
             (user_id, username),
         )
@@ -133,6 +143,8 @@ def ensure_internal_wallet(user_id: int, username: Optional[str]) -> Dict[str, A
         "balance_slh": _to_decimal(row[3]),
         "created_at": row[4],
         "updated_at": row[5],
+        "bsc_address": row[6],
+        "ton_address": row[7],
     }
 
 
@@ -143,7 +155,8 @@ def get_wallet_overview(user_id: int) -> Optional[Dict[str, Any]]:
 
         cur.execute(
             """
-            SELECT id, user_id, username, balance_slh, created_at, updated_at
+            SELECT id, user_id, username, balance_slh, created_at, updated_at,
+                   bsc_address, ton_address
             FROM internal_wallets
             WHERE user_id = %s;
             """,
@@ -161,7 +174,51 @@ def get_wallet_overview(user_id: int) -> Optional[Dict[str, Any]]:
             "balance_slh": _to_decimal(row[3]),
             "created_at": row[4],
             "updated_at": row[5],
+            "bsc_address": row[6],
+            "ton_address": row[7],
         }
+
+
+def set_onchain_addresses(
+    user_id: int,
+    bsc_address: Optional[str],
+    ton_address: Optional[str],
+) -> Dict[str, Any]:
+    """
+    מעדכן כתובות on-chain (ארנק חם) למשתמש.
+    """
+    with db_cursor() as (conn, cur):
+        if cur is None:
+            raise RuntimeError("DB not available")
+
+        cur.execute(
+            """
+            INSERT INTO internal_wallets (user_id)
+            VALUES (%s)
+            ON CONFLICT (user_id) DO NOTHING;
+            """,
+            (user_id,),
+        )
+
+        cur.execute(
+            """
+            UPDATE internal_wallets
+            SET bsc_address = COALESCE(%s, bsc_address),
+                ton_address = COALESCE(%s, ton_address),
+                updated_at = NOW()
+            WHERE user_id = %s
+            RETURNING id, bsc_address, ton_address;
+            """,
+            (bsc_address, ton_address, user_id),
+        )
+        row = cur.fetchone()
+        conn.commit()
+
+    return {
+        "wallet_id": row[0],
+        "bsc_address": row[1],
+        "ton_address": row[2],
+    }
 
 
 def _add_ledger_entry(
@@ -438,47 +495,33 @@ def mint_slh_from_payment(amount_nis: Decimal) -> Decimal:
     return (amount_nis / price).quantize(Decimal("0.000000000000000001"))
 
 
-def credit_wallet_from_payment(
+def credit_wallet_from_entry_price(
     user_id: int,
     username: Optional[str],
-    amount_nis: Decimal,
-    ref_type: str = "payment",
+    ref_type: Optional[str] = "entry_payment",
     ref_id: Optional[int] = None,
 ) -> Dict[str, Any]:
     """
-    מזכה ארנק פנימי על בסיס סכום בש״ח:
-    - מחשב כמה SLH מגיעים לפי מחיר המטבע הנוכחי.
-    - מזכה את הארנק ומוסיף רשומת לוג.
+    מזכה משתמש ב-SLH לפי מחיר הכניסה (SLH_ENTRY_PRICE_NIS) וחישוב מחיר המטבע (SLH_TOKEN_PRICE_NIS).
+    למשל: 39 ₪ / 444 ₪ ≈ 0.0878 SLH.
     """
-    slh_amount = mint_slh_from_payment(amount_nis)
-    if slh_amount <= 0:
-        raise ValueError("לא ניתן להנפיק SLH – מחיר מטבע לא תקין או סכום נמוך מדי.")
+    entry_price = _get_entry_price_nis()
+    if entry_price <= 0:
+        raise ValueError("Entry price must be positive")
+
+    amount_slh = mint_slh_from_payment(entry_price)
+    if amount_slh <= 0:
+        raise ValueError("Calculated SLH amount is not positive")
+
+    logger.info(
+        f"Minting {amount_slh} SLH for user {user_id} based on entry price {entry_price} NIS."
+    )
 
     return credit_wallet(
         user_id=user_id,
         username=username,
-        amount_slh=slh_amount,
-        reason=f"mint from payment {amount_nis} NIS",
-        ref_type=ref_type,
-        ref_id=ref_id,
-    )
-
-
-def credit_wallet_from_entry_price(
-    user_id: int,
-    username: Optional[str],
-    ref_type: str = "entry_payment",
-    ref_id: Optional[int] = None,
-) -> Dict[str, Any]:
-    """
-    מזכה ארנק פנימי לפי מחיר הכניסה המוגדר (SLH_ENTRY_PRICE_NIS).
-    שימושי למקרה שבו כל כניסה לבוט היא, למשל, 39 ש״ח.
-    """
-    amount_nis = _get_entry_price_nis()
-    return credit_wallet_from_payment(
-        user_id=user_id,
-        username=username,
-        amount_nis=amount_nis,
+        amount_slh=amount_slh,
+        reason=f"entry payment {entry_price} NIS",
         ref_type=ref_type,
         ref_id=ref_id,
     )
