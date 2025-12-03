@@ -143,7 +143,7 @@ try:
     if core_router is not None:
         app.include_router(core_router, prefix="/api/core", tags=["core"])
     if slhnet_extra_router is not None:
-        app.include_router(shnet_extra_router, prefix="/api/extra", tags=["extra"])
+        app.include_router(slhnet_extra_router, prefix="/api/extra", tags=["extra"])
 except Exception as e:
     logger.error(f"Error including routers: {e}")
 
@@ -300,6 +300,81 @@ def upsert_profile(
         save_profiles(profiles)
     except Exception as e:
         logger.error(f"Error upserting profile: {e}")
+
+
+# =========================
+# On-chain (external) wallets per user (file-based)
+# =========================
+
+ONCHAIN_FILE = DATA_DIR / "onchain_wallets.json"
+
+
+def load_onchain_wallets() -> Dict[str, Any]:
+    """
+    אחסון פשוט של כתובות On-chain לכל משתמש:
+    {
+      "123456789": {
+        "bsc": "0x....",
+        "ton": "UQ....",
+        "updated_at": "ISO8601"
+      },
+      ...
+    }
+    """
+    if not ONCHAIN_FILE.exists():
+        return {}
+    try:
+        with ONCHAIN_FILE.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        logger.error(f"Error loading on-chain wallets: {e}")
+        return {}
+
+
+def save_onchain_wallets(data: Dict[str, Any]) -> None:
+    try:
+        tmp = ONCHAIN_FILE.with_suffix(".tmp")
+        with tmp.open("w", encoding="utf-8") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+        tmp.replace(ONCHAIN_FILE)
+    except Exception as e:
+        logger.error(f"Error saving on-chain wallets: {e}")
+
+
+def get_onchain_wallet(user_id: int) -> Dict[str, Optional[str]]:
+    """
+    מחזיר את הארנק החיצוני של המשתמש (BSC/TON).
+    אם לא מוגדר – מחזיר ערכי None.
+    """
+    data = load_onchain_wallets()
+    rec = data.get(str(user_id), {})
+    return {
+        "bsc": rec.get("bsc"),
+        "ton": rec.get("ton"),
+        "updated_at": rec.get("updated_at"),
+    }
+
+
+def set_onchain_wallet(
+    user_id: int,
+    bsc_address: Optional[str] = None,
+    ton_address: Optional[str] = None,
+) -> Dict[str, Optional[str]]:
+    """
+    מעדכן/יוצר כתובות On-chain למשתמש.
+    אם אחת מהכתובות היא '-', ננקה אותה.
+    """
+    data = load_onchain_wallets()
+    suid = str(user_id)
+    rec = data.get(suid, {})
+    if bsc_address is not None:
+        rec["bsc"] = None if bsc_address == "-" else bsc_address
+    if ton_address is not None:
+        rec["ton"] = None if ton_address == "-" else ton_address
+    rec["updated_at"] = datetime.now().isoformat()
+    data[suid] = rec
+    save_onchain_wallets(data)
+    return rec
 
 
 # =========================
@@ -470,6 +545,15 @@ class ConfigSnapshot(BaseModel):
     total_slh_minted: float
     hot_wallet_address: str
     cold_wallet_address: str
+
+
+class WalletAPIResponse(BaseModel):
+    user_id: int
+    balance_slh: float
+    staked_slh: float
+    value_nis: float
+    bsc_address: Optional[str]
+    ton_address: Optional[str]
 
 
 # =========================
@@ -652,6 +736,10 @@ class TelegramAppManager:
             CommandHandler("my_link", my_link_command),
             CommandHandler("my_referrals", my_referrals_command),
             CommandHandler("portfolio", portfolio_command),
+
+            # ארנק חיצוני אישי (בדיקות בלבד)
+            CommandHandler("onchain_wallet", onchain_wallet_command),
+            CommandHandler("set_wallet", set_wallet_command),
 
             CallbackQueryHandler(callback_query_handler),
             MessageHandler(filters.PHOTO | filters.Document.ALL, payment_proof_handler),
@@ -927,8 +1015,10 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "• /my_link – קישור אישי להזמנת חברים\n"
         "• /my_referrals – רשימת הפניות שלך\n"
         "• /portfolio – סקירה של הארנק, סטייקינג והפניות\n"
-        "• /wallet – פירוט ארנק SLH פנימי\n"
-        "• /mystakes – פירוט עמדות סטייקינג\n\n"
+        "• /wallet – פירוט ארנק SLH פנימי + חיצוני (בדיקות)\n"
+        "• /mystakes – פירוט עמדות סטייקינג\n"
+        "• /onchain_wallet – צפייה בארנק החיצוני (BSC/TON)\n"
+        "• /set_wallet – הגדרת ארנק חיצוני (בדיקות בלבד)\n\n"
         "פקודות למנהלים בלבד:\n"
         "• /admin – פאנל ניהול\n"
         "• /pending – תשלומים ממתינים\n"
@@ -1075,7 +1165,7 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         "     מציג תמונת מצב מערכתית: שער נוכחי, סכום כניסה, סך SLH שחולקו, כתובות ארנק חם / קר.",
         "",
         " - /admin_user <user_id>",
-        "     מציג פרטי משתמש: ארנק פנימי, סטייקינג, הפניות – לצורך תמונת מצב לפני החלטות.",
+        "     מציג פרטי משתמש: ארנק פנימי, סטייקינג, הפניות, ארנק חיצוני – לצורך תמונת מצב לפני החלטות.",
         "",
         " - /admin_credit <user_id> <amount_slh>",
         "     מאפשר לתת זיכוי SLH פנימי ידני למשתמש (לדוגמה: בונוס, תיקון טכני, מתנה).",
@@ -1371,7 +1461,7 @@ async def admin_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYP
 async def admin_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
     /admin_user <user_id>
-    מציג למנהל תמונת מצב על משתמש: ארנק, סטייקינג, הפניות.
+    מציג למנהל תמונת מצב על משתמש: ארנק, סטייקינג, הפניות + ארנק חיצוני (BSC/TON).
     """
     user = update.effective_user
     chat = update.effective_chat
@@ -1426,6 +1516,12 @@ async def admin_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
     price_nis, _ = get_current_price_and_entry()
     wallet_value_nis = balance * price_nis if price_nis > 0 else Decimal("0")
 
+    # ארנק חיצוני אישי
+    onchain = get_onchain_wallet(target_id)
+    bsc_addr = onchain.get("bsc") or "לא מוגדר"
+    ton_addr = onchain.get("ton") or "לא מוגדר"
+    updated_at = onchain.get("updated_at") or "N/A"
+
     lines = [
         "🔍 *צילום מצב משתמש – עבור אדמין*",
         "",
@@ -1443,6 +1539,11 @@ async def admin_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         f"• סה\"כ הפניות על שמו: *{my_ref_count}*",
         "",
         f"🔢 מספר עמדות סטייקינג: {len(stakes)}",
+        "",
+        "🌐 *ארנק חיצוני אישי (בדיקות בלבד):*",
+        f"• BSC / BNB Chain: `{bsc_addr}`",
+        f"• TON: `{ton_addr}`",
+        f"🕒 עודכן לאחרונה: {updated_at}",
     ]
 
     await chat.send_message("\n".join(lines), parse_mode="Markdown")
@@ -1519,13 +1620,15 @@ async def admin_credit_command(update: Update, context: ContextTypes.DEFAULT_TYP
 # ===== Wallet & staking =====
 async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    מציג למשתמש את ארנק ה-SLH הפנימי שלו + סכום בסטייקינג + מידע SLH/ש\"ח + ארנק חם/קר.
+    מציג למשתמש את ארנק ה-SLH הפנימי שלו + סטייקינג + מידע SLH/ש\"ח
+    + ארנק חם/קר של המערכת + ארנק חיצוני אישי (BSC/TON – בדיקות בלבד).
     """
     user = update.effective_user
     chat = update.effective_chat
     if not user or not chat:
         return
 
+    # === ארנק פנימי + סטייקינג ===
     try:
         ensure_internal_wallet(user.id, user.username or None)
         overview = get_wallet_overview(user.id) or {}
@@ -1557,8 +1660,14 @@ async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     price_nis, _ = get_current_price_and_entry()
     value_nis = balance * price_nis if price_nis > 0 else Decimal("0")
 
+    # === ארנקי מערכת (חם/קר) ===
     hot = Config.HOT_WALLET_ADDRESS or "טרם הוגדר (HOT_WALLET_ADDRESS)"
     cold = Config.COLD_WALLET_ADDRESS or "טרם הוגדר (COLD_WALLET_ADDRESS)"
+
+    # === ארנק חיצוני אישי (On-chain) – בדיקות בלבד ===
+    onchain = get_onchain_wallet(user.id)
+    bsc_addr = onchain.get("bsc") or "לא מוגדר"
+    ton_addr = onchain.get("ton") or "לא מוגדר"
 
     msg = (
         "💼 *ארנק SLH פנימי*\n\n"
@@ -1571,10 +1680,16 @@ async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "`/stake 100 30` – סטייקינג על 100 SLH ל-30 ימים.\n\n"
         "לצפייה בכל הסטייקים הפעילים:\n"
         "השתמש ב-/mystakes.\n\n"
-        "🔥 *ארנק חם (On-chain / BSC / TON):*\n"
+        "🔥 *ארנק חם של המערכת (On-chain / BSC / TON):*\n"
         f"{hot}\n\n"
-        "❄️ *ארנק קר / כספת קהילה:*\n"
-        f"{cold}"
+        "❄️ *ארנק קר / כספת קהילה של המערכת:*\n"
+        f"{cold}\n\n"
+        "🌐 *ארנק חיצוני אישי (בדיקות בלבד)*\n"
+        f"• BSC / BNB Chain: `{bsc_addr}`\n"
+        f"• TON: `{ton_addr}`\n\n"
+        "לעדכון הארנק החיצוני:\n"
+        "`/set_wallet <כתובת_BSC|-> [כתובת_TON|-]`\n"
+        "_נכון לעכשיו החיבור החיצוני משמש להצגה ובדיקות בלבד (אין שליחה אמיתית מהבוט)._"
     )
 
     await chat.send_message(text=msg, parse_mode="Markdown")
@@ -1798,9 +1913,86 @@ async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         "• /mystakes – פירוט סטייקינג\n"
         "• /my_link – קישור אישי להזמנת חברים\n"
         "• /my_referrals – פירוט הפניות\n"
+        "• /onchain_wallet – פירוט ארנק חיצוני (בדיקות בלבד)\n"
     )
 
     await chat.send_message(text=text, parse_mode="Markdown")
+
+
+async def set_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    /set_wallet <bsc_address|-> [ton_address|-]
+    מגדיר למשתמש את הכתובות החיצוניות שלו (בדיקות בלבד כרגע).
+    שימוש ב '-' במקום כתובת – מאפס את השדה.
+    """
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    if not context.args:
+        await chat.send_message(
+            "שימוש: /set_wallet <כתובת_BSC|-> [כתובת_TON|-]\n\n"
+            "דוגמאות:\n"
+            "• /set_wallet 0x1234... UQxxxxx...\n"
+            "• /set_wallet 0x1234...      (רק BSC)\n"
+            "• /set_wallet - UQxxxxx...    (מאפס BSC ומשאיר/מגדיר TON)\n"
+            "• /set_wallet - -             (מאפס את שתי הכתובות)"
+        )
+        return
+
+    bsc_arg = context.args[0]
+    ton_arg = context.args[1] if len(context.args) > 1 else None
+
+    rec = set_onchain_wallet(
+        user_id=user.id,
+        bsc_address=bsc_arg,
+        ton_address=ton_arg,
+    )
+
+    bsc = rec.get("bsc") or "לא מוגדר"
+    ton = rec.get("ton") or "לא מוגדר"
+
+    await chat.send_message(
+        "🌐 ארנק חיצוני עודכן (בדיקות בלבד):\n\n"
+        f"• BSC / BNB Chain: `{bsc}`\n"
+        f"• TON: `{ton}`\n\n"
+        "_נכון לעכשיו זה משמש להצגה ובדיקות בלבד – אין שליחה אמיתית מהבוט._",
+        parse_mode="Markdown",
+    )
+
+    await send_log_message(
+        "🌐 עדכון ארנק חיצוני ע\"י משתמש:\n"
+        f"👤 user_id={user.id}\n"
+        f"BSC={bsc}\n"
+        f"TON={ton}"
+    )
+
+
+async def onchain_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    /onchain_wallet – מציג למשתמש רק את הארנק החיצוני שלו (BSC/TON).
+    """
+    user = update.effective_user
+    chat = update.effective_chat
+    if not user or not chat:
+        return
+
+    rec = get_onchain_wallet(user.id)
+    bsc = rec.get("bsc") or "לא מוגדר"
+    ton = rec.get("ton") or "לא מוגדר"
+    updated_at = rec.get("updated_at") or "N/A"
+
+    await chat.send_message(
+        "🌐 *ארנק חיצוני (בדיקות בלבד)*\n\n"
+        f"• BSC / BNB Chain: `{bsc}`\n"
+        f"• TON: `{ton}`\n"
+        f"🕒 עודכן לאחרונה: {updated_at}\n\n"
+        "לעדכון:\n"
+        "`/set_wallet <כתובת_BSC|-> [כתובת_TON|-]`\n\n"
+        "_כרגע בשימוש להצגה ובדיקות בלבד – אין ביצוע טרנזאקציות אמיתיות מהבוט._",
+        parse_mode="Markdown",
+    )
 
 
 # ===== Callback queries =====
@@ -2232,6 +2424,50 @@ async def referrals_summary():
         "statistics": data.get("statistics", {}),
         "users_count": len(data.get("users", {})),
     }
+
+
+@app.get("/api/wallets/{user_id}", response_model=WalletAPIResponse)
+async def api_user_wallet(user_id: int):
+    """
+    מחזיר תמונת מצב של ארנק לממשק ה-API:
+    - ארנק פנימי (יתרה / סטייקינג / שווי בש\"ח)
+    - כתובות BSC/TON (אם הוגדרו) – בדיקות בלבד.
+    """
+    try:
+        ensure_internal_wallet(user_id, None)
+        overview = get_wallet_overview(user_id) or {}
+        stakes = get_user_stakes(user_id) or []
+    except Exception as e:
+        logger.error(f"api_user_wallet error for {user_id}: {e}")
+        raise
+
+    try:
+        balance = Decimal(str(overview.get("balance_slh", "0")))
+    except Exception:
+        balance = Decimal("0")
+
+    total_staked = Decimal("0")
+    for s in stakes:
+        try:
+            total_staked += Decimal(str(s.get("amount_slh", "0")))
+        except Exception:
+            continue
+
+    price_nis, _ = get_current_price_and_entry()
+    value_nis = balance * price_nis if price_nis > 0 else Decimal("0")
+
+    onchain = get_onchain_wallet(user_id)
+    bsc_addr = onchain.get("bsc")
+    ton_addr = onchain.get("ton")
+
+    return WalletAPIResponse(
+        user_id=user_id,
+        balance_slh=float(balance),
+        staked_slh=float(total_staked),
+        value_nis=float(value_nis),
+        bsc_address=bsc_addr,
+        ton_address=ton_addr,
+    )
 
 
 @app.get("/metrics")
