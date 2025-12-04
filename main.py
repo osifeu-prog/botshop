@@ -935,7 +935,7 @@ async def send_start_screen(
         logger.error(f"Error checking approved payment for user {user.id}: {e}")
 
     keyboard = build_start_keyboard(has_paid)
-    await chat.send_message(text=body, reply_markup=keyboard, parse_mode="Markdown")
+    await chat.send_message(text=body, reply_markup=keyboard)
 
     # log
     log_text = (
@@ -974,7 +974,7 @@ async def whoami_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         f"🔄 מספר הפניות: {ref_data.get('referral_count', 0)}\n"
         f"📅 הצטרף: {ref_data.get('joined_at', 'לא ידוע')}"
     )
-    await chat.send_message(text=text, parse_mode="Markdown")
+    await chat.send_message(text=text)
 
 
 async def stats_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1029,7 +1029,7 @@ async def help_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
         "• /admin_user <user_id> – צילום מצב משתמש\n"
         "• /admin_credit <user_id> <amount_slh> – קרדיט ידני של SLH\n"
     )
-    await chat.send_message(text=text, parse_mode="Markdown")
+    await chat.send_message(text=text)
 
 
 # ===== Payments & admin =====
@@ -1171,7 +1171,7 @@ async def admin_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> N
         "     מאפשר לתת זיכוי SLH פנימי ידני למשתמש (לדוגמה: בונוס, תיקון טכני, מתנה).",
     ]
 
-    await chat.send_message("\n".join(text_lines), parse_mode="Markdown")
+    await chat.send_message("\n".join(text_lines))
 
 
 async def pending_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1195,7 +1195,7 @@ async def pending_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
             f"• user_id={p['user_id']} | username=@{p['username'] or 'לא ידוע'} | שיטה={p['pay_method']} | id={p['id']}"
         )
 
-    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+    await chat.send_message("\n".join(lines))
 
 
 async def auto_mint_slh_for_entry(user_id: int) -> Optional[Decimal]:
@@ -1296,7 +1296,7 @@ async def approve_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
                 "תוכל תמיד לקבל את הקישור האישי שוב בפקודה /my_link.\n"
                 "ברוך הבא 🙌"
             ),
-            parse_mode="Markdown",
+            
         )
     except Exception as e:
         logger.error(f"Error sending approval message to user {target_id}: {e}")
@@ -1381,7 +1381,7 @@ async def set_price_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
             "כדי לעדכן:\n"
             "/set_price <מחיר_ש\"ח_ל-SLH_1>\n"
             "לדוגמה: /set_price 500",
-            parse_mode="Markdown",
+            
         )
         return
 
@@ -1411,7 +1411,7 @@ async def set_price_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         f"מחיר חדש ל-SLH 1: *{format_decimal_pretty(price_nis)} ₪*\n"
         f"סכום כניסה: *{format_decimal_pretty(entry_nis)} ₪*\n"
         f"SLH מחושב לכל כניסה: *{format_decimal_pretty(compute_slh_for_entry(price_nis, entry_nis))}* SLH",
-        parse_mode="Markdown",
+        
     )
 
 
@@ -1455,7 +1455,7 @@ async def admin_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYP
         "HOT_WALLET_ADDRESS, COLD_WALLET_ADDRESS",
     ]
 
-    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+    await chat.send_message("\n".join(lines))
 
 
 async def admin_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1546,7 +1546,7 @@ async def admin_user_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         f"🕒 עודכן לאחרונה: {updated_at}",
     ]
 
-    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+    await chat.send_message("\n".join(lines))
 
 
 async def admin_credit_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1598,12 +1598,12 @@ async def admin_credit_command(update: Update, context: ContextTypes.DEFAULT_TYP
                 f"סכום: *{format_decimal_pretty(amount)}* SLH\n"
                 "הזיכוי הועבר לארנק הפנימי שלך בבוט.",
             ),
-            parse_mode="Markdown",
+            
         )
 
         await chat.send_message(
             f"✅ זוכו למשתמש {target_id} *{format_decimal_pretty(amount)}* SLH פנימיים.",
-            parse_mode="Markdown",
+            
         )
 
         await send_log_message(
@@ -1692,7 +1692,7 @@ async def wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         "_נכון לעכשיו החיבור החיצוני משמש להצגה ובדיקות בלבד (אין שליחה אמיתית מהבוט)._"
     )
 
-    await chat.send_message(text=msg, parse_mode="Markdown")
+    await chat.send_message(text=msg)
 
 
 async def send_slh_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1796,7 +1796,7 @@ async def mystakes_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -
             f"• {amount} SLH | {apy}% | {lock_days} ימים | סטטוס: {status} | התחלה: {started}"
         )
 
-    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+    await chat.send_message("\n".join(lines))
 
 
 # ===== Referrals & personal area =====
@@ -1818,7 +1818,7 @@ async def my_link_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
         f"{link}\n\n"
         "כל מי שנכנס דרך הקישור הזה ונרשם – נרשם על שמך במערכת ההפניות."
     )
-    await chat.send_message(text=text, parse_mode="Markdown")
+    await chat.send_message(text=text)
 
 
 async def my_referrals_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1849,7 +1849,7 @@ async def my_referrals_command(update: Update, context: ContextTypes.DEFAULT_TYP
             lines.append(f"• user_id = {rid}")
         lines.append("\nהמשך להזמין אנשים דרך הקישור האישי שלך!")
 
-    await chat.send_message("\n".join(lines), parse_mode="Markdown")
+    await chat.send_message("\n".join(lines))
 
 
 async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1916,7 +1916,7 @@ async def portfolio_command(update: Update, context: ContextTypes.DEFAULT_TYPE) 
         "• /onchain_wallet – פירוט ארנק חיצוני (בדיקות בלבד)\n"
     )
 
-    await chat.send_message(text=text, parse_mode="Markdown")
+    await chat.send_message(text=text)
 
 
 async def set_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -1958,7 +1958,7 @@ async def set_wallet_command(update: Update, context: ContextTypes.DEFAULT_TYPE)
         f"• BSC / BNB Chain: `{bsc}`\n"
         f"• TON: `{ton}`\n\n"
         "_נכון לעכשיו זה משמש להצגה ובדיקות בלבד – אין שליחה אמיתית מהבוט._",
-        parse_mode="Markdown",
+        
     )
 
     await send_log_message(
@@ -1991,7 +1991,7 @@ async def onchain_wallet_command(update: Update, context: ContextTypes.DEFAULT_T
         "לעדכון:\n"
         "`/set_wallet <כתובת_BSC|-> [כתובת_TON|-]`\n\n"
         "_כרגע בשימוש להצגה ובדיקות בלבד – אין ביצוע טרנזאקציות אמיתיות מהבוט._",
-        parse_mode="Markdown",
+        
     )
 
 
@@ -2025,7 +2025,7 @@ async def handle_investor_callback(update: Update, context: ContextTypes.DEFAULT
         ]
     )
     await query.edit_message_text(
-        text=investor_text, reply_markup=keyboard, parse_mode="Markdown"
+        text=investor_text, reply_markup=keyboard
     )
 
 
@@ -2092,7 +2092,7 @@ async def handle_send_proof_menu(update: Update, context: ContextTypes.DEFAULT_T
         "לאחר התשלום, שלח כאן לבוט צילום מסך של האישור."
     )
     keyboard = build_payment_menu_keyboard()
-    await query.edit_message_text(text=text, reply_markup=keyboard, parse_mode="Markdown")
+    await query.edit_message_text(text=text, reply_markup=keyboard)
 
 
 async def handle_payment_method_callback(
@@ -2126,7 +2126,7 @@ async def handle_payment_method_callback(
             ],
         ]
     )
-    await query.edit_message_text(text=text, reply_markup=keyboard, parse_mode="Markdown")
+    await query.edit_message_text(text=text, reply_markup=keyboard)
 
 
 async def handle_benefits_callback(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -2161,7 +2161,7 @@ async def handle_benefits_callback(update: Update, context: ContextTypes.DEFAULT
         ]
     )
     await query.edit_message_text(
-        text=benefits_text, reply_markup=keyboard, parse_mode="Markdown"
+        text=benefits_text, reply_markup=keyboard
     )
 
 
@@ -2195,7 +2195,7 @@ async def handle_personal_area_callback(update: Update, context: ContextTypes.DE
             ],
         ]
     )
-    await query.edit_message_text(text=text, reply_markup=keyboard, parse_mode="Markdown")
+    await query.edit_message_text(text=text, reply_markup=keyboard)
 
 
 async def handle_bug_report_callback(
@@ -2299,7 +2299,7 @@ async def callback_query_handler(update: Update, context: ContextTypes.DEFAULT_T
                     "תוכל תמיד לקבל אותו שוב בפקודה /my_link.\n"
                     "ברוך הבא 🙌"
                 ),
-                parse_mode="Markdown",
+                
             )
         except Exception as e:
             logger.error(f"Error sending approval message to user {target_id}: {e}")
