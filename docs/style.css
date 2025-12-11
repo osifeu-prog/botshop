@@ -1,0 +1,434 @@
+/* ======================================= */
+/* 0. CSS Variables & Theme Definition (Dark Mode ready) */
+/* ======================================= */
+:root {
+    /* Base Colors - Light Theme */
+    --color-primary: #007bff; /* כחול - ראשי */
+    --color-primary-hover: #0056b3;
+    --color-secondary: #6c757d; /* אפור - משני */
+    --color-text: #333; /* טקסט כהה */
+    --color-background: #f4f4f9; /* רקע בהיר */
+    --color-background-alt: #ffffff; /* רקע משני (לסקשנים מתחלפים) */
+    --color-border: #ddd;
+    --color-shadow: rgba(0, 0, 0, 0.1);
+
+    /* Typography */
+    --font-family-primary: 'Arial', sans-serif;
+    --font-size-base: 16px;
+}
+
+/* Dark Theme Overrides */
+html[data-theme='dark'] {
+    --color-text: #f4f4f9; /* טקסט בהיר */
+    --color-background: #1a1a1a; /* רקע כהה */
+    --color-background-alt: #2c2c2c; /* רקע משני כהה */
+    --color-border: #444;
+    --color-shadow: rgba(255, 255, 255, 0.1);
+}
+
+/* ======================================= */
+/* 1. Global Reset & Base Styles */
+/* ======================================= */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family-primary);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background-color: var(--color-background);
+    line-height: 1.6;
+    /* מעבר חלק בין ערכות נושא */
+    transition: background-color 0.3s, color 0.3s; 
+}
+
+h1, h2, h3 {
+    margin-bottom: 0.5em;
+    font-weight: 700;
+}
+
+h1 { font-size: 2.5em; }
+h2 { font-size: 2em; margin-bottom: 1em; }
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section {
+    padding: 60px 0;
+}
+
+.padded {
+    padding: 80px 0;
+}
+
+.bg-alt {
+    background-color: var(--color-background-alt);
+}
+
+.shadow-lg {
+    box-shadow: 0 4px 6px -1px var(--color-shadow);
+}
+
+/* ======================================= */
+/* 2. Navigation (Navbar) */
+/* ======================================= */
+.navbar {
+    background-color: var(--color-background-alt);
+    border-bottom: 1px solid var(--color-border);
+    padding: 15px 0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.navbar .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: var(--color-primary);
+    text-decoration: none;
+}
+
+.nav-links a {
+    color: var(--color-text);
+    text-decoration: none;
+    margin-left: 20px;
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-links a:hover {
+    color: var(--color-primary);
+}
+
+.nav-toggle {
+    display: none; /* נסתר בדסקטופ */
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.btn-icon {
+    background: none;
+    border: none;
+    color: var(--color-text);
+    font-size: 1.2em;
+    cursor: pointer;
+    margin-right: 15px;
+    transition: color 0.2s;
+}
+
+/* ======================================= */
+/* 3. Hero Section */
+/* ======================================= */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    padding-top: 100px;
+    background-color: var(--color-background);
+}
+
+.hero h1 {
+    font-size: 3em;
+    margin-bottom: 0.5em;
+}
+
+.hero .subtitle {
+    font-size: 1.2em;
+    color: var(--color-secondary);
+    max-width: 700px;
+    margin: 0 auto 30px;
+}
+
+/* Buttons */
+.btn {
+    padding: 10px 25px;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    transition: background-color 0.2s, opacity 0.2s;
+    margin: 0 10px;
+}
+
+.btn.primary {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+.btn.primary:hover {
+    background-color: var(--color-primary-hover);
+}
+
+.btn.secondary {
+    background-color: transparent;
+    border: 2px solid var(--color-primary);
+    color: var(--color-primary);
+}
+
+.cta-group {
+    margin-top: 30px;
+}
+
+/* ======================================= */
+/* 4. Layouts & Components */
+/* ======================================= */
+.grid-2, .grid-3 {
+    display: grid;
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.grid-3 {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.grid-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.feature-box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: var(--color-background-alt);
+    border: 1px solid var(--color-border);
+}
+
+.feature-box i {
+    font-size: 2.5em;
+    color: var(--color-primary);
+    margin-bottom: 10px;
+}
+
+.content-split {
+    display: flex;
+    gap: 40px;
+    align-items: center;
+}
+
+.content-split .text-content {
+    flex: 1;
+}
+
+.content-split .media-content {
+    flex: 1;
+    min-height: 300px; /* Placeholder visual space */
+    background-color: var(--color-border);
+    border-radius: 10px;
+}
+
+/* Investor Data */
+.data-card {
+    background-color: var(--color-background-alt);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px var(--color-shadow);
+    text-align: center;
+}
+
+.data-card .big-number {
+    font-size: 3em;
+    font-weight: bold;
+    color: var(--color-primary);
+}
+
+/* Tokenomics Table */
+.tokenomics table {
+    width: 100%;
+    margin-top: 20px;
+    border-collapse: collapse;
+}
+
+.tokenomics th, .tokenomics td {
+    padding: 12px;
+    text-align: right;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.tokenomics th {
+    background-color: var(--color-primary);
+    color: white;
+    font-weight: bold;
+}
+
+.tokenomics tr:nth-child(even) {
+    background-color: var(--color-background);
+}
+
+/* Roadmap (Timeline) */
+.timeline {
+    position: relative;
+    padding: 20px 0;
+    margin: 40px 0;
+    border-right: 2px solid var(--color-primary);
+}
+
+.timeline-item {
+    padding: 0 30px 30px 30px;
+    position: relative;
+}
+
+.timeline-item::before {
+    content: '';
+    position: absolute;
+    right: -10px;
+    top: 5px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: var(--color-primary);
+    border: 4px solid var(--color-background);
+}
+
+.timeline-item.current::before {
+    background-color: #ffc107; /* צהוב/זהב - הדגשה */
+}
+
+/* ======================================= */
+/* 5. FAQ (Accordion) */
+/* ======================================= */
+.faq-item {
+    margin-bottom: 10px;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.faq-question {
+    width: 100%;
+    padding: 15px 20px;
+    background-color: var(--color-background-alt);
+    color: var(--color-text);
+    border: none;
+    text-align: right;
+    font-weight: bold;
+    font-size: 1.1em;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: background-color 0.2s;
+}
+
+.faq-question:hover {
+    background-color: var(--color-background);
+}
+
+.faq-item.active .faq-question {
+    color: var(--color-primary);
+}
+
+.faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+    padding: 0 20px;
+    background-color: var(--color-background);
+}
+
+.faq-item.active .faq-answer {
+    max-height: 500px; /* מספיק גדול להכיל כל תוכן */
+    padding: 15px 20px;
+}
+
+/* ======================================= */
+/* 6. Footer */
+/* ======================================= */
+.footer {
+    background-color: var(--color-background-alt);
+    border-top: 1px solid var(--color-border);
+    padding: 20px 0;
+    color: var(--color-text);
+    text-align: center;
+}
+
+.footer .container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.social-links a {
+    color: var(--color-text);
+    font-size: 1.5em;
+    margin-right: 15px;
+    transition: color 0.2s;
+}
+
+.social-links a:hover {
+    color: var(--color-primary);
+}
+
+
+/* ======================================= */
+/* 7. Responsiveness (Mobile First) */
+/* ======================================= */
+
+@media (max-width: 768px) {
+    .navbar .container {
+        flex-wrap: wrap;
+    }
+    
+    .nav-links {
+        display: none; /* נסתר כברירת מחדל במובייל */
+        flex-direction: column;
+        width: 100%;
+        background-color: var(--color-background-alt);
+        position: absolute;
+        top: 60px; /* מתחת ל-Navbar */
+        left: 0;
+        border-top: 1px solid var(--color-border);
+    }
+    
+    .nav-links.open {
+        display: flex; /* מוצג בלחיצה על Toggle */
+    }
+
+    .nav-links a {
+        margin: 0;
+        padding: 15px 20px;
+        border-bottom: 1px solid var(--color-border);
+    }
+    
+    .nav-toggle {
+        display: block; /* מוצג במובייל */
+    }
+
+    .content-split {
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .grid-2 {
+        grid-template-columns: 1fr; /* טור אחד במובייל */
+    }
+    
+    .hero h1 {
+        font-size: 2em;
+    }
+
+    .footer .container {
+        flex-direction: column;
+        gap: 10px;
+    }
+}
