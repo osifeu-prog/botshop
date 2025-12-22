@@ -1,1051 +1,1259 @@
 <!DOCTYPE html>
-<html lang="he" dir="rtl" data-theme="light">
+<html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLH Ecosystem - אקוסיסטם דיגיטלי חדשני | AI, בלוקצ'יין וכלכלה חברתית</title>
-    
-    <meta name="description" content="SLH Ecosystem: אקוסיסטם דיגיטלי המשלב AI, בלוקצ'יין, ארנקי קריפטו, מסחר אוטומטי ואקדמיה למומחים. הצטרפו לעתיד הכלכלי!">
-    <meta name="keywords" content="SLH, Ecosystem, AI, בלוקצ'יין, קריפטו, מסחר, טלגרם בוט, השקעה, web3, web2, כלכלה חברתית">
-    <meta property="og:title" content="SLH Ecosystem - העתיד הכלכלי מתחיל כאן">
-    <meta property="og:description" content="אקוסיסטם דיגיטלי חדשני המשלב AI, בלוקצ'יין וכלכלה חברתית.">
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="YOUR_WEBSITE_URL_HERE">
-    <link rel="icon" type="image/png" href="PATH_TO_FAVICON.png">
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    
+    <title>SELHA - Sovereign Economic Layer for Human Advancement</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            /* Light Theme Defaults */
-            --primary-color: #4361ee;
-            --secondary-color: #3a0ca3;
-            --accent-color: #7209b7;
-            --light-color: #f8f9fa;
-            --dark-color: #212529;
-            --text-color: #333;
-            --bg-color: #fff;
-            --card-bg: #fff;
-            --border-color: #e9ecef;
-            --shadow: 0 4px 12px rgba(0,0,0,0.08);
-            --gradient: linear-gradient(135deg, #4361ee, #3a0ca3);
-            --success-color: #4cc9f0;
-        }
-
-        [data-theme="dark"] {
-            /* Dark Theme Overrides */
-            --primary-color: #4895ef;
-            --secondary-color: #560bad;
-            --accent-color: #b5179e;
-            --light-color: #343a40;
-            --dark-color: #f8f9fa;
-            --text-color: #f8f9fa;
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --border-color: #333;
-            --shadow: 0 4px 12px rgba(0,0,0,0.3);
-            --gradient: linear-gradient(135deg, #4895ef, #560bad);
-        }
-
-        body {
-            font-family: 'Heebo', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: all 0.3s ease;
-            overflow-x: hidden;
-        }
-
-        /* --- Theme Toggle & Accessibility --- */
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-        }
-
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        /* Navigation */
-        .navbar {
-            background-color: var(--card-bg) !important;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            padding: 1rem 0;
-            backdrop-filter: blur(5px); /* Add blur for modern look */
-        }
-
-        .navbar-brand {
-            font-weight: 900;
-            color: var(--primary-color) !important;
-            font-size: 1.5rem;
-        }
-
-        .nav-link {
-            color: var(--text-color) !important;
-            font-weight: 500;
-            transition: color 0.3s;
-            margin: 0 0.5rem;
-        }
-
-        .nav-link:hover {
-            color: var(--primary-color) !important;
+            --primary-blue: #0066ff;
+            --dark-blue: #0047b3;
+            --light-blue: #e6f0ff;
+            --accent-teal: #00d4aa;
+            --dark-bg: #0a0a0f;
+            --card-bg: #151522;
         }
         
-        /* Hero Section */
-        .hero-section {
-            background: var(--gradient);
+        * {
+            font-family: 'Heebo', sans-serif;
+        }
+        
+        body {
+            background-color: var(--dark-bg);
             color: white;
-            padding: 180px 0 120px;
-            position: relative;
-            overflow: hidden;
+            overflow-x: hidden;
         }
-
-        .hero-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            /* שימוש ב-SVG עם Opacity לשקיפות נכונה על רקע כהה/בהיר */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cdefs%3E%3CradialGradient id='g' cx='50' cy='50' r='50'%3E%3Cstop offset='0%25' stop-color='white' stop-opacity='0.1'/%3E%3Cstop offset='100%25' stop-color='white' stop-opacity='0'/%3E%3C/radialGradient%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23g)'/%3E%3C/svg%3E");
-            background-size: cover;
-            opacity: 0.5; /* Opacity applied directly to the pattern */
+        
+        .gradient-bg {
+            background: radial-gradient(circle at 20% 30%, rgba(0, 102, 255, 0.15) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 70%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+                        var(--dark-bg);
         }
-
-        .hero-content {
-            position: relative;
-            z-index: 2;
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-
-        /* Section Styling */
+        
+        .feature-card {
+            background: rgba(21, 21, 34, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-blue);
+            box-shadow: 0 10px 30px rgba(0, 102, 255, 0.2);
+        }
+        
+        .live-badge {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            background-color: #00ff00;
+            border-radius: 50%;
+            margin-left: 8px;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+        
+        .glow-button {
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--dark-blue) 100%);
+            box-shadow: 0 0 20px rgba(0, 102, 255, 0.5);
+            transition: all 0.3s ease;
+        }
+        
+        .glow-button:hover {
+            box-shadow: 0 0 30px rgba(0, 102, 255, 0.8);
+            transform: translateY(-2px);
+        }
+        
+        .accent-button {
+            background: transparent;
+            border: 2px solid var(--accent-teal);
+            color: var(--accent-teal);
+            transition: all 0.3s ease;
+        }
+        
+        .accent-button:hover {
+            background: rgba(0, 212, 170, 0.1);
+            box-shadow: 0 0 15px rgba(0, 212, 170, 0.3);
+        }
+        
         .section-title {
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: var(--text-color);
             position: relative;
             display: inline-block;
         }
-
+        
         .section-title::after {
             content: '';
             position: absolute;
             bottom: -10px;
             right: 0;
-            width: 60px;
-            height: 4px;
-            background: var(--primary-color);
-            border-radius: 2px;
-        }
-
-        .section-padding {
-            padding: 100px 0;
-        }
-
-        /* Card Styling */
-        .card-custom {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            transition: all 0.3s ease;
-            height: 100%;
-            overflow: hidden;
-        }
-
-        .card-custom:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-        }
-
-        .stat-card {
-            text-align: center;
-            padding: 40px 20px;
-            border-radius: 16px;
-            background: var(--gradient);
-            color: white;
-        }
-
-        .stat-number {
-            font-size: 3rem;
-            font-weight: 900;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
-        }
-
-        .feature-icon {
-            font-size: 3rem;
-            color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        /* Button Styling */
-        .btn-primary {
-            background: var(--gradient);
-            border: none;
-            font-weight: 600;
-            padding: 15px 40px;
-            border-radius: 50px;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(67, 97, 238, 0.4);
-            opacity: 0.9;
-        }
-
-        .btn-outline-primary {
-            color: var(--primary-color);
-            border-color: var(--primary-color);
-            font-weight: 600;
-            padding: 15px 40px;
-            border-radius: 50px;
-            transition: all 0.3s;
-        }
-
-        .btn-outline-primary:hover {
-            background: var(--primary-color);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
-        }
-
-        /* Custom Animations */
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-        }
-
-        .floating {
-            animation: float 6s ease-in-out infinite;
-        }
-
-        /* Enhanced Timeline */
-        .timeline {
-            position: relative;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .timeline::after {
-            content: '';
-            position: absolute;
-            width: 6px;
-            background: var(--gradient);
-            top: 0;
-            bottom: 0;
-            right: 50%;
-            margin-right: -3px;
+            width: 60%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
             border-radius: 3px;
         }
-
-        .timeline-item {
-            padding: 20px 40px;
-            position: relative;
-            width: 50%;
-            box-sizing: border-box;
-            margin-bottom: 40px;
-        }
-
-        .timeline-item::after {
-            content: '';
-            position: absolute;
-            width: 24px;
-            height: 24px;
-            background-color: var(--bg-color);
-            border: 4px solid var(--primary-color);
-            top: 20px;
-            border-radius: 50%;
-            z-index: 1;
-        }
-
-        .left {
-            right: 0;
-        }
-
-        .left::after {
-            left: -12px;
-        }
-
-        .right {
-            right: 50%;
-        }
-
-        .right::after {
-            right: -12px;
-        }
-
-        .timeline-content {
-            padding: 30px;
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            box-shadow: var(--shadow);
-            border-left: 5px solid var(--primary-color);
-        }
-
-        .timeline-date {
-            font-weight: 700;
-            color: var(--primary-color);
-            margin-bottom: 15px;
-            font-size: 1.1rem;
-        }
-
-        /* Enhanced Testimonial */
-        .testimonial-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 40px;
-            box-shadow: var(--shadow);
-            margin: 20px;
-            border-left: 5px solid var(--primary-color);
-            position: relative;
-        }
-
-        .testimonial-card::before {
-            content: '“'; /* Changed to left quotation mark */
-            font-size: 80px;
-            color: var(--primary-color);
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            opacity: 0.3;
-        }
-
-        .testimonial-text {
-            font-style: italic;
-            margin-bottom: 25px;
-            font-size: 1.1rem;
-            line-height: 1.8;
-        }
-
-        .testimonial-author {
-            font-weight: 700;
-            color: var(--primary-color);
-            font-size: 1.1rem;
-        }
-
-        /* Enhanced FAQ */
-        .faq-item {
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .faq-item:hover {
-            border-color: var(--primary-color);
-        }
-
-        .faq-question {
-            padding: 20px;
-            background: var(--card-bg);
-            font-weight: 600;
-            cursor: pointer;
+        
+        .tech-icon {
+            width: 60px;
+            height: 60px;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1.1rem;
-        }
-
-        .faq-answer {
-            padding: 0 20px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease, padding 0.3s ease;
-        }
-
-        .faq-item.active .faq-answer {
-            padding: 20px;
-            max-height: 500px;
-        }
-
-        /* Footer */
-        .footer {
-            background: var(--card-bg);
-            color: var(--text-color);
-            padding: 80px 0 40px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .social-links a {
-            display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 50px;
-            height: 50px;
-            background: var(--gradient);
-            color: white;
-            border-radius: 50%;
-            text-align: center;
-            margin-left: 10px;
-            transition: all 0.3s;
-            text-decoration: none;
+            background: rgba(0, 102, 255, 0.1);
+            border-radius: 12px;
+            margin-left: 15px;
+            font-size: 28px;
+            color: var(--primary-blue);
         }
-
-        .social-links a:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        
+        .coin-animation {
+            animation: float 6s ease-in-out infinite;
         }
-
-        /* Progress Bars */
-        .progress-bar-custom {
-            background: var(--gradient);
-            border-radius: 10px;
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
         }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .hero-section {
-                padding: 120px 0 80px;
-            }
-            
-            .section-padding {
-                padding: 60px 0;
-            }
-            
-            .timeline::after {
-                right: 31px;
-            }
-            
-            .timeline-item {
-                width: 100%;
-                padding-right: 70px;
-                padding-left: 25px;
-            }
-            
-            .timeline-item::after {
-                right: 21px;
-                left: auto;
-            }
-            
-            .right {
-                right: 0%;
-            }
-            
-            .stat-number {
-                font-size: 2rem;
-            }
-
-            .hero-buttons {
-                text-align: center;
-            }
-
-            .hero-buttons .btn {
-                width: 100%;
-                margin-left: 0 !important;
-            }
+        
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        /* RTL specific fixes */
+        .rtl-grid {
+            direction: rtl;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-blue);
+            border-radius: 5px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--dark-blue);
         }
     </style>
 </head>
-<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="100">
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle Dark/Light Mode">
-        <i class="fas fa-moon"></i>
-    </button>
-
-    <nav class="navbar navbar-expand-lg fixed-top" id="mainNav">
-        <div class="container">
-            <a class="navbar-brand" href="#home">
-                <i class="fas fa-infinity me-2"></i>
-                SLH Ecosystem
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#home">🏠 בית</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#about">💡 אודות</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#features">⭐ יתרונות</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#products">📦 מוצרים</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#investment">📈 השקעה</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#roadmap">🗺️ לו"ז</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#testimonials">💬 עדויות</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#contact">📞 צור קשר</a></li>
-                    <li class="nav-item">
-                        <a class="btn btn-primary btn-sm ms-2 mt-2 mt-lg-0" href="https://t.me/Buy_My_Shop_bot" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-telegram me-1"></i> התחל עכשיו
-                        </a>
-                    </li>
-                </ul>
+<body class="gradient-bg">
+    <!-- ניווט -->
+    <nav class="py-6 px-4 md:px-12 border-b border-gray-800 sticky top-0 z-50 bg-dark-bg/90 backdrop-blur-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 space-x-reverse">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center">
+                    <i class="fas fa-layer-group"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold">SELHA</h1>
+                    <p class="text-xs text-gray-400">Sovereign Economic Layer</p>
+                </div>
             </div>
+            
+            <div class="hidden md:flex space-x-8 space-x-reverse">
+                <a href="#about" class="hover:text-blue-400 transition">אודות</a>
+                <a href="#solution" class="hover:text-blue-400 transition">הפתרון</a>
+                <a href="#technology" class="hover:text-blue-400 transition">טכנולוגיה</a>
+                <a href="#ecosystem" class="hover:text-blue-400 transition">אקוסיסטם</a>
+                <a href="#investment" class="hover:text-blue-400 transition">השקעה</a>
+            </div>
+            
+            <a href="#contact" class="glow-button px-6 py-3 rounded-full font-semibold">
+                <i class="fas fa-chart-line mr-2"></i>להשקעה בפרויקט
+            </a>
         </div>
     </nav>
 
-    <section id="home" class="hero-section">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-7 hero-content" data-aos="fade-right" data-aos-delay="200">
-                    <p class="mb-2 fs-5 text-light opacity-75 animate__animated animate__fadeInDown">מהפכת ה-Web3 וה-AI בישראל</p>
-                    <h1 class="display-3 fw-bold mb-4 animate__animated animate__fadeInDown">SLH Ecosystem - העתיד הכלכלי מתחיל כאן</h1>
-                    <p class="lead mb-5 fs-5 animate__animated animate__fadeInUp">
-                        אקוסיסטם דיגיטלי חדשני המשלב **AI**, **בלוקצ'יין** ו**כלכלה חברתית** להנעת צמיחה עסקית ופיננסית.
+    <!-- Hero Section -->
+    <section class="pt-24 pb-16 px-4 md:px-12">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row items-center justify-between">
+                <div class="md:w-1/2 mb-12 md:mb-0 fade-in">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-900/30 text-blue-300 mb-6">
+                        <span class="live-badge"></span>
+                        <span class="mr-2">פרויקט חי ופעיל</span>
+                    </div>
+                    
+                    <h1 class="text-4xl md:text-6xl font-bold mb-6">
+                        <span class="hero-gradient">בונים שכבת כלכלה חדשה</span><br>
+                        <span>לעולם הדיגיטלי</span>
+                    </h1>
+                    
+                    <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+                        תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.
                     </p>
-                    <div class="hero-buttons animate__animated animate__fadeInUp" data-aos-delay="400">
-                        <a href="#investment" class="btn btn-light btn-lg me-3 mb-3">
-                            <i class="fas fa-chart-line me-2"></i>מידע על השקעה
+                    
+                    <div class="flex flex-wrap gap-3 mb-10">
+                        <span class="px-4 py-2 rounded-full bg-blue-900/40 border border-blue-700/50">AI</span>
+                        <span class="px-4 py-2 rounded-full bg-purple-900/40 border border-purple-700/50">Web3</span>
+                        <span class="px-4 py-2 rounded-full bg-green-900/40 border border-green-700/50">DAO</span>
+                        <span class="px-4 py-2 rounded-full bg-yellow-900/40 border border-yellow-700/50">תשלומים</span>
+                        <span class="px-4 py-2 rounded-full bg-red-900/40 border border-red-700/50">אבטחה קריפטוגרפית</span>
+                        <span class="px-4 py-2 rounded-full bg-teal-900/40 border border-teal-700/50">קהילות חכמות</span>
+                    </div>
+                    
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <a href="#contact" class="glow-button px-8 py-4 rounded-full font-bold text-lg text-center">
+                            <i class="fas fa-handshake mr-2"></i>הצטרף לאקוסיסטם של SELHA
                         </a>
-                        <a href="https://t.me/Buy_My_Shop_bot" class="btn btn-outline-light btn-lg mb-3" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-telegram me-2"></i>התחל בבוט
+                        <a href="#ecosystem" class="accent-button px-8 py-4 rounded-full font-bold text-lg text-center">
+                            <i class="fas fa-play-circle mr-2"></i>צפה באקוסיסטם החי
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-5 text-center d-none d-lg-block" data-aos="fade-left" data-aos-delay="400">
-                    <div class="hero-image floating">
-                        <i class="fas fa-brain display-1 text-white opacity-75"></i>
-                        <i class="fas fa-link display-1 text-white opacity-75" style="margin-right: -10px;"></i>
+                
+                <div class="md:w-2/5 fade-in">
+                    <div class="relative">
+                        <div class="absolute -top-10 -right-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl"></div>
+                        <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"></div>
+                        
+                        <div class="relative bg-card-bg border border-gray-800 rounded-3xl p-8 shadow-2xl">
+                            <div class="flex justify-between items-center mb-8">
+                                <h3 class="text-2xl font-bold">מטבע SELHA</h3>
+                                <div class="coin-animation">
+                                    <i class="fas fa-coins text-3xl text-yellow-500"></i>
+                                </div>
+                            </div>
+                            
+                            <div class="space-y-6">
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-400">מחיר נוכחי</span>
+                                        <span class="font-bold">₿ 0.00025 ~ $15</span>
+                                    </div>
+                                    <div class="w-full bg-gray-800 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-green-500 to-teal-400 h-2 rounded-full w-3/4"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-400">סטייקינג חודשי</span>
+                                        <span class="font-bold text-green-400">4% ריבית</span>
+                                    </div>
+                                    <div class="w-full bg-gray-800 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full w-full"></div>
+                                    </div>
+                                </div>
+                                
+                                <div>
+                                    <div class="flex justify-between mb-2">
+                                        <span class="text-gray-400">משקיעים עד כה</span>
+                                        <span class="font-bold">280+</span>
+                                    </div>
+                                    <div class="w-full bg-gray-800 rounded-full h-2">
+                                        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full w-1/3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mt-8 pt-8 border-t border-gray-800">
+                                <p class="text-center text-gray-300 mb-4">מגייסים כעת:</p>
+                                <p class="text-3xl font-bold text-center text-blue-400">300M ₪</p>
+                                <p class="text-center text-gray-400 text-sm mt-2">לפיתוח תשתיות, AI, אבטחה וצוות</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <section class="section-padding py-5">
-        <div class="container">
-            <div class="row text-center">
-                <div class="col-md-3 col-6 mb-4" data-aos="fade-up">
-                    <div class="card-custom stat-card">
-                        <div class="stat-number">60+</div>
-                        <p class="mb-0">לידים יומיים</p>
+    <!-- About SELHA -->
+    <section id="about" class="py-16 px-4 md:px-12">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">מהי SELHA?</h2>
+            
+            <div class="feature-card p-8 mb-12 fade-in">
+                <p class="text-xl leading-relaxed text-gray-300">
+                    SELHA היא שכבת תשתית כלכלית חדשה — שילוב של פיננסים, קהילה ומדינה — המאפשרת יצירת שוק חדש לחלוטין, מבוזר, יציב ורווחי. המערכת כוללת:
+                </p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid fade-in">
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">מנוע AI פנימי</h3>
+                    <p class="text-gray-400">מערכת בינה מלאכותית מתקדמת לניהול ואופטימיזציה של התהליכים הכלכליים והקהילתיים.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-money-bill-transfer"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">מערכת תשלומים וקריפטו</h3>
+                    <p class="text-gray-400">תשתית תשלומים מאובטחת ותמיכה מלאה במטבעות קריפטוגרפיים עם חיבור למערכות פיננסיות מסורתיות.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-users-gear"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">DAO / DAX</h3>
+                    <p class="text-gray-400">מערכת ממשל מבוזרת (DAO) וממשק ניהול מתקדם (DAX) לניהול קהילתי וארגוני.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">אקדמיה מובנית</h3>
+                    <p class="text-gray-400">פלטפורמת למידה והכשרה משולבת לתרבות ידע וצמיחה קהילתית בתוך המערכת.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-database"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">מאגרי מידע קהילתיים</h3>
+                    <p class="text-gray-400">בסיסי ידע משותפים וניהול מידע קהילתי מבוזר עם גישה מבוקרת.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">שכבת אבטחה HMAC</h3>
+                    <p class="text-gray-400">הגנה קריפטוגרפית מתקדמת עם Time-to-Live ואנטי-רפליי� להגנה על נתונים ותקשורת.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-globe"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">תשתיות ווב וטלגרם חיות</h3>
+                    <p class="text-gray-400">רשת של שערי גישה פעילים בפלטפורמות ווב וטלגרם לנגישות ושימוש מידיים.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-file-contract"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">חוזה Web3 פעיל</h3>
+                    <p class="text-gray-400">חוזה חכם פעיל על BNB Chain לניהול נכסים דיגיטליים ואינטראקציות מבוזרות.</p>
+                </div>
+                
+                <div class="feature-card p-6">
+                    <div class="tech-icon mb-4">
+                        <i class="fas fa-infinity"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">אקוסיסטם שלם</h3>
+                    <p class="text-gray-400">מערכת שלמה המחברת בין כל המרכיבים לסביבה כלכלית-חברתית מתפקדת ומשגשגת.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- The Problem -->
+    <section class="py-16 px-4 md:px-12 bg-gradient-to-l from-red-900/20 to-dark-bg">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">האתגר העולמי</h2>
+            
+            <div class="feature-card p-8 mb-8 fade-in">
+                <p class="text-xl text-gray-300 mb-8">
+                    העולם מתמודד עם משברים מבניים עמוקים שיוצרים חוסר יציבות וחוסר אימון במערכות הקיימות:
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-chart-line-up text-red-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">אינפלציה מתמשכת</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">ערך הכסף הולך ונשחק עם הזמן, פוגע בכוח הקנייה וביציבות הכלכלית.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-house-chimney-crack text-red-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">יוקר מחיה</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">עלייה מתמדת במחירי דיור, מזון ושירותים חיוניים מקשה על החיים.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-building-columns text-red-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">שחיקה מוסדית</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">מוסדות פיננסיים וממשלתיים מאבדים את היעילות והיכולת לספק פתרונות.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-user-group text-red-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">ירידה באמון הציבור</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">אמון הציבור במערכות הפיננסיות, הממשלתיות והחברתיות נמצא בשפל.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-people-arrows text-red-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">פערים בין קהילות למערכות</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">קהילות מתקשות להשפיע על המערכות ששולטות בחייהן ופועלות בנפרד מהן.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-plug-circle-exclamation text-red-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">היעדר תשתית כלכלית‑קהילתית</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">אין כיום מערכת אחת שמחברת פיננסים, קהילה, מדינה ו‑AI למען יציבות ורווחה.</p>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card-custom stat-card">
-                        <div class="stat-number">100+</div>
-                        <p class="mb-0">משתמשים פעילים</p>
+            </div>
+            
+            <div class="text-center fade-in">
+                <p class="text-2xl font-bold mb-4">אין כיום מערכת אחת שמחברת פיננסים, קהילה, מדינה ו‑AI.</p>
+                <p class="text-xl text-gray-300">זהו החלל שאותו SELHA נועדה למלא.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- The SELHA Solution -->
+    <section id="solution" class="py-16 px-4 md:px-12">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">פתרון SELHA</h2>
+            
+            <div class="feature-card p-8 mb-12 fade-in">
+                <h3 class="text-2xl md:text-3xl font-bold mb-6 text-center">
+                    <span class="hero-gradient">Sovereign Economic Layer for Human Advancement</span>
+                </h3>
+                <p class="text-xl text-gray-300 mb-8 text-center leading-relaxed">
+                    תשתית היברידית שמחברת בין כל המרכיבים הדרושים לכלכלה חדשה, יציבה ומשגשגת:
+                </p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-network-wired text-blue-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">כלכלה מבוזרת</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">מערכת כלכלית שאינה תלויה בגורם מרכזי אחד, עם חלוקת כוח ושליטה רחבה.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-coins text-yellow-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">תשלומים וקריפטו</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">תשתית תשלומים גלובלית מהירה ובטוחה עם תמיכה במטבעות דיגיטליים.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-robot text-purple-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">AI</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">בינה מלאכותית מתקדמת לניהול, אופטימיזציה וצמיחה של המערכת הכלכלית.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-users-between-lines text-green-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">קהילות חכמות</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">קהילות מקושרות עם כלים לניהול עצמי, קבלת החלטות ושיתוף פעולה.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-book-open text-teal-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">אקדמיה</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">מערכת למידה והכשרה פנימית לצמיחה אישית וקהילתית בתוך האקוסיסטם.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-vote-yea text-orange-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">DAO / DAX</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">מנגנוני ממשל מבוזרים וממשקי ניהול מתקדמים לקבלת החלטות קהילתיות.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-lock text-red-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">אבטחה קריפטוגרפית</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">שכבת הגנה מתקדמת עם HMAC, TTL ואנטי-רפליי� לאבטחת מידע ותקשורת.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-satellite-dish text-cyan-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">תשתיות ווב וטלגרם</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">רשת פעילה של שערי גישה ופלטפורמות לשימוש מיידי ונגישות גלובלית.</p>
+                    </div>
+                    
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                        <div class="flex items-center mb-3">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
+                                <i class="fas fa-cubes text-indigo-400"></i>
+                            </div>
+                            <h3 class="text-lg font-bold">מערכת שלמה</h3>
+                        </div>
+                        <p class="text-gray-400 text-sm">מערכת שמסוגלת לשרת יחידים, קהילות, ארגונים ואף מדינות שלמות.</p>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card-custom stat-card">
-                        <div class="stat-number">24/7</div>
-                        <p class="mb-0">שרתים פעילים</p>
+            </div>
+            
+            <div class="text-center fade-in">
+                <p class="text-2xl font-bold mb-6">מערכת שמסוגלת לשרת יחידים, קהילות, ארגונים ואף מדינות.</p>
+                <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg">
+                    <i class="fas fa-rocket mr-2"></i>הצטרף למהפכה הכלכלית
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Live Ecosystem -->
+    <section id="ecosystem" class="py-16 px-4 md:px-12 bg-gradient-to-r from-blue-900/20 to-dark-bg">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">האקוסיסטם החי של SELHA</h2>
+            
+            <div class="feature-card p-8 mb-8 fade-in">
+                <div class="flex items-center mb-8">
+                    <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center mr-4">
+                        <i class="fas fa-play text-green-400"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold">תשתיות SELHA — כבר פעילות</h3>
+                        <p class="text-gray-400">כל המערכות פעילות כעת וניתנות לגישה מיידית</p>
                     </div>
                 </div>
-                <div class="col-md-3 col-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="card-custom stat-card">
-                        <div class="stat-number">$4M</div>
-                        <p class="mb-0">יעד גיוס</p>
+                
+                <div class="mb-10">
+                    <h4 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fab fa-telegram mr-3 text-blue-400"></i> שערי טלגרם
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 rtl-grid">
+                        <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-store text-blue-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">Buy My Shop Bot</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">בוט ליצירה וניהול חנויות מקוונות בתוך אקוסיסטם SELHA.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-blue-400 group-hover:text-blue-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
+                        <a href="https://t.me/Osifs_Factory_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-industry text-purple-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">Osifs Factory Bot</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">בוט ליצירה וניהול נכסים דיגיטליים ואוטומציה בתוך המערכת.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-blue-400 group-hover:text-blue-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
+                        <a href="https://t.me/SLH_Academia_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-teal-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-graduation-cap text-teal-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">SLH Academia</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">בוט אקדמי ללמידה והכשרה על המערכת והטכנולוגיות של SELHA.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-blue-400 group-hover:text-blue-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
+                        <a href="https://t.me/MY_SUPER_ADMIN_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-red-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-user-shield text-red-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">MY SUPER ADMIN</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">בוט ניהול מתקדם עם הרשאות ניהול ופיקוח על רכיבי המערכת.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-blue-400 group-hover:text-blue-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="mb-10">
+                    <h4 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-globe mr-3 text-green-400"></i> תשתיות אינטרנט
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
+                        <a href="https://slhisrael.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-star-of-david text-green-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">SLH ישראל</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">הפלטפורמה המרכזית של SELHA בשפה העברית עם מידע ותמיכה.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-green-400 group-hover:text-green-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
+                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-3">
+                                    <i class="fab fa-btc text-yellow-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">SLH BNB Gateway</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">שער גישה לרשת BNB Chain לאינטראקציה עם החוזה החכם של SELHA.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-green-400 group-hover:text-green-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
+                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-project-diagram text-purple-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">פרויקט אליעזר</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">פלטפורמת ניסוי ופיתוח ליכולות ה-AI המתקדמות של המערכת.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-green-400 group-hover:text-green-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
+                        <a href="https://slh-nft.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-pink-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-palette text-pink-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">SLH NFT Marketplace</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">שוק NFT פעיל ליצירה וסחר בנכסים דיגיטליים ייחודיים.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-green-400 group-hover:text-green-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
+                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-chart-line text-blue-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">פורטל משקיעים</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">פלטפורמה ייעודית למשקיעים עם נתונים, דוחות וכלי ניתוח.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-green-400 group-hover:text-green-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-xl font-bold mb-6 flex items-center">
+                        <i class="fas fa-link mr-3 text-orange-400"></i> חוזים חכמים
+                    </h4>
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="feature-card p-6 hover:border-orange-500 transition group block">
+                        <div class="flex items-center mb-4">
+                            <div class="w-10 h-10 rounded-full bg-orange-900/50 flex items-center justify-center mr-3">
+                                <i class="fas fa-file-contract text-orange-400"></i>
+                            </div>
+                            <div>
+                                <h5 class="text-lg font-bold">חוזה חכם ב-BNB Chain</h5>
+                                <p class="text-gray-400 text-sm">0xACb0A09414CEA1C879c67bB7A877E4e19480f022</p>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-4">חוזה ה-Web3 הפעיל של SELHA על רשת BNB Chain עם אפשרויות סטייקינג, העברה וניהול.</p>
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm text-orange-400 group-hover:text-orange-300">לצפייה בחוזה ב-BscScan</span>
+                            <i class="fas fa-external-link-alt text-gray-500"></i>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <div class="feature-card p-8 fade-in">
+                <h3 class="text-2xl font-bold mb-8 text-center">מדדים וצמיחה</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 rtl-grid">
+                    <div class="text-center p-6 bg-gradient-to-b from-blue-900/30 to-transparent rounded-xl">
+                        <div class="text-4xl font-bold text-blue-400 mb-2">280+</div>
+                        <p class="text-gray-400">משתמשים רשומים בבלוקצ'יין</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-gradient-to-b from-green-900/30 to-transparent rounded-xl">
+                        <div class="text-4xl font-bold text-green-400 mb-2">5</div>
+                        <p class="text-gray-400">שערי גישה פעילים + 2 בפיתוח</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-gradient-to-b from-purple-900/30 to-transparent rounded-xl">
+                        <div class="text-4xl font-bold text-purple-400 mb-2">4</div>
+                        <p class="text-gray-400">תרגום לשפות שונות</p>
+                    </div>
+                    
+                    <div class="text-center p-6 bg-gradient-to-b from-teal-900/30 to-transparent rounded-xl">
+                        <div class="text-4xl font-bold text-teal-400 mb-2">24/7</div>
+                        <p class="text-gray-400">פעילות, סטייקינג ומכירות</p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <hr/>
+    <!-- Technology -->
+    <section id="technology" class="py-16 px-4 md:px-12">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">טכנולוגיה מתקדמת</h2>
+            
+            <div class="feature-card p-8 mb-8 fade-in">
+                <h3 class="text-2xl font-bold mb-8 text-center">ארכיטקטורת מערכת מתקדמת</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 rtl-grid">
+                    <div>
+                        <h4 class="text-xl font-bold mb-6 text-blue-400">ליבת המערכת</h4>
+                        <ul class="space-y-5">
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-blue-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-microchip text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">מיקרו־שירותים (Microservices)</h5>
+                                    <p class="text-gray-400 text-sm">ארכיטקטורה מבוססת שירותים עצמאיים לגמישות, סקיילביליות ואמינות מקסימלית.</p>
+                                </div>
+                            </li>
+                            
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-purple-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-brain text-purple-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">מנוע AI פנימי</h5>
+                                    <p class="text-gray-400 text-sm">בינה מלאכותית מתקדמת לאופטימיזציה, חיזוי וניהול אוטומטי של המערכת הכלכלית.</p>
+                                </div>
+                            </li>
+                            
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-green-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fab fa-ethereum text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">Web3 (BNB Chain)</h5>
+                                    <p class="text-gray-400 text-sm">אינטגרציה מלאה עם בלוקצ'יין וטכנולוגיות מבוזרות לניהול נכסים ואינטראקציות.</p>
+                                </div>
+                            </li>
+                            
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-orange-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-vote-yea text-orange-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">DAO / DAX ממשל</h5>
+                                    <p class="text-gray-400 text-sm">מנגנוני ממשל מבוזרים וממשקי ניהול מתקדמים לקבלת החלטות קהילתיות.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-xl font-bold mb-6 text-teal-400">שכבת אבטחה ותשתית</h4>
+                        <ul class="space-y-5">
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-red-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-shield-alt text-red-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">שכבת אבטחה HMAC</h5>
+                                    <p class="text-gray-400 text-sm">הגנה קריפטוגרפית מתקדמת עם TTL + Anti‑Replay לאבטחת תקשורת ומניעת התקפות.</p>
+                                </div>
+                            </li>
+                            
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-cyan-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-route text-cyan-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">ארכיטקטורת מולטי־גייטוויי</h5>
+                                    <p class="text-gray-400 text-sm">רשת של שערי גישה מרובים לזמינות גבוהה, עמידות בכשלים ונגישות גלובלית.</p>
+                                </div>
+                            </li>
+                            
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-indigo-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-language text-indigo-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">תמיכה בריבוי שפות</h5>
+                                    <p class="text-gray-400 text-sm">מערכת מוכנה ללוקליזציה ותמיכה במגוון שפות לקהל גלובלי.</p>
+                                </div>
+                            </li>
+                            
+                            <li class="flex items-start">
+                                <div class="w-8 h-8 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-server text-yellow-400"></i>
+                                </div>
+                                <div>
+                                    <h5 class="font-bold mb-1">תשתית API סקיילבילית</h5>
+                                    <p class="text-gray-400 text-sm">מערכת API חזקה וסקיילבילית לאינטגרציה עם שירותים ופלטפורמות חיצוניות.</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center fade-in">
+                <p class="text-xl text-gray-300 mb-6">המערכת כוללת הגנת HMAC מתקדמת עם מנגנוני Time-to-Live (TTL) ואנטי-רפליי� למניעת התקפות וזיופים.</p>
+                <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="accent-button inline-block px-8 py-4 rounded-full font-bold text-lg">
+                    <i class="fas fa-file-contract mr-2"></i>בדוק את החוזה החכם שלנו
+                </a>
+            </div>
+        </div>
+    </section>
 
-    <section id="about" class="section-padding bg-light">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-6 mb-5 mb-lg-0" data-aos="fade-right">
-                    <h2 class="section-title">💡 המהפכה הדיגיטלית של SLH</h2>
-                    <p class="lead mb-4">SLH Ecosystem הוא אקוסיסטם חדשני המאחד פלטפורמות מסחר, ארנק קריפטו חוצה-רשתות, מערכת תשלומים קהילתית, חנות בוטים דיגיטלית אוטומטית, ואקדמיה למומחים עם תגמול אמיתי.</p>
-                    <blockquote class="blockquote border-start border-primary border-5 ps-3 mb-4">
-                        <p class="mb-0 fs-5 fw-bold">"Knowledge = Capital. Time = Currency."</p>
-                        <footer class="blockquote-footer mt-1 text-end">העיקרון המנחה שלנו</footer>
-                    </blockquote>
-                    <p class="mb-4">
-                        המערכת מתגמלת מומחים, בעלי עסקים, מתכנתים ומשתמשים – כולם בתוך כלכלה אחת המאחדת **Web2**, **Web3** ו-**AI**.
+    <!-- Business Model & Funding -->
+    <section id="investment" class="py-16 px-4 md:px-12 bg-gradient-to-l from-purple-900/20 to-dark-bg">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">מודל עסקי ומימון</h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 rtl-grid">
+                <div class="fade-in">
+                    <div class="feature-card p-8 h-full">
+                        <h3 class="text-2xl font-bold mb-8 text-center text-purple-400">מנוע הכנסות היברידי</h3>
+                        
+                        <div class="space-y-6">
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-coins text-yellow-500"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold mb-1">מכירת מטבעות (₿ 444)</h4>
+                                    <p class="text-gray-400">הנפקה ראשונית ומשנית של מטבע SELHA עם מודל ערך ברור וצפוי.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-percentage text-blue-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold mb-1">סטייקינג: 4% חודשי</h4>
+                                    <p class="text-gray-400">תוכנית סטייקינג אטרקטיבית עם תשואה חודשית קבועה להחזקה ארוכת טווח.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-cloud text-green-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold mb-1">SaaS לשירותי API</h4>
+                                    <p class="text-gray-400">השכרת גישה ל-API מתקדם של המערכת לחברות וארגונים.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-teal-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-users-gear text-teal-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold mb-1">תשתית DAO בתשלום</h4>
+                                    <p class="text-gray-400">התאמה אישית והטמעה של מערכות ממשל מבוזרות לארגונים וקהילות.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-red-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-graduation-cap text-red-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold mb-1">שירותי אקדמיה וקהילה</h4>
+                                    <p class="text-gray-400">קורסים, הכשרות ושירותי ניהול קהילתי בתשלום.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-10 pt-8 border-t border-gray-800">
+                            <h4 class="text-xl font-bold mb-4">זרמי הכנסה צפויים</h4>
+                            <div class="space-y-3">
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">שנה ראשונה</span>
+                                    <span class="font-bold">₪ 50M</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2">
+                                    <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full w-1/4"></div>
+                                </div>
+                                
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">שנה שנייה</span>
+                                    <span class="font-bold">₪ 200M</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2">
+                                    <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full w-2/3"></div>
+                                </div>
+                                
+                                <div class="flex justify-between">
+                                    <span class="text-gray-400">שנה שלישית</span>
+                                    <span class="font-bold">₪ 500M+</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2">
+                                    <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full w-full"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="fade-in">
+                    <div class="feature-card p-8 h-full">
+                        <h3 class="text-2xl font-bold mb-8 text-center text-blue-400">גיוס הון: ₪ 300 מיליון</h3>
+                        
+                        <p class="text-xl text-gray-300 mb-8">ההשקעה תשמש להאצת הפיתוח והתרחבות גלובלית של תשתית SELHA:</p>
+                        
+                        <div class="space-y-6 mb-10">
+                            <div class="flex justify-between items-center p-4 bg-blue-900/30 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-4">
+                                        <i class="fas fa-code text-blue-400"></i>
+                                    </div>
+                                    <span class="font-bold">פיתוח תשתיות</span>
+                                </div>
+                                <span class="text-blue-400 font-bold">25%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-purple-900/30 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-purple-900/70 flex items-center justify-center mr-4">
+                                        <i class="fas fa-robot text-purple-400"></i>
+                                    </div>
+                                    <span class="font-bold">AI ומחקר</span>
+                                </div>
+                                <span class="text-purple-400 font-bold">20%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-red-900/30 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-4">
+                                        <i class="fas fa-shield-alt text-red-400"></i>
+                                    </div>
+                                    <span class="font-bold">אבטחה וביקורות</span>
+                                </div>
+                                <span class="text-red-400 font-bold">15%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-green-900/30 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-green-900/70 flex items-center justify-center mr-4">
+                                        <i class="fas fa-users text-green-400"></i>
+                                    </div>
+                                    <span class="font-bold">צוות וקהילה</span>
+                                </div>
+                                <span class="text-green-400 font-bold">15%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-yellow-900/30 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-yellow-900/70 flex items-center justify-center mr-4">
+                                        <i class="fas fa-bullhorn text-yellow-400"></i>
+                                    </div>
+                                    <span class="font-bold">שיווק ותקשורת</span>
+                                </div>
+                                <span class="text-yellow-400 font-bold">10%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-teal-900/30 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-teal-900/70 flex items-center justify-center mr-4">
+                                        <i class="fas fa-graduation-cap text-teal-400"></i>
+                                    </div>
+                                    <span class="font-bold">אקדמיה וממשק מדיני</span>
+                                </div>
+                                <span class="text-teal-400 font-bold">10%</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-4 bg-indigo-900/30 rounded-xl">
+                                <div class="flex items-center">
+                                    <div class="w-10 h-10 rounded-full bg-indigo-900/70 flex items-center justify-center mr-4">
+                                        <i class="fas fa-boxes text-indigo-400"></i>
+                                    </div>
+                                    <span class="font-bold">תפעול ורזרבות</span>
+                                </div>
+                                <span class="text-indigo-400 font-bold">5%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8 p-6 bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-xl border border-blue-800/50">
+                            <h4 class="text-xl font-bold mb-3">מדדי הצלחה צפויים</h4>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-blue-400">100K+</div>
+                                    <div class="text-sm text-gray-400">משתמשים פעילים</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-green-400">₪ 1B+</div>
+                                    <div class="text-sm text-gray-400">שווי שוק</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-purple-400">50+</div>
+                                    <div class="text-sm text-gray-400">מדינות</div>
+                                </div>
+                                <div class="text-center">
+                                    <div class="text-2xl font-bold text-teal-400">10K+</div>
+                                    <div class="text-sm text-gray-400">משתתפי סטייקינג</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact/CTA -->
+    <section id="contact" class="py-20 px-4 md:px-12">
+        <div class="container mx-auto">
+            <div class="max-w-4xl mx-auto text-center fade-in">
+                <h2 class="text-4xl md:text-5xl font-bold mb-8">מוכנים לבנות את העתיד הכלכלי יחד?</h2>
+                
+                <p class="text-xl text-gray-300 mb-12 leading-relaxed">
+                    הצטרפו לאקוסיסטם SELHA והשקיעו בשכבת התשתית הכלכלית החדשה לעולם הדיגיטלי. 
+                    קבלו גישה למסמכים טכניים מפורטים, פורטל המשקיעים החי, ותוכנית הפיתוח המלאה.
+                </p>
+                
+                <div class="flex flex-col md:flex-row justify-center gap-6 mb-16">
+                    <a href="#contact" class="glow-button px-10 py-5 rounded-full font-bold text-xl">
+                        <i class="fas fa-handshake mr-3"></i>צור קשר להשקעה
+                    </a>
+                    
+                    <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="accent-button px-10 py-5 rounded-full font-bold text-xl">
+                        <i class="fas fa-chart-line mr-3"></i>פורטל משקיעים
+                    </a>
+                    
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="px-10 py-5 rounded-full font-bold text-xl border border-yellow-800 bg-yellow-900/20 text-yellow-400 hover:bg-yellow-900/40 transition">
+                        <i class="fas fa-file-contract mr-3"></i>חוזה חכם
+                    </a>
+                </div>
+                
+                <div class="feature-card p-8">
+                    <h3 class="text-2xl font-bold mb-6">פרטי התקשרות למשקיעים</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 rtl-grid">
+                        <div class="p-6 bg-blue-900/20 rounded-xl">
+                            <div class="w-14 h-14 rounded-full bg-blue-900/50 flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-envelope text-blue-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2">אימייל</h4>
+                            <p class="text-gray-400">invest@selha.eco</p>
+                        </div>
+                        
+                        <div class="p-6 bg-purple-900/20 rounded-xl">
+                            <div class="w-14 h-14 rounded-full bg-purple-900/50 flex items-center justify-center mx-auto mb-4">
+                                <i class="fab fa-telegram text-purple-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2">טלגרם</h4>
+                            <p class="text-gray-400">@SELHA_Official</p>
+                        </div>
+                        
+                        <div class="p-6 bg-teal-900/20 rounded-xl">
+                            <div class="w-14 h-14 rounded-full bg-teal-900/50 flex items-center justify-center mx-auto mb-4">
+                                <i class="fas fa-file-invoice text-teal-400 text-2xl"></i>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2">מסמכי השקעה</h4>
+                            <p class="text-gray-400">פניה לקבלת חבילת משקיעים</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-12 pt-8 border-t border-gray-800">
+                    <p class="text-gray-400">
+                        <i class="fas fa-exclamation-circle mr-2"></i>
+                        השקעה במטבעות קריפטוגרפיים כרוכה בסיכונים. אנא ערכו בדיקת נאותות מקיפה לפני כל השקעה.
                     </p>
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-robot text-primary me-3 fs-4"></i>
-                                <span>ניהול לידים אוטומטי עם AI</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-chart-pie text-primary me-3 fs-4"></i>
-                                <span>דשבורד ניהול מתקדם בזמן אמת</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-handshake text-primary me-3 fs-4"></i>
-                                <span>אינטגרציה מלאה עם מערכות CRM</span>
-                            </div>
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-globe text-primary me-3 fs-4"></i>
-                                <span>שירות גלובלי ורב-רשתי (Multi-Chain)</span>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="#features" class="btn btn-primary mt-4">גלה את היתרונות</a>
-                </div>
-                <div class="col-lg-6" data-aos="fade-left">
-                    <div class="row">
-                        <div class="col-6 mb-4">
-                            <div class="card-custom text-center p-4 h-100">
-                                <i class="fas fa-brain feature-icon"></i>
-                                <h5>בינה מלאכותית</h5>
-                                <p class="mb-0 text-muted">מערכות AI לניתוח, חיזוי ואוטומציה מתקדמת</p>
-                            </div>
-                        </div>
-                        <div class="col-6 mb-4">
-                            <div class="card-custom text-center p-4 h-100">
-                                <i class="fas fa-link feature-icon"></i>
-                                <h5>בלוקצ'יין</h5>
-                                <p class="mb-0 text-muted">תמיכה ב-BSC, TON, Ethereum ורשתות נוספות</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card-custom text-center p-4 h-100">
-                                <i class="fas fa-users feature-icon"></i>
-                                <h5>כלכלה חברתית</h5>
-                                <p class="mb-0 text-muted">מודל Pi Index מתקדם לתגמול משתמשים</p>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card-custom text-center p-4 h-100">
-                                <i class="fas fa-robot feature-icon"></i>
-                                <h5>אוטומציה מלאה</h5>
-                                <p class="mb-0 text-muted">בוטים חכמים לניהול ותפעול אוטומטי</p>
-                            </div>
-                        </div>
-                    </div>
+                    <p class="text-gray-400 text-sm mt-4">
+                        Founded & Architected by Onger • Sovereign Economic Layer for Human Advancement
+                    </p>
                 </div>
             </div>
         </div>
     </section>
 
-    <hr/>
-
-    <section id="features" class="section-padding">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">⭐ יתרונות מרכזיים</h2>
-                <p class="lead">מדוע SLH Ecosystem הוא הפתרון המושלם עבור ניהול משרד פרסום והשקעות?</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-4 mb-4" data-aos="fade-up">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-bolt"></i></div>
-                        <h4>מהירות וביצועים</h4>
-                        <p>מערכת מהירה ויעילה עם זמן תגובה מינימלי וחוויית משתמש חלקה. עיבוד נתונים בזמן אמת עם latency נמוך.</p>
+    <!-- Footer -->
+    <footer class="py-8 px-4 md:px-12 border-t border-gray-800">
+        <div class="container mx-auto">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="flex items-center space-x-3 space-x-reverse mb-6 md:mb-0">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-xl font-bold">SELHA</h2>
+                        <p class="text-xs text-gray-400">Sovereign Economic Layer for Human Advancement</p>
                     </div>
                 </div>
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-shield-alt"></i></div>
-                        <h4>אבטחה מתקדמת</h4>
-                        <p>מערכת אבטחה רב-שכבתית עם הצפנה מתקדמת, הגנה מפני איומים ואימות דו-שלבי לכל המשתמשים (2FA).</p>
-                    </div>
+                
+                <div class="flex space-x-6 space-x-reverse mb-6 md:mb-0">
+                    <a href="https://slhisrael.com/" target="_blank" class="text-gray-400 hover:text-white transition">
+                        <i class="fas fa-globe"></i>
+                    </a>
+                    <a href="https://t.me/SLH_Academia_bot" target="_blank" class="text-gray-400 hover:text-blue-400 transition">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="text-gray-400 hover:text-orange-400 transition">
+                        <i class="fab fa-ethereum"></i>
+                    </a>
+                    <a href="#contact" class="text-gray-400 hover:text-green-400 transition">
+                        <i class="fas fa-envelope"></i>
+                    </a>
                 </div>
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-hand-holding-usd"></i></div>
-                        <h4>תשואה גבוהה</h4>
-                        <p>פוטנציאל תשואה משמעותי על ההשקעה עם מודל עסקי מוכח ותשואה צפויה של **20%-40% לשנה**.</p>
-                    </div>
+                
+                <div class="text-gray-400 text-sm">
+                    © 2023 SELHA. כל הזכויות שמורות.
                 </div>
-            </div>
-            <div class="row mt-4">
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-sync-alt"></i></div>
-                        <h4>סנכרון אוטומטי</h4>
-                        <p>סנכרון אוטומטי מלא עם אתרי אינטרנט, פלטפורמות מדיה חברתית ומערכות CRM קיימות, ללא צורך בהתערבות ידנית.</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="400">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-chart-bar"></i></div>
-                        <h4>דוחות מתקדמים</h4>
-                        <p>דוחות ניתוח מתקדמים עם תובנות עמוקות על ביצועי קמפיינים, התנהגות משתמשים ומדדי מפתח (KPIs).</p>
-                    </div>
-                </div>
-                <div class="col-lg-4 mb-4" data-aos="fade-up" data-aos-delay="500">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-expand-arrows-alt"></i></div>
-                        <h4>מדרגיות וצמיחה</h4>
-                        <p>מערכת מדרגית המסוגלת להתאים עצמה לצמיחה מהירה ולעומסי עבודה גבוהים ללא פגיעה בביצועים.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr/>
-
-    <section id="products" class="section-padding bg-light">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">📦 מוצרי הליבה שלנו</h2>
-                <p class="lead">חמישה עמודי תווך המרכיבים את האקוסיסטם השלם לניהול משרד פרסום והשקעות</p>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-wallet"></i></div>
-                        <h4>SLH Wallet Bot</h4>
-                        <p class="text-muted">ארנק קריפטו חכם התומך ב-BSC ו-TON עם יצירת ארנק אוטומטית, המרות, וניהול נכסים מתקדם.</p>
-                        <ul class="list-unstyled product-list">
-                            <li><i class="fas fa-check text-primary me-2"></i> יצירת ארנק אוטומטית</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> תמיכה ב-BSC & TON</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> המרת מטבעות (Swap)</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> API מלא למפתחים</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-chart-line"></i></div>
-                        <h4>TON Trading Bot Pro</h4>
-                        <p class="text-muted">בוט מסחר מתקדם עם ניתוחים חכמים, איתותים בזמן אמת וחיזוי תנועות שוק עם דיוק גבוה, הממוקד ברשת TON.</p>
-                        <ul class="list-unstyled product-list">
-                            <li><i class="fas fa-check text-primary me-2"></i> ניתוחים טכניים מתקדמים</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> איתותים לפי Symbol</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> חיזוי תנועות שוק AI</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> מנוי פרימיום משתלם</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="200">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-store"></i></div>
-                        <h4>BotShop Marketplace</h4>
-                        <p class="text-muted">שוק בוטים דיגיטלי שבו כל אחד יכול ליצור, למכור ולקנות בוטים אוטומטיים, שירותים וכלים דיגיטליים.</p>
-                        <ul class="list-unstyled product-list">
-                            <li><i class="fas fa-check text-primary me-2"></i> יצירת בוטים בקליק</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> מודל תמחור גמיש (החל מ-39 ש"ח)</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> מערכת הפניות (Affiliate) מלאה</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> תבניות מוכנות מראש</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="300">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-graduation-cap"></i></div>
-                        <h4>SLH Academy</h4>
-                        <p class="text-muted">אקדמיה דיגיטלית למומחים המאפשרת למידה, הוראה והעברת ידע בתשלום באמצעות תגמול על ידע וזמן.</p>
-                        <ul class="list-unstyled product-list">
-                            <li><i class="fas fa-check text-primary me-2"></i> קורסים דיגיטליים מקצועיים</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> מודל תגמול חדשני על ידע</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> סמינרים אונליין ווובינרים</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> מערכת תעודות ואקרדיטציה</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-6 mb-4" data-aos="fade-up" data-aos-delay="400">
-                    <div class="card-custom p-4 h-100">
-                        <div class="feature-icon"><i class="fas fa-exchange-alt"></i></div>
-                        <h4>SLH Exchange</h4>
-                        <p class="text-muted">בורסה פנימית למסחר בנכסים דיגיטליים בתוך האקוסיסטם עם נזילות גבוהה, עמלות נמוכות וארנק מובנה.</p>
-                        <ul class="list-unstyled product-list">
-                            <li><i class="fas fa-check text-primary me-2"></i> מסחר בנכסים סחירים פנימיים</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> נזילות גבוהה ומיידית</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> עמלות מסחר נמוכות במיוחד</li>
-                            <li><i class="fas fa-check text-primary me-2"></i> ארנק מובנה ומאובטח</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr/>
-
-    <section id="investment" class="section-padding bg-light">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">📈 הזדמנות השקעה ייחודית</h2>
-                <p class="lead">הצטרפו למהפכה הכלכלית וקבלו תשואה על ההשקעה עם פוטנציאל צמיחה משמעותי</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <div class="card-custom p-5" data-aos="zoom-in">
-                        <div class="text-center mb-4">
-                            <h3>הצעת השקעה בלעדית</h3>
-                            <span class="badge bg-primary fs-6 p-2">מוגבל למשקיעים אסטרטגיים</span>
-                        </div>
-                        <div class="row text-center mb-5">
-                            <div class="col-md-4 mb-3">
-                                <p class="mb-0 text-muted">סכום הגיוס</p>
-                                <div class="stat-number text-primary">$4M</div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <p class="mb-0 text-muted">אחוזי בעלות</p>
-                                <div class="stat-number text-primary">15%</div>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <p class="mb-0 text-muted">השקעה מינימלית</p>
-                                <div class="stat-number text-primary">10,000+ <small>₪</small></div>
-                            </div>
-                        </div>
-                        <div class="mb-4" data-aos="fade-up" data-aos-delay="100">
-                            <h5 class="mb-3"><i class="fas fa-bullseye me-2 text-primary"></i>יעדי הגיוס:</h5>
-                            <div class="mb-3">
-                                <p class="mb-1 fw-bold">פיתוח ואינטגרציה (60%):</p>
-                                <div class="progress" style="height: 10px;">
-                                    <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 60%;" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <p class="mb-1 fw-bold">שיווק וצמיחה (30%):</p>
-                                <div class="progress" style="height: 10px;">
-                                    <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 30%;" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <p class="mb-1 fw-bold">הון חוזר ורגולציה (10%):</p>
-                                <div class="progress" style="height: 10px;">
-                                    <div class="progress-bar progress-bar-custom" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="text-center mt-5" data-aos="fade-up" data-aos-delay="200">
-                            <p class="lead fw-bold">רוצים לקבל את תוכנית ההשקעה המלאה?</p>
-                            <a href="#contact" class="btn btn-primary btn-lg mt-3"><i class="fas fa-envelope me-2"></i>דברו איתנו</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr/>
-
-    <section id="roadmap" class="section-padding">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">🗺️ מפת דרכים (Roadmap)</h2>
-                <p class="lead">היעדים שלנו לשנים הקרובות</p>
-            </div>
-
-            <div class="timeline">
-                <div class="timeline-item right" data-aos="fade-left">
-                    <div class="timeline-content">
-                        <h4 class="timeline-date">רבעון 4 2024: שלב ה-MVP והגיוס הראשוני</h4>
-                        <p>השקת גרסת הבטא (MVP) של SLH Wallet Bot ו-BotShop Marketplace. גיוס Seed ראשוני למשקיעים אסטרטגיים.</p>
-                        <ul>
-                            <li>השקת ארנק מולטי-צ'יין (BSC, TON)</li>
-                            <li>פתיחת BotShop למפתחים</li>
-                            <li>השקה רשמית של מודל Pi Index</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="timeline-item left" data-aos="fade-right">
-                    <div class="timeline-content">
-                        <h4 class="timeline-date">רבעון 1 2025: אינטגרציה מורחבת</h4>
-                        <p>הרחבת האינטגרציה הטכנולוגית והשקת מוצרים משלימים.</p>
-                        <ul>
-                            <li>שילוב AI ב-Trading Bot</li>
-                            <li>השקת SLH Academy (קורסים ראשונים)</li>
-                            <li>אינטגרציה מלאה עם 3 מערכות CRM מובילות</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="timeline-item right" data-aos="fade-left">
-                    <div class="timeline-content">
-                        <h4 class="timeline-date">רבעון 3 2025: השקת בורסה וצמיחה גלובלית</h4>
-                        <p>השקה פנימית של SLH Exchange והתחלת מהלך שיווק בינלאומי.</p>
-                        <ul>
-                            <li>השקה פנימית של SLH Exchange</li>
-                            <li>הרחבת האקדמיה ל-10+ מומחים פעילים</li>
-                            <li>יעד: 500 משתמשים פעילים</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="timeline-item left" data-aos="fade-right">
-                    <div class="timeline-content">
-                        <h4 class="timeline-date">רבעון 1 2026: סבב גיוס A והכרה עולמית</h4>
-                        <p>גיוס סבב A ומיצוב SLH כמובילה בתחום האקוסיסטם הדיגיטלי הממוזג.</p>
-                        <ul>
-                            <li>השקת שותפויות אסטרטגיות עם חברות גלובליות</li>
-                            <li>יעד: מעבר ל-1,000 משתמשים פעילים</li>
-                            <li>בדיקת אפשרות לרישום מטבע SLH בבורסות קריפטו גדולות</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr/>
-
-    <section id="testimonials" class="section-padding bg-light">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">💬 מה אומרים הלקוחות שלנו</h2>
-                <p class="lead">עדויות אמיתיות מלקוחות שנהנים מהאקוסיסטם</p>
-            </div>
-            <div class="row">
-                <div class="col-lg-6 mb-4" data-aos="fade-up">
-                    <div class="testimonial-card">
-                        <p class="testimonial-text">"המעבר ל-SLH Ecosystem חסך לנו שעות עבודה רבות. האוטומציה של ניהול הלידים והשילוב המדהים עם ה-AI פשוט שינה את כללי המשחק במשרד הפרסום שלנו."</p>
-                        <div class="testimonial-author">- דניאל לוי, מנכ"ל משרד פרסום</div>
-                    </div>
-                </div>
-                <div class="col-lg-6 mb-4" data-aos="fade-up" data-aos-delay="100">
-                    <div class="testimonial-card">
-                        <p class="testimonial-text">"ה-SLH Wallet Bot מאפשר לי לנהל את כל נכסי הקריפטו שלי במקום אחד, כולל הרשתות של TON ו-BSC, בצורה פשוטה ומאובטחת. זה פשוט הפתרון הטוב ביותר בשוק הישראלי."</p>
-                        <div class="testimonial-author">- רותם כהן, משקיע קריפטו פרטי</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr/>
-
-    <section id="faq" class="section-padding">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">❓ שאלות נפוצות</h2>
-                <p class="lead">כאן תמצאו תשובות לשאלות הנפוצות ביותר</p>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="faq-item active" data-aos="fade-up" data-aos-delay="0">
-                        <div class="faq-question" id="faq-q1">
-                            <span>מה מייחד את SLH Ecosystem מאחרים?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>SLH Ecosystem היא הפלטפורמה היחידה שממזגת באופן מלא את שלושת העולמות: **Web2, Web3 ו-AI** תחת קורת גג אחת, עם דגש על **כלכלה חברתית** ומתן תגמול אמיתי למשתמשים על בסיס ידע וזמן (Pi Index).</p>
-                        </div>
-                    </div>
-                    <div class="faq-item" data-aos="fade-up" data-aos-delay="100">
-                        <div class="faq-question" id="faq-q2">
-                            <span>מהו מודל ה-Pi Index?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>מודל Pi Index הוא שיטת תגמול קהילתית שמטרתה למדוד את ערך הידע והתרומה של כל משתמש לאקוסיסטם (למשל, על ידי שיתוף ידע באקדמיה או פיתוח בוטים), ולתגמל אותו בהתאם בנכסים דיגיטליים של SLH.</p>
-                        </div>
-                    </div>
-                    <div class="faq-item" data-aos="fade-up" data-aos-delay="200">
-                        <div class="faq-question" id="faq-q3">
-                            <span>מהי התשואה הצפויה למשקיעים?</span>
-                            <i class="fas fa-chevron-down"></i>
-                        </div>
-                        <div class="faq-answer">
-                            <p>אנו צופים פוטנציאל תשואה של **20%-40%** בשנה על בסיס מודל עסקי מוכח ונתוני מכירות ראשוניים מרשימים. כל משקיע יקבל גישה לתוכנית עסקית מפורטת הכוללת תחזיות פיננסיות וניתוח סיכונים מעמיק.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr/>
-
-    <section id="contact" class="section-padding bg-light">
-        <div class="container">
-            <div class="text-center mb-5" data-aos="fade-up">
-                <h2 class="section-title">📞 צור קשר</h2>
-                <p class="lead">נשמח לענות על כל שאלה ולספק מידע נוסף</p>
-            </div>
-            <div class="row justify-content-center">
-                <div class="col-lg-8">
-                    <div class="card-custom p-5" data-aos="zoom-in">
-                        <form action="YOUR_FORM_SUBMISSION_ENDPOINT" method="POST">
-                            <div class="mb-3">
-                                <label for="contactName" class="form-label">שם מלא</label>
-                                <input type="text" class="form-control" id="contactName" name="name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="contactEmail" class="form-label">דוא"ל</label>
-                                <input type="email" class="form-control" id="contactEmail" name="email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="contactSubject" class="form-label">נושא הפנייה</label>
-                                <select class="form-select" id="contactSubject" name="subject" required>
-                                    <option selected disabled>בחר נושא</option>
-                                    <option value="השקעה">השקעה</option>
-                                    <option value="שאלה טכנית">שאלה טכנית</option>
-                                    <option value="שיתוף פעולה">שיתוף פעולה</option>
-                                    <option value="אחר">אחר</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="contactMessage" class="form-label">הודעה</label>
-                                <textarea class="form-control" id="contactMessage" name="message" rows="5" required></textarea>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100 mt-3"><i class="fas fa-paper-plane me-2"></i>שלח הודעה</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <hr/>
-
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-md-4 mb-4" data-aos="fade-up">
-                    <h5 class="fw-bold mb-3"><i class="fas fa-infinity me-2 text-primary"></i>SLH Ecosystem</h5>
-                    <p class="text-muted">אקוסיסטם ה-Web3 וה-AI המוביל בישראל. הופכים ידע להון וזמן למטבע.</p>
-                </div>
-                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
-                    <h5 class="fw-bold mb-3">ניווט</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="#about" class="text-decoration-none text-muted">אודות</a></li>
-                        <li><a href="#products" class="text-decoration-none text-muted">מוצרים</a></li>
-                        <li><a href="#investment" class="text-decoration-none text-muted">השקעה</a></li>
-                        <li><a href="#roadmap" class="text-decoration-none text-muted">מפת דרכים</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
-                    <h5 class="fw-bold mb-3">עקבו אחרינו</h5>
-                    <div class="social-links">
-                        <a href="https://t.me/Buy_My_Shop_bot" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                        <a href="#" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
-                    </div>
-                </div>
-            </div>
-            <div class="text-center pt-4 border-top border-secondary-subtle mt-4">
-                <p class="mb-0 text-muted">&copy; <span id="currentYear"></span> SLH Ecosystem. כל הזכויות שמורות.</p>
-                <small class="text-muted">Designed & Developed with AI & Code</small>
             </div>
         </div>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- JavaScript for animations -->
     <script>
-        AOS.init({
-            duration: 800,
-            once: true,
+        // Fade-in animation on scroll
+        const fadeElements = document.querySelectorAll('.fade-in');
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, {
+            threshold: 0.1
         });
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        
+        fadeElements.forEach(el => observer.observe(el));
+        
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if(targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if(targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Update current year in footer
+        document.addEventListener('DOMContentLoaded', function() {
+            const yearElement = document.querySelector('footer .text-gray-400');
+            if(yearElement) {
+                yearElement.textContent = yearElement.textContent.replace('2023', new Date().getFullYear());
+            }
+            
+            // Add animation to stats
+            const statElements = document.querySelectorAll('.text-4xl.font-bold');
+            statElements.forEach(stat => {
+                const finalValue = stat.textContent;
+                if(finalValue.includes('+')) return;
+                
+                let current = 0;
+                const target = parseInt(finalValue.replace(/[^0-9]/g, ''));
+                const increment = target / 50;
+                
+                const updateStat = () => {
+                    current += increment;
+                    if(current < target) {
+                        stat.textContent = Math.floor(current) + '+';
+                        setTimeout(updateStat, 30);
+                    } else {
+                        stat.textContent = finalValue;
+                    }
+                };
+                
+                setTimeout(updateStat, 1000);
+            });
+        });
     </script>
-
-    <script src="js/slh.js"></script>
 </body>
 </html>
