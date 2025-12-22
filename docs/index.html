@@ -45,6 +45,8 @@
             --text-secondary: #d1d5db;
             --font-scale: 1;
             --high-contrast: false;
+            --gold-gradient: linear-gradient(135deg, #FFD700 0%, #DAA520 50%, #B8860B 100%);
+            --purple-gradient: linear-gradient(135deg, #8A2BE2 0%, #9370DB 50%, #4B0082 100%);
         }
         
         .light-mode {
@@ -117,6 +119,20 @@
             background-clip: text;
         }
         
+        .gold-gradient {
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .purple-gradient {
+            background: var(--purple-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
         .feature-card {
             background: rgba(21, 21, 34, 0.8);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -150,6 +166,153 @@
         .high-contrast .feature-card:hover {
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border-color: var(--primary-blue);
+        }
+        
+        .partner-card {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+        
+        .partner-card:hover {
+            transform: translateY(-8px);
+            border-color: #FFD700;
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.25);
+        }
+        
+        .partner-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        
+        .partner-table th {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(138, 43, 226, 0.2) 100%);
+            padding: 1.2rem;
+            text-align: center;
+            border: 1px solid rgba(255, 215, 0, 0.3);
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        
+        .partner-table td {
+            padding: 1rem;
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            text-align: center;
+        }
+        
+        .partner-table tr:nth-child(even) {
+            background: rgba(255, 215, 0, 0.05);
+        }
+        
+        .partner-table tr:hover {
+            background: rgba(255, 215, 0, 0.1);
+        }
+        
+        .level-badge {
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            border-radius: 25px;
+            font-weight: bold;
+            margin: 0.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+        }
+        
+        .level-bronze {
+            background: linear-gradient(135deg, #CD7F32 0%, #8B4513 100%);
+            color: white;
+            border: 1px solid #CD7F32;
+        }
+        
+        .level-silver {
+            background: linear-gradient(135deg, #C0C0C0 0%, #808080 100%);
+            color: #333;
+            border: 1px solid #C0C0C0;
+        }
+        
+        .level-gold {
+            background: var(--gold-gradient);
+            color: #333;
+            border: 1px solid #FFD700;
+        }
+        
+        .level-platinum {
+            background: linear-gradient(135deg, #E5E4E2 0%, #7F7F7F 100%);
+            color: #333;
+            border: 1px solid #E5E4E2;
+        }
+        
+        .level-diamond {
+            background: linear-gradient(135deg, #B9F2FF 0%, #0FF 100%);
+            color: #333;
+            border: 1px solid #B9F2FF;
+        }
+        
+        .partner-benefit-list li {
+            margin-bottom: 0.8rem;
+            padding-right: 1.5rem;
+            position: relative;
+        }
+        
+        .partner-benefit-list li:before {
+            content: '✓';
+            position: absolute;
+            right: 0;
+            color: #00d4aa;
+            font-weight: bold;
+        }
+        
+        .income-example {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(0, 102, 255, 0.1) 100%);
+            border: 1px solid rgba(0, 212, 170, 0.3);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .income-example:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 25px rgba(0, 212, 170, 0.2);
+        }
+        
+        .partner-form {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.05) 0%, rgba(138, 43, 226, 0.05) 100%);
+            border: 1px solid rgba(255, 215, 0, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+        
+        .step-process {
+            counter-reset: step;
+        }
+        
+        .step-process .step-item {
+            position: relative;
+            padding-right: 4rem;
+            margin-bottom: 2.5rem;
+        }
+        
+        .step-process .step-item:before {
+            counter-increment: step;
+            content: counter(step);
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
         }
         
         .live-badge {
@@ -189,6 +352,19 @@
             transform: translateY(-2px);
         }
         
+        .gold-button {
+            background: var(--gold-gradient);
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.5);
+            transition: all 0.3s ease;
+            color: #333;
+            font-weight: bold;
+        }
+        
+        .gold-button:hover {
+            box-shadow: 0 0 35px rgba(255, 215, 0, 0.8);
+            transform: translateY(-3px);
+        }
+        
         .accent-button {
             background: transparent;
             border: 2px solid var(--accent-teal);
@@ -219,6 +395,10 @@
             height: 3px;
             background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
             border-radius: 3px;
+        }
+        
+        .partner-section-title::after {
+            background: linear-gradient(90deg, #FFD700 0%, #8A2BE2 100%);
         }
         
         .tech-icon {
@@ -439,6 +619,31 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
             color: var(--text-color);
+            position: relative;
+        }
+        
+        .accessibility-btn .tooltip {
+            position: absolute;
+            right: 60px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+        }
+        
+        .accessibility-btn:hover .tooltip {
+            opacity: 1;
+            visibility: visible;
         }
         
         .light-mode .accessibility-btn {
@@ -463,6 +668,15 @@
         
         .glow-animation {
             animation: glow 3s ease-in-out infinite;
+        }
+        
+        .gold-glow-animation {
+            animation: gold-glow 3s ease-in-out infinite;
+        }
+        
+        @keyframes gold-glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(255, 215, 0, 0.8); }
         }
         
         /* Enhanced hover effects */
@@ -669,6 +883,38 @@
             background: var(--dark-blue);
             transform: translateY(-3px);
         }
+        
+        /* Partner section specific styles */
+        .partner-banner {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.15) 0%, rgba(138, 43, 226, 0.15) 100%);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+        
+        .benefit-icon {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2) 0%, rgba(138, 43, 226, 0.2) 100%);
+            border-radius: 50%;
+            margin: 0 auto 1.5rem;
+            font-size: 30px;
+            color: #FFD700;
+            border: 2px solid rgba(255, 215, 0, 0.5);
+        }
+        
+        .partner-join-section {
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-top: 3rem;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="gradient-bg">
@@ -679,18 +925,23 @@
     <div class="accessibility-toolbar">
         <div class="accessibility-btn" id="themeToggle" aria-label="החלף מצב תצוגה">
             <i class="fas fa-moon" id="themeIcon"></i>
+            <div class="tooltip">החלף בין מצב כהה/בהיר</div>
         </div>
         <div class="accessibility-btn" id="fontIncrease" aria-label="הגדל גודל גופן">
             <i class="fas fa-text-height"></i>
+            <div class="tooltip">הגדל גודל טקסט</div>
         </div>
         <div class="accessibility-btn" id="fontDecrease" aria-label="הקטן גודל גופן">
             <i class="fas fa-text-width"></i>
+            <div class="tooltip">הקטן גודל טקסט</div>
         </div>
         <div class="accessibility-btn" id="contrastToggle" aria-label="החלף מצב ניגודיות גבוהה">
             <i class="fas fa-adjust"></i>
+            <div class="tooltip">החלף מצב ניגודיות גבוהה</div>
         </div>
         <div class="accessibility-btn" id="speechToggle" aria-label="הקראת תוכן">
             <i class="fas fa-volume-up"></i>
+            <div class="tooltip">הפעל הקראת תוכן</div>
         </div>
     </div>
     
@@ -717,6 +968,7 @@
                 <a href="#solution" class="hover:text-blue-400 transition focus-visible">הפתרון</a>
                 <a href="#technology" class="hover:text-blue-400 transition focus-visible">טכנולוגיה</a>
                 <a href="#ecosystem" class="hover:text-blue-400 transition focus-visible">אקוסיסטם חי</a>
+                <a href="#partners" class="hover:text-yellow-400 transition focus-visible gold-gradient font-bold">תוכנית שותפים</a>
                 <a href="#security" class="hover:text-blue-400 transition focus-visible">אבטחה</a>
                 <a href="#investment" class="hover:text-blue-400 transition focus-visible">השקעה</a>
                 <a href="#team" class="hover:text-blue-400 transition focus-visible">צוות</a>
@@ -761,8 +1013,8 @@
                         <a href="#contact" class="glow-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift">
                             <i class="fas fa-handshake mr-2"></i>הצטרף לאקוסיסטם של SELHA
                         </a>
-                        <a href="#ecosystem" class="accent-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift">
-                            <i class="fas fa-play-circle mr-2"></i>צפה באקוסיסטם החי
+                        <a href="#partners" class="gold-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift gold-glow-animation">
+                            <i class="fas fa-crown mr-2"></i>הצטרף כתוכנית שותפים
                         </a>
                     </div>
                 </div>
@@ -1316,6 +1568,305 @@
         </div>
     </section>
 
+    <!-- תוכנית השותפים החדשה -->
+    <section id="partners" class="py-16 px-4 md:px-12 bg-gradient-to-l from-yellow-900/10 to-purple-900/10">
+        <div class="container mx-auto">
+            <h2 class="section-title partner-section-title text-3xl md:text-4xl font-bold mb-12 fade-in gold-gradient">תוכנית השותפים היוקרתית של SELHA</h2>
+            
+            <div class="partner-banner fade-in">
+                <h3 class="text-3xl font-bold mb-4 purple-gradient">🚀 הזדמנות ייחודית להצטרף למהפכה הכלכלית!</h3>
+                <p class="text-xl text-gray-300 mb-6">
+                    הצטרפו לתוכנית השותפים היוקרתית שלנו והפוך לחלק מצמיחה כלכלית חסרת תקדים. 
+                    קבלו כלים, הכשרה והזדמנויות להכנסה פסיבית ומשמעותית.
+                </p>
+                <a href="#partner-form" class="gold-button inline-block px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                    <i class="fas fa-crown mr-3"></i>הצטרף לתוכנית השותפים עכשיו!
+                </a>
+            </div>
+            
+            <!-- 6 יתרונות עיקריים -->
+            <div class="mb-16 fade-in">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient">6 יתרונות עיקריים לשותפים</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 rtl-grid">
+                    <div class="partner-card p-6 text-center hover-lift">
+                        <div class="benefit-icon mb-4">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 gold-gradient">אתר מותאם אישית</h4>
+                        <p class="text-gray-300">כל שותף מקבל אתר משלו עם עיצוב מותאם אישית וניתן להתאמה מלאה.</p>
+                    </div>
+                    
+                    <div class="partner-card p-6 text-center hover-lift">
+                        <div class="benefit-icon mb-4">
+                            <i class="fas fa-money-bill-wave"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 gold-gradient">10% עמלה מכל הפקדה</h4>
+                        <p class="text-gray-300">הכנסה פסיבית של 10% מכל הפקדה שמגיעה דרך האתר שלך או הקישורים שלך.</p>
+                    </div>
+                    
+                    <div class="partner-card p-6 text-center hover-lift">
+                        <div class="benefit-icon mb-4">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 gold-gradient">ניהול תיק סטייקינג</h4>
+                        <p class="text-gray-300">אופציה לניהול תיק סטייקינג עם תשואה של 4% בחודש על ההשקעות שלך.</p>
+                    </div>
+                    
+                    <div class="partner-card p-6 text-center hover-lift">
+                        <div class="benefit-icon mb-4">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 gold-gradient">קהילת עסקים בלעדית</h4>
+                        <p class="text-gray-300">גישה לקהילת עסקים בלעדית עם מפגשים, אירועים ורשת עמיתים.</p>
+                    </div>
+                    
+                    <div class="partner-card p-6 text-center hover-lift">
+                        <div class="benefit-icon mb-4">
+                            <i class="fas fa-coins"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 gold-gradient">מטבעות SLH פנימיים</h4>
+                        <p class="text-gray-300">קבלת מטבעות SLH פנימיים בעלי ערך ייחודי לשימוש באקוסיסטם.</p>
+                    </div>
+                    
+                    <div class="partner-card p-6 text-center hover-lift">
+                        <div class="benefit-icon mb-4">
+                            <i class="fas fa-gift"></i>
+                        </div>
+                        <h4 class="text-xl font-bold mb-3 gold-gradient">מטבעות על שיתופים</h4>
+                        <p class="text-gray-300">תגמולים במטבעות על שיתופים ופעילות ברשתות החברתיות.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- הטבות נוספות -->
+            <div class="mb-16 fade-in">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient">הטבות נוספות לשותפים</h3>
+                <div class="partner-card p-8 hover-lift">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 rtl-grid">
+                        <div>
+                            <h4 class="text-xl font-bold mb-6 text-yellow-400">כלים ופלטפורמות</h4>
+                            <ul class="partner-benefit-list text-gray-300">
+                                <li>דשבורד ניהול מתקדם עם מעקב בזמן אמת</li>
+                                <li>ערכת שיווק מלאה עם חומרים מוכנים לשימוש</li>
+                                <li>הדרכות ואימון מלא מהצוות המקצועי</li>
+                                <li>תמיכה טכנית זמינה 24/7</li>
+                                <li>אנליטיקס מתקדם למעקב אחר ביצועים</li>
+                            </ul>
+                        </div>
+                        
+                        <div>
+                            <h4 class="text-xl font-bold mb-6 text-purple-400">הזדמנויות עסקיות</h4>
+                            <ul class="partner-benefit-list text-gray-300">
+                                <li>גישה להטבות בלעדיות לשותפים</li>
+                                <li>הזמנות לאירועים וכנסים פרטיים</li>
+                                <li>הזדמנות להיות חלק מצוות המייסדים</li>
+                                <li>אפשרות לצמיחה מהירה בתוך האקוסיסטם</li>
+                                <li>תמיכה בהקמת עסק עצמאי</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- טבלת רמות שותפים -->
+            <div class="mb-16 fade-in">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient">רמות שותפים והטבות</h3>
+                <div class="overflow-x-auto">
+                    <table class="partner-table">
+                        <thead>
+                            <tr>
+                                <th>רמה</th>
+                                <th>עמלה</th>
+                                <th>הטבות עיקריות</th>
+                                <th>דרישות כניסה</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><span class="level-badge level-bronze">ברונזה</span></td>
+                                <td class="text-xl font-bold">10%</td>
+                                <td>אתר בסיסי + הדרכה ראשונית + גישה לקהילה</td>
+                                <td>הרשמה + ראיון התאמה</td>
+                            </tr>
+                            <tr>
+                                <td><span class="level-badge level-silver">כסף</span></td>
+                                <td class="text-xl font-bold">12%</td>
+                                <td>דשבורד מתקדם + ערכת שיווק + תמיכה טכנית</td>
+                                <td>פעילות חודשית + 3 הפקדות</td>
+                            </tr>
+                            <tr>
+                                <td><span class="level-badge level-gold">זהב</span></td>
+                                <td class="text-xl font-bold">15%</td>
+                                <td>אתר מותאם אישית + תמיכה VIP + הדרכות מתקדמות</td>
+                                <td>10 הפקדות חודשיות + צוות של 5 שותפים</td>
+                            </tr>
+                            <tr>
+                                <td><span class="level-badge level-platinum">פלטינום</span></td>
+                                <td class="text-xl font-bold">18%</td>
+                                <td>אירועים בלעדיים + מנטורינג אישי + הטבות מיוחדות</td>
+                                <td>צוות של 20 שותפים + הכנסה חודשית של 50K+</td>
+                            </tr>
+                            <tr>
+                                <td><span class="level-badge level-diamond">יהלום</span></td>
+                                <td class="text-xl font-bold">20%</td>
+                                <td>שותפות באקוסיסטם + הכנסות מהמערכת + השפעה על החלטות</td>
+                                <td>צוות של 50+ שותפים + הכנסה חודשית של 200K+</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- דוגמאות הכנסות -->
+            <div class="mb-16 fade-in">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient">דוגמאות הכנסות מהתוכנית</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 rtl-grid">
+                    <div class="income-example hover-lift">
+                        <h4 class="text-xl font-bold mb-4 text-green-400">מתחיל</h4>
+                        <div class="text-4xl font-bold mb-2 gold-gradient">₪5,000</div>
+                        <p class="text-gray-300 mb-4">השקעה חודשית ממוצעת</p>
+                        <div class="text-2xl font-bold text-yellow-400 mb-2">₪500 עמלה</div>
+                        <p class="text-gray-400 text-sm">10% מההפקדות + הכנסות נוספות</p>
+                    </div>
+                    
+                    <div class="income-example hover-lift">
+                        <h4 class="text-xl font-bold mb-4 text-blue-400">מתקדם</h4>
+                        <div class="text-4xl font-bold mb-2 gold-gradient">₪50,000</div>
+                        <p class="text-gray-300 mb-4">השקעה חודשית ממוצעת</p>
+                        <div class="text-2xl font-bold text-yellow-400 mb-2">₪5,000 עמלה</div>
+                        <p class="text-gray-400 text-sm">12%-15% מההפקדות + הכנסות צוות</p>
+                    </div>
+                    
+                    <div class="income-example hover-lift">
+                        <h4 class="text-xl font-bold mb-4 text-purple-400">מקצוען</h4>
+                        <div class="text-4xl font-bold mb-2 gold-gradient">₪500,000+</div>
+                        <p class="text-gray-300 mb-4">השקעה חודשית ממוצעת</p>
+                        <div class="text-2xl font-bold text-yellow-400 mb-2">₪50,000+ עמלה</div>
+                        <p class="text-gray-400 text-sm">18%-20% מההפקדות + הכנסות מהמערכת</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- טופס הרשמה לשותפים -->
+            <div id="partner-form" class="fade-in">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient">טופס הרשמה לתוכנית השותפים</h3>
+                <div class="partner-form hover-lift">
+                    <form class="space-y-6 text-right" id="partner-contact-form">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">שם מלא</label>
+                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="הזן את שמך המלא" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">דוא"ל</label>
+                                <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="your@email.com" required>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">טלפון</label>
+                                <input type="tel" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="05X-XXXXXXX" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">עיר מגורים</label>
+                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="עיר המגורים שלך" required>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-right">רקע מקצועי / ניסיון</label>
+                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" rows="3" placeholder="ספר לנו על הרקע המקצועי שלך, ניסיון בשיווק, רשתות חברתיות וכו'..." required></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-right">מדוע אתה מעוניין להצטרף כתוכנית שותפים?</label>
+                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" rows="3" placeholder="הסבר את המוטיבציה שלך להצטרפות..." required></textarea>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">באיזו רמת שותפות אתה מעוניין להתחיל?</label>
+                                <select class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" required>
+                                    <option value="">בחר רמה</option>
+                                    <option value="bronze">ברונזה (10%)</option>
+                                    <option value="silver">כסף (12%)</option>
+                                    <option value="gold">זהב (15%)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">כמה שעות שבועיות אתה יכול להקדיש?</label>
+                                <select class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" required>
+                                    <option value="">בחר טווח שעות</option>
+                                    <option value="5-10">5-10 שעות</option>
+                                    <option value="10-20">10-20 שעות</option>
+                                    <option value="20+">20+ שעות</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <input type="checkbox" id="partner-consent" class="ml-2 rounded bg-gray-800 border-gray-700 focus:outline-none focus-visible" required>
+                            <label for="partner-consent" class="text-gray-300 cursor-pointer">
+                                אני מסכים לתנאי השותפות ומאשר קבלת עדכונים והצעות מהתוכנית
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="gold-button w-full py-4 rounded-lg font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                            <i class="fas fa-user-plus mr-2"></i>הגש מועמדות לתוכנית השותפים
+                        </button>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- תהליך הצטרפות -->
+            <div class="mt-16 fade-in">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient">תהליך הצטרפות לשותפים - 4 שלבים פשוטים</h3>
+                <div class="partner-card p-8 hover-lift">
+                    <div class="step-process">
+                        <div class="step-item">
+                            <div class="ml-12">
+                                <h4 class="text-xl font-bold mb-3 text-yellow-400">הרשמה - מילוי טופס</h4>
+                                <p class="text-gray-300">מלא את הטופס למעלה עם הפרטים שלך. נבדוק את ההתאמה שלך ונחזור אליך תוך 24 שעות.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="ml-12">
+                                <h4 class="text-xl font-bold mb-3 text-yellow-400">ראיון - שיחת התאמה</h4>
+                                <p class="text-gray-300">נקיים שיחת היכרות קצרה כדי להבין את הצרכים שלך ולהתאים את התוכנית עבורך.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="ml-12">
+                                <h4 class="text-xl font-bold mb-3 text-yellow-400">הדרכה - הכשרה מלאה</h4>
+                                <p class="text-gray-300">תקבל הדרכה מפורטת על המערכת, הכלים ודרכי העבודה. ההדרכה כוללת חומרים כתובים, סרטונים ותמיכה אישית.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="step-item">
+                            <div class="ml-12">
+                                <h4 class="text-xl font-bold mb-3 text-yellow-400">השקה - קבלת אתר וכלים</h4>
+                                <p class="text-gray-300">קבל את האתר המותאם אישית שלך, דשבורד ניהול, ערכת שיווק וכל הכלים להתחלת העבודה.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="partner-join-section mt-12">
+                        <h4 class="text-2xl font-bold mb-6 gold-gradient">מוכנים להצטרף למהפכה?</h4>
+                        <p class="text-xl text-gray-300 mb-8">
+                            אל תחכו - מספר המקומות בתוכנית השותפים מוגבל. הצטרפו עכשיו והתחילו לבנות את ההכנסה הפסיבית שלכם!
+                        </p>
+                        <a href="#partner-form" class="gold-button inline-block px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                            <i class="fas fa-crown mr-3"></i>הצטרף לתוכנית השותפים עכשיו!
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Technology & Security Architecture -->
     <section id="technology" class="py-16 px-4 md:px-12">
         <div class="container mx-auto">
@@ -1791,6 +2342,26 @@
                             <p class="text-gray-400">אנו משתמשים בשכבת אבטחה HMAC מתקדמת עם TTL ואנטי-רפליי, חוזה חכם שעבר ביקורות אבטחה, וארכיטקטורת מיקרו-שירותים מבודדת. כמו כן, יש לנו צוות אבטחה ייעודי שמנטר את המערכת 24/7.</p>
                         </div>
                     </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>מהי תוכנית השותפים של SELHA?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">תוכנית השותפים שלנו מאפשרת לכם להצטרף לאקוסיסטם שלנו ולקבל הכנסה פסיבית. השותפים מקבלים אתר מותאם אישית, 10% עמלה מכל הפקדה שמגיעה דרך האתר שלהם, כלי שיווק מתקדמים, הדרכה מלאה ותמיכה טכנית. ישנן 5 רמות שותפים עם הטבות הולכות וגדלות.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>כמה זמן לוקח להתחיל להרוויח כתוכנית שותפים?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">תהליך ההצטרפות כולל 4 שלבים פשוטים: הרשמה, ראיון, הדרכה והשקה. תוך שבוע ממועד ההרשמה תוכלו כבר להתחיל לעבוד. השותפים שלנו מדווחים על הכנסות כבר בחודש הראשון לפעילות, עם פוטנציאל צמיחה משמעותי בחודשים הבאים.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1854,6 +2425,16 @@
                                 <div>
                                     <h4 class="text-lg font-bold mb-1">שירותי אקדמיה וקהילה</h4>
                                     <p class="text-gray-400">קורסים, הכשרות ושירותי ניהול קהילתי בתשלום.</p>
+                                </div>
+                            </div>
+                            
+                            <div class="flex items-start">
+                                <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4 mt-1">
+                                    <i class="fas fa-handshake text-yellow-400"></i>
+                                </div>
+                                <div>
+                                    <h4 class="text-lg font-bold mb-1">תוכנית שותפים</h4>
+                                    <p class="text-gray-400">הכנסות מתוכנית השותפים היוקרתית עם מודל צמיחה מבוזר.</p>
                                 </div>
                             </div>
                         </div>
@@ -2030,9 +2611,9 @@
                         <div class="news-date">1 פבר׳ 2024</div>
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold mb-3">שיתופי פעולה חדשים</h3>
-                        <p class="text-gray-400 mb-4">חתמנו על שיתופי פעולה עם 3 חברות טכנולוגיה מובילות להטמעת SELHA בתעשייה.</p>
-                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold">קרא עוד →</a>
+                        <h3 class="text-xl font-bold mb-3">השקת תוכנית שותפים חדשה</h3>
+                        <p class="text-gray-400 mb-4">השקנו תוכנית שותפים יוקרתית עם הטבות משמעותיות והזדמנויות להכנסה פסיבית.</p>
+                        <a href="#partners" class="text-yellow-400 hover:text-yellow-300 font-semibold gold-gradient">קרא עוד →</a>
                     </div>
                 </div>
             </div>
@@ -2053,6 +2634,10 @@
                 <div class="flex flex-col md:flex-row justify-center gap-6 mb-16">
                     <a href="#contact-form" class="glow-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift glow-animation">
                         <i class="fas fa-handshake mr-3"></i>צור קשר להשקעה
+                    </a>
+                    
+                    <a href="#partners" class="gold-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                        <i class="fas fa-crown mr-3"></i>הצטרף כתוכנית שותפים
                     </a>
                     
                     <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="accent-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift">
@@ -2214,7 +2799,7 @@
                         השקעה במטבעות קריפטוגרפיים כרוכה בסיכונים. אנא ערכו בדיקת נאותות מקיפה לפני כל השקעה.
                     </p>
                     <p class="text-gray-400 text-sm mt-4">
-                        Founded & Architected by Onger • Sovereign Economic Layer for Human Advancement
+                        Founded & Architected by Osif e.Ungar & Tzvika Kaufman • Sovereign Economic Layer for Human Advancement
                     </p>
                 </div>
             </div>
@@ -2247,6 +2832,9 @@
                     </a>
                     <a href="https://slh-nft.com/" target="_blank" class="text-gray-400 hover:text-purple-400 transition focus-visible" title="NFT Marketplace">
                         <i class="fas fa-palette"></i>
+                    </a>
+                    <a href="#partners" class="text-gray-400 hover:text-yellow-400 transition focus-visible" title="תוכנית שותפים">
+                        <i class="fas fa-crown"></i>
                     </a>
                     <a href="#contact" class="text-gray-400 hover:text-green-400 transition focus-visible" title="צור קשר">
                         <i class="fas fa-envelope"></i>
@@ -2482,7 +3070,7 @@
             });
         });
         
-        // Form submission handler
+        // Form submission handlers
         const contactForm = document.getElementById('main-contact-form');
         if(contactForm) {
             contactForm.addEventListener('submit', function(e) {
@@ -2504,6 +3092,36 @@
                 setTimeout(() => {
                     alert('תודה על פנייתך! הודעה נשלחה לדוא"ל שלנו. נציגנו יחזרו אליך בהקדם.');
                     contactForm.reset();
+                }, 1000);
+            });
+        }
+        
+        // Partner form submission handler
+        const partnerForm = document.getElementById('partner-contact-form');
+        if(partnerForm) {
+            partnerForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // Collect form data
+                const name = this.querySelector('input[type="text"]').value;
+                const email = this.querySelector('input[type="email"]').value;
+                const phone = this.querySelector('input[type="tel"]').value;
+                const city = this.querySelectorAll('input[type="text"]')[2].value;
+                const background = this.querySelectorAll('textarea')[0].value;
+                const motivation = this.querySelectorAll('textarea')[1].value;
+                const level = this.querySelector('select').value;
+                const hours = this.querySelectorAll('select')[1].value;
+                
+                // Create email body
+                const emailBody = `שם: ${name}%0Aאימייל: ${email}%0Aטלפון: ${phone}%0Aעיר: ${city}%0Aרמה רצויה: ${level}%0Aשעות שבועיות: ${hours}%0A%0Aרקע מקצועי:%0A${background}%0A%0Aמוטיבציה:%0A${motivation}`;
+                
+                // Open mail client
+                window.location.href = `mailto:kaufmanungar@gmail.com?subject=מועמדות לתוכנית שותפים SELHA&body=${emailBody}`;
+                
+                // Show confirmation message
+                setTimeout(() => {
+                    alert('תודה על הגשת המועמדות לתוכנית השותפים! נציגנו ייצרו איתך קשר תוך 24 שעות לקביעת ראיון.');
+                    partnerForm.reset();
                 }, 1000);
             });
         }
