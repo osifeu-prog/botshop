@@ -8,19 +8,27 @@
     <!-- Meta tags for social media sharing -->
     <meta property="og:title" content="SELHA - שכבת כלכלה ריבונית לקידום אנושי">
     <meta property="og:description" content="תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.">
-    <meta property="og:image" content="https://slhisrael.com/images/selha-social-share.jpg">
-    <meta property="og:url" content="https://slhisrael.com/">
+    <meta property="og:image" content="https://slh-nft.com/assets/start_banner.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" content="https://slh-nft.com/">
     <meta property="og:type" content="website">
     <meta property="og:locale" content="he_IL">
+    <meta property="og:site_name" content="SELHA">
     
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="SELHA - Sovereign Economic Layer for Human Advancement">
     <meta name="twitter:description" content="בונים שכבת כלכלה חדשה לעולם הדיגיטלי">
-    <meta name="twitter:image" content="https://slhisrael.com/images/selha-twitter-card.jpg">
+    <meta name="twitter:image" content="https://slh-nft.com/assets/start_banner.jpg">
+    <meta name="twitter:site" content="@SELHA_Official">
+    <meta name="twitter:creator" content="@SELHA_Official">
     
     <!-- Favicon and app icons -->
-    <link rel="icon" href="https://slhisrael.com/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" href="https://slhisrael.com/images/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="https://slh-nft.com/assets/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://slh-nft.com/assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="https://slh-nft.com/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="https://slh-nft.com/assets/favicon-16x16.png">
+    <link rel="manifest" href="https://slh-nft.com/assets/site.webmanifest">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -35,6 +43,8 @@
             --card-bg: #151522;
             --text-color: #ffffff;
             --text-secondary: #d1d5db;
+            --font-scale: 1;
+            --high-contrast: false;
         }
         
         .light-mode {
@@ -48,6 +58,21 @@
             --accent-teal: #0d9488;
         }
         
+        .high-contrast {
+            --text-color: #000000;
+            --text-secondary: #333333;
+            --primary-blue: #0000ff;
+            --dark-blue: #0000aa;
+            --accent-teal: #008080;
+            --dark-bg: #ffffff;
+            --card-bg: #f0f0f0;
+        }
+        
+        .high-contrast.light-mode {
+            --dark-bg: #ffffff;
+            --card-bg: #f0f0f0;
+        }
+        
         * {
             font-family: 'Heebo', sans-serif;
         }
@@ -57,6 +82,16 @@
             color: var(--text-color);
             overflow-x: hidden;
             transition: background-color 0.3s ease, color 0.3s ease;
+            font-size: calc(1rem * var(--font-scale));
+            line-height: calc(1.5 * var(--font-scale));
+        }
+        
+        body.font-large {
+            --font-scale: 1.2;
+        }
+        
+        body.font-xlarge {
+            --font-scale: 1.4;
         }
         
         .gradient-bg {
@@ -69,6 +104,10 @@
             background: radial-gradient(circle at 20% 30%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
                         radial-gradient(circle at 80% 70%, rgba(13, 148, 136, 0.05) 0%, transparent 50%),
                         var(--dark-bg);
+        }
+        
+        .high-contrast .gradient-bg {
+            background: var(--dark-bg);
         }
         
         .hero-gradient {
@@ -92,6 +131,12 @@
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
         }
         
+        .high-contrast .feature-card {
+            background: var(--card-bg);
+            border: 2px solid #000000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
         .feature-card:hover {
             transform: translateY(-5px);
             border-color: var(--primary-blue);
@@ -100,6 +145,11 @@
         
         .light-mode .feature-card:hover {
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+        }
+        
+        .high-contrast .feature-card:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--primary-blue);
         }
         
         .live-badge {
@@ -127,6 +177,11 @@
         
         .light-mode .glow-button {
             box-shadow: 0 0 20px rgba(37, 99, 235, 0.3);
+        }
+        
+        .high-contrast .glow-button {
+            box-shadow: 0 0 20px rgba(0, 0, 255, 0.7);
+            border: 2px solid #000000;
         }
         
         .glow-button:hover {
@@ -183,6 +238,11 @@
             background: rgba(37, 99, 235, 0.1);
         }
         
+        .high-contrast .tech-icon {
+            background: rgba(0, 0, 255, 0.2);
+            border: 1px solid #000000;
+        }
+        
         .coin-animation {
             animation: float 6s ease-in-out infinite;
         }
@@ -222,6 +282,11 @@
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
         
+        .high-contrast .comparison-table th {
+            background: rgba(0, 0, 255, 0.3);
+            border: 2px solid #000000;
+        }
+        
         .comparison-table td {
             padding: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -232,12 +297,20 @@
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
         
+        .high-contrast .comparison-table td {
+            border: 2px solid #000000;
+        }
+        
         .comparison-table tr:nth-child(even) {
             background: rgba(255, 255, 255, 0.05);
         }
         
         .light-mode .comparison-table tr:nth-child(even) {
             background: rgba(0, 0, 0, 0.02);
+        }
+        
+        .high-contrast .comparison-table tr:nth-child(even) {
+            background: rgba(0, 0, 0, 0.1);
         }
         
         .security-badge {
@@ -284,6 +357,10 @@
             background: rgba(0, 0, 0, 0.05);
         }
         
+        .high-contrast ::-webkit-scrollbar-track {
+            background: #e0e0e0;
+        }
+        
         ::-webkit-scrollbar-thumb {
             background: var(--primary-blue);
             border-radius: 5px;
@@ -306,6 +383,11 @@
             border: 1px solid rgba(37, 99, 235, 0.2);
         }
         
+        .high-contrast .integrated-architecture {
+            background: linear-gradient(135deg, rgba(0, 0, 255, 0.1) 0%, rgba(0, 128, 128, 0.1) 100%);
+            border: 2px solid #000000;
+        }
+        
         /* Accessibility improvements */
         .skip-to-content {
             position: absolute;
@@ -316,6 +398,7 @@
             padding: 8px;
             z-index: 1001;
             text-decoration: none;
+            font-weight: bold;
         }
         
         .skip-to-content:focus {
@@ -327,12 +410,23 @@
             outline-offset: 2px;
         }
         
-        /* Theme toggle button */
-        .theme-toggle {
+        .high-contrast .focus-visible:focus {
+            outline: 3px solid #000000;
+            outline-offset: 3px;
+        }
+        
+        /* Accessibility toolbar */
+        .accessibility-toolbar {
             position: fixed;
             bottom: 20px;
             left: 20px;
             z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .accessibility-btn {
             background: var(--card-bg);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 50%;
@@ -344,26 +438,236 @@
             cursor: pointer;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
+            color: var(--text-color);
         }
         
-        .light-mode .theme-toggle {
+        .light-mode .accessibility-btn {
             border: 1px solid rgba(0, 0, 0, 0.1);
         }
         
-        .theme-toggle:hover {
-            transform: scale(1.1);
-        }
-        
-        /* High contrast mode for accessibility */
-        .high-contrast {
-            --text-color: #000000;
-            --text-secondary: #333333;
-            --primary-blue: #0000ff;
-            --accent-teal: #008080;
-        }
-        
-        .high-contrast .feature-card {
+        .high-contrast .accessibility-btn {
             border: 2px solid #000000;
+        }
+        
+        .accessibility-btn:hover {
+            transform: scale(1.1);
+            background: var(--primary-blue);
+            color: white;
+        }
+        
+        /* Advanced animations */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(0, 102, 255, 0.5); }
+            50% { box-shadow: 0 0 30px rgba(0, 102, 255, 0.8); }
+        }
+        
+        .glow-animation {
+            animation: glow 3s ease-in-out infinite;
+        }
+        
+        /* Enhanced hover effects */
+        .hover-lift {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 35px rgba(0, 102, 255, 0.15);
+        }
+        
+        /* Progress bars */
+        .progress-bar {
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .light-mode .progress-bar {
+            background: rgba(0, 0, 0, 0.1);
+        }
+        
+        .high-contrast .progress-bar {
+            background: #cccccc;
+            border: 1px solid #000000;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-blue) 0%, var(--accent-teal) 100%);
+            border-radius: 4px;
+            transition: width 1s ease-in-out;
+        }
+        
+        /* Timeline */
+        .timeline-item {
+            position: relative;
+            padding-right: 40px;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            border: 3px solid var(--dark-bg);
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            right: 9px;
+            top: 20px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background: var(--primary-blue);
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        /* News cards */
+        .news-card {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .news-date {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            background: var(--primary-blue);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        /* Team cards */
+        .team-card {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .team-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            border: 3px solid var(--primary-blue);
+            overflow: hidden;
+        }
+        
+        .team-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* FAQ */
+        .faq-item {
+            margin-bottom: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .faq-question {
+            padding: 15px;
+            background: var(--card-bg);
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+        }
+        
+        .faq-answer {
+            padding: 0 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background: rgba(0, 102, 255, 0.05);
+        }
+        
+        .light-mode .faq-answer {
+            background: rgba(37, 99, 235, 0.05);
+        }
+        
+        .faq-item.active .faq-answer {
+            padding: 15px;
+            max-height: 500px;
+        }
+        
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+        
+        /* Counter animations */
+        .counter {
+            font-weight: 800;
+            color: var(--primary-blue);
+        }
+        
+        /* Loader */
+        .loader {
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 80px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            background: var(--primary-blue);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 999;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        .back-to-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .back-to-top:hover {
+            background: var(--dark-blue);
+            transform: translateY(-3px);
         }
     </style>
 </head>
@@ -371,9 +675,28 @@
     <!-- Accessibility: Skip to content link -->
     <a href="#main-content" class="skip-to-content focus-visible">דלג לתוכן הראשי</a>
     
-    <!-- Theme toggle button -->
-    <div class="theme-toggle" id="themeToggle" aria-label="החלף מצב תצוגה">
-        <i class="fas fa-moon" id="themeIcon"></i>
+    <!-- Accessibility toolbar -->
+    <div class="accessibility-toolbar">
+        <div class="accessibility-btn" id="themeToggle" aria-label="החלף מצב תצוגה">
+            <i class="fas fa-moon" id="themeIcon"></i>
+        </div>
+        <div class="accessibility-btn" id="fontIncrease" aria-label="הגדל גודל גופן">
+            <i class="fas fa-text-height"></i>
+        </div>
+        <div class="accessibility-btn" id="fontDecrease" aria-label="הקטן גודל גופן">
+            <i class="fas fa-text-width"></i>
+        </div>
+        <div class="accessibility-btn" id="contrastToggle" aria-label="החלף מצב ניגודיות גבוהה">
+            <i class="fas fa-adjust"></i>
+        </div>
+        <div class="accessibility-btn" id="speechToggle" aria-label="הקראת תוכן">
+            <i class="fas fa-volume-up"></i>
+        </div>
+    </div>
+    
+    <!-- Back to top button -->
+    <div class="back-to-top" id="backToTop" aria-label="חזרה למעלה">
+        <i class="fas fa-arrow-up"></i>
     </div>
     
     <!-- ניווט -->
@@ -396,9 +719,11 @@
                 <a href="#ecosystem" class="hover:text-blue-400 transition focus-visible">אקוסיסטם חי</a>
                 <a href="#security" class="hover:text-blue-400 transition focus-visible">אבטחה</a>
                 <a href="#investment" class="hover:text-blue-400 transition focus-visible">השקעה</a>
+                <a href="#team" class="hover:text-blue-400 transition focus-visible">צוות</a>
+                <a href="#news" class="hover:text-blue-400 transition focus-visible">חדשות</a>
             </div>
             
-            <a href="#contact" class="glow-button px-6 py-3 rounded-full font-semibold focus-visible">
+            <a href="#contact" class="glow-button px-6 py-3 rounded-full font-semibold focus-visible glow-animation">
                 <i class="fas fa-chart-line mr-2"></i>להשקעה בפרויקט
             </a>
         </div>
@@ -424,19 +749,19 @@
                     </p>
                     
                     <div class="flex flex-wrap gap-3 mb-10">
-                        <span class="px-4 py-2 rounded-full bg-blue-900/40 border border-blue-700/50">AI</span>
-                        <span class="px-4 py-2 rounded-full bg-purple-900/40 border border-purple-700/50">Web3</span>
-                        <span class="px-4 py-2 rounded-full bg-green-900/40 border border-green-700/50">DAO</span>
-                        <span class="px-4 py-2 rounded-full bg-yellow-900/40 border border-yellow-700/50">תשלומים</span>
-                        <span class="px-4 py-2 rounded-full bg-red-900/40 border border-red-700/50">אבטחה קריפטוגרפית</span>
-                        <span class="px-4 py-2 rounded-full bg-teal-900/40 border border-teal-700/50">קהילות חכמות</span>
+                        <span class="px-4 py-2 rounded-full bg-blue-900/40 border border-blue-700/50 hover-lift">AI</span>
+                        <span class="px-4 py-2 rounded-full bg-purple-900/40 border border-purple-700/50 hover-lift">Web3</span>
+                        <span class="px-4 py-2 rounded-full bg-green-900/40 border border-green-700/50 hover-lift">DAO</span>
+                        <span class="px-4 py-2 rounded-full bg-yellow-900/40 border border-yellow-700/50 hover-lift">תשלומים</span>
+                        <span class="px-4 py-2 rounded-full bg-red-900/40 border border-red-700/50 hover-lift">אבטחה קריפטוגרפית</span>
+                        <span class="px-4 py-2 rounded-full bg-teal-900/40 border border-teal-700/50 hover-lift">קהילות חכמות</span>
                     </div>
                     
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#contact" class="glow-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible">
+                        <a href="#contact" class="glow-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift">
                             <i class="fas fa-handshake mr-2"></i>הצטרף לאקוסיסטם של SELHA
                         </a>
-                        <a href="#ecosystem" class="accent-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible">
+                        <a href="#ecosystem" class="accent-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift">
                             <i class="fas fa-play-circle mr-2"></i>צפה באקוסיסטם החי
                         </a>
                     </div>
@@ -447,7 +772,7 @@
                         <div class="absolute -top-10 -right-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl"></div>
                         <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"></div>
                         
-                        <div class="relative bg-card-bg border border-gray-800 rounded-3xl p-8 shadow-2xl">
+                        <div class="relative bg-card-bg border border-gray-800 rounded-3xl p-8 shadow-2xl hover-lift">
                             <div class="flex justify-between items-center mb-8">
                                 <h3 class="text-2xl font-bold">מטבע SELHA</h3>
                                 <div class="coin-animation">
@@ -461,8 +786,8 @@
                                         <span class="text-gray-400">מחיר נוכחי</span>
                                         <span class="font-bold">₿ 0.00025 ~ $15</span>
                                     </div>
-                                    <div class="w-full bg-gray-800 rounded-full h-2">
-                                        <div class="bg-gradient-to-r from-green-500 to-teal-400 h-2 rounded-full w-3/4"></div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill w-3/4"></div>
                                     </div>
                                 </div>
                                 
@@ -471,18 +796,18 @@
                                         <span class="text-gray-400">סטייקינג חודשי</span>
                                         <span class="font-bold text-green-400">4% ריבית</span>
                                     </div>
-                                    <div class="w-full bg-gray-800 rounded-full h-2">
-                                        <div class="bg-gradient-to-r from-blue-500 to-purple-500 h-2 rounded-full w-full"></div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill w-full"></div>
                                     </div>
                                 </div>
                                 
                                 <div>
                                     <div class="flex justify-between mb-2">
                                         <span class="text-gray-400">משקיעים פעילים</span>
-                                        <span class="font-bold">280+ בלוקצ'יין</span>
+                                        <span class="font-bold"><span class="counter" data-target="280">0</span>+ בלוקצ'יין</span>
                                     </div>
-                                    <div class="w-full bg-gray-800 rounded-full h-2">
-                                        <div class="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full w-1/3"></div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill w-1/3"></div>
                                     </div>
                                 </div>
                             </div>
@@ -491,6 +816,10 @@
                                 <p class="text-center text-gray-300 mb-4">מגייסים כעת:</p>
                                 <p class="text-3xl font-bold text-center text-blue-400">300M ₪</p>
                                 <p class="text-center text-gray-400 text-sm mt-2">לפיתוח תשתיות, AI, אבטחה וצוות</p>
+                                <div class="mt-4 progress-bar">
+                                    <div class="progress-fill w-2/3"></div>
+                                </div>
+                                <p class="text-center text-xs text-gray-500 mt-2">67% הושגו</p>
                             </div>
                         </div>
                     </div>
@@ -504,14 +833,14 @@
         <div class="container mx-auto">
             <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">מהי SELHA?</h2>
             
-            <div class="feature-card p-8 mb-12 fade-in">
+            <div class="feature-card p-8 mb-12 fade-in hover-lift">
                 <p class="text-xl leading-relaxed text-gray-300">
                     SELHA היא שכבת תשתית כלכלית חדשה — שילוב של פיננסים, קהילה ומדינה — המאפשרת יצירת שוק חדש לחלוטין, מבוזר, יציב ורווחי. המערכת כוללת:
                 </p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid fade-in">
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-brain"></i>
                     </div>
@@ -519,7 +848,7 @@
                     <p class="text-gray-400">מערכת בינה מלאכותית מתקדמת לניהול ואופטימיזציה של התהליכים הכלכליים והקהילתיים.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-money-bill-transfer"></i>
                     </div>
@@ -527,7 +856,7 @@
                     <p class="text-gray-400">תשתית תשלומים מאובטחת ותמיכה מלאה במטבעות קריפטוגרפיים עם חיבור למערכות פיננסיות מסורתיות.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-users-gear"></i>
                     </div>
@@ -535,7 +864,7 @@
                     <p class="text-gray-400">מערכת ממשל מבוזרת (DAO) וממשק ניהול מתקדם (DAX) לניהול קהילתי וארגוני.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
@@ -543,7 +872,7 @@
                     <p class="text-gray-400">פלטפורמת למידה והכשרה משולבת לתרבות ידע וצמיחה קהילתית בתוך המערכת.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-database"></i>
                     </div>
@@ -551,7 +880,7 @@
                     <p class="text-gray-400">בסיסי ידע משותפים וניהול מידע קהילתי מבוזר עם גישה מבוקרת.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-shield-alt"></i>
                     </div>
@@ -559,7 +888,7 @@
                     <p class="text-gray-400">הגנה קריפטוגרפית מתקדמת עם Time-to-Live ואנטי-רפליי להגנה על נתונים ותקשורת.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-globe"></i>
                     </div>
@@ -567,7 +896,7 @@
                     <p class="text-gray-400">רשת של שערי גישה פעילים בפלטפורמות ווב וטלגרם לנגישות ושימוש מידיים.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-file-contract"></i>
                     </div>
@@ -575,7 +904,7 @@
                     <p class="text-gray-400">חוזה חכם פעיל על BNB Chain לניהול נכסים דיגיטליים ואינטראקציות מבוזרות.</p>
                 </div>
                 
-                <div class="feature-card p-6">
+                <div class="feature-card p-6 hover-lift">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-infinity"></i>
                     </div>
@@ -591,13 +920,13 @@
         <div class="container mx-auto">
             <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">האתגר העולמי</h2>
             
-            <div class="feature-card p-8 mb-8 fade-in">
+            <div class="feature-card p-8 mb-8 fade-in hover-lift">
                 <p class="text-xl text-gray-300 mb-8">
                     העולם מתמודד עם משברים מבניים עמוקים שיוצרים חוסר יציבות וחוסר אימון במערכות הקיימות:
                 </p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
-                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-chart-line-up text-red-400"></i>
@@ -607,7 +936,7 @@
                         <p class="text-gray-400 text-sm">ערך הכסף הולך ונשחק עם הזמן, פוגע בכוח הקנייה וביציבות הכלכלית.</p>
                     </div>
                     
-                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-house-chimney-crack text-red-400"></i>
@@ -617,7 +946,7 @@
                         <p class="text-gray-400 text-sm">עלייה מתמדת במחירי דיור, מזון ושירותים חיוניים מקשה על החיים.</p>
                     </div>
                     
-                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-building-columns text-red-400"></i>
@@ -627,7 +956,7 @@
                         <p class="text-gray-400 text-sm">מוסדות פיננסיים וממשלתיים מאבדים את היעילות והיכולת לספק פתרונות.</p>
                     </div>
                     
-                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-user-group text-red-400"></i>
@@ -637,7 +966,7 @@
                         <p class="text-gray-400 text-sm">אמון הציבור במערכות הפיננסיות, הממשלתיות והחברתיות נמצא בשפל.</p>
                     </div>
                     
-                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-people-arrows text-red-400"></i>
@@ -647,7 +976,7 @@
                         <p class="text-gray-400 text-sm">קהילות מתקשות להשפיע על המערכות ששולטות בחייהן ופועלות בנפרד מהן.</p>
                     </div>
                     
-                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-plug-circle-exclamation text-red-400"></i>
@@ -671,7 +1000,7 @@
         <div class="container mx-auto">
             <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">פתרון SELHA</h2>
             
-            <div class="feature-card p-8 mb-12 fade-in">
+            <div class="feature-card p-8 mb-12 fade-in hover-lift">
                 <h3 class="text-2xl md:text-3xl font-bold mb-6 text-center">
                     <span class="hero-gradient">Sovereign Economic Layer for Human Advancement</span>
                 </h3>
@@ -680,7 +1009,7 @@
                 </p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-network-wired text-blue-400"></i>
@@ -690,7 +1019,7 @@
                         <p class="text-gray-400 text-sm">מערכת כלכלית שאינה תלויה בגורם מרכזי אחד, עם חלוקת כוח ושליטה רחבה.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-coins text-yellow-400"></i>
@@ -700,7 +1029,7 @@
                         <p class="text-gray-400 text-sm">תשתית תשלומים גלובלית מהירה ובטוחה עם תמיכה במטבעות דיגיטליים.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-robot text-purple-400"></i>
@@ -710,7 +1039,7 @@
                         <p class="text-gray-400 text-sm">בינה מלאכותית מתקדמת לניהול, אופטימיזציה וצמיחה של המערכת הכלכלית.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-users-between-lines text-green-400"></i>
@@ -720,7 +1049,7 @@
                         <p class="text-gray-400 text-sm">קהילות מקושרות עם כלים לניהול עצמי, קבלת החלטות ושיתוף פעולה.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-book-open text-teal-400"></i>
@@ -730,7 +1059,7 @@
                         <p class="text-gray-400 text-sm">מערכת למידה והכשרה פנימית לצמיחה אישית וקהילתית בתוך האקוסיסטם.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-vote-yea text-orange-400"></i>
@@ -740,7 +1069,7 @@
                         <p class="text-gray-400 text-sm">מנגנוני ממשל מבוזרים וממשקי ניהול מתקדמים לקבלת החלטות קהילתיות.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-lock text-red-400"></i>
@@ -750,7 +1079,7 @@
                         <p class="text-gray-400 text-sm">שכבת הגנה מתקדמת עם HMAC, TTL ואנטי-רפליי לאבטחת מידע ותקשורת.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-satellite-dish text-cyan-400"></i>
@@ -760,7 +1089,7 @@
                         <p class="text-gray-400 text-sm">רשת פעילה של שערי גישה ופלטפורמות לשימוש מיידי ונגישות גלובלית.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-cubes text-indigo-400"></i>
@@ -774,7 +1103,7 @@
             
             <div class="text-center fade-in">
                 <p class="text-2xl font-bold mb-6">מערכת שמסוגלת לשרת יחידים, קהילות, ארגונים ואף מדינות.</p>
-                <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible">
+                <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift glow-animation">
                     <i class="fas fa-rocket mr-2"></i>הצטרף למהפכה הכלכלית
                 </a>
             </div>
@@ -786,7 +1115,7 @@
         <div class="container mx-auto">
             <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">האקוסיסטם החי של SELHA</h2>
             
-            <div class="feature-card p-8 mb-8 fade-in">
+            <div class="feature-card p-8 mb-8 fade-in hover-lift">
                 <div class="flex items-center mb-8">
                     <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center mr-4">
                         <i class="fas fa-play text-green-400"></i>
@@ -802,7 +1131,7 @@
                         <i class="fab fa-telegram mr-3 text-blue-400"></i> שערי טלגרם פעילים
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 rtl-grid">
-                        <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible">
+                        <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-store text-blue-400"></i>
@@ -816,7 +1145,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://t.me/Osifs_Factory_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible">
+                        <a href="https://t.me/Osifs_Factory_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-industry text-purple-400"></i>
@@ -830,7 +1159,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://t.me/SLH_Academia_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible">
+                        <a href="https://t.me/SLH_Academia_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-teal-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-graduation-cap text-teal-400"></i>
@@ -844,7 +1173,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://t.me/MY_SUPER_ADMIN_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible">
+                        <a href="https://t.me/MY_SUPER_ADMIN_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-red-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-user-shield text-red-400"></i>
@@ -865,7 +1194,7 @@
                         <i class="fas fa-globe mr-3 text-green-400"></i> תשתיות אינטרנט פעילות
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
-                        <a href="https://slh-nft.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible">
+                        <a href="https://slh-nft.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-pink-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-palette text-pink-400"></i>
@@ -879,7 +1208,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://slhisrael.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible">
+                        <a href="https://slhisrael.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-star-of-david text-green-400"></i>
@@ -893,7 +1222,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible">
+                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-3">
                                     <i class="fab fa-btc text-yellow-400"></i>
@@ -907,7 +1236,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible">
+                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-project-diagram text-purple-400"></i>
@@ -921,7 +1250,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible">
+                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-chart-line text-blue-400"></i>
@@ -941,7 +1270,7 @@
                     <h4 class="text-xl font-bold mb-6 flex items-center">
                         <i class="fas fa-link mr-3 text-orange-400"></i> חוזה Web3 פעיל (BNB Chain)
                     </h4>
-                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="feature-card p-6 hover:border-orange-500 transition group block focus-visible">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="feature-card p-6 hover:border-orange-500 transition group block focus-visible hover-lift">
                         <div class="flex items-center mb-4">
                             <div class="w-10 h-10 rounded-full bg-orange-900/50 flex items-center justify-center mr-3">
                                 <i class="fas fa-file-contract text-orange-400"></i>
@@ -960,21 +1289,21 @@
                 </div>
             </div>
             
-            <div class="feature-card p-8 fade-in">
+            <div class="feature-card p-8 fade-in hover-lift">
                 <h3 class="text-2xl font-bold mb-8 text-center">מדדים וצמיחה - כבר היום!</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 rtl-grid">
                     <div class="text-center p-6 bg-gradient-to-b from-blue-900/30 to-transparent rounded-xl">
-                        <div class="text-4xl font-bold text-blue-400 mb-2">280+</div>
+                        <div class="text-4xl font-bold text-blue-400 mb-2"><span class="counter" data-target="280">0</span>+</div>
                         <p class="text-gray-400">משתמשים רשומים בבלוקצ'יין</p>
                     </div>
                     
                     <div class="text-center p-6 bg-gradient-to-b from-green-900/30 to-transparent rounded-xl">
-                        <div class="text-4xl font-bold text-green-400 mb-2">5</div>
+                        <div class="text-4xl font-bold text-green-400 mb-2"><span class="counter" data-target="5">0</span></div>
                         <p class="text-gray-400">שערי גישה פעילים + 2 בפיתוח</p>
                     </div>
                     
                     <div class="text-center p-6 bg-gradient-to-b from-purple-900/30 to-transparent rounded-xl">
-                        <div class="text-4xl font-bold text-purple-400 mb-2">4</div>
+                        <div class="text-4xl font-bold text-purple-400 mb-2"><span class="counter" data-target="4">0</span></div>
                         <p class="text-gray-400">תרגום לשפות שונות</p>
                     </div>
                     
@@ -992,7 +1321,7 @@
         <div class="container mx-auto">
             <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">טכנולוגיה מתקדמת</h2>
             
-            <div class="feature-card p-8 mb-8 fade-in">
+            <div class="feature-card p-8 mb-8 fade-in hover-lift">
                 <h3 class="text-2xl font-bold mb-8 text-center">ארכיטקטורת מערכת מתקדמת</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 rtl-grid">
@@ -1089,7 +1418,7 @@
             </div>
             
             <!-- Security Gateway vs Blockchain Section -->
-            <div id="security" class="feature-card p-8 mb-8 fade-in">
+            <div id="security" class="feature-card p-8 mb-8 fade-in hover-lift">
                 <h3 class="text-2xl font-bold mb-8 text-center">אבטחה מתקדמת: השילוב המושלם</h3>
                 
                 <div class="integrated-architecture">
@@ -1100,7 +1429,7 @@
                     </p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div class="p-6 bg-gradient-to-br from-blue-900/30 to-transparent border border-blue-800/50 rounded-xl">
+                        <div class="p-6 bg-gradient-to-br from-blue-900/30 to-transparent border border-blue-800/50 rounded-xl hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-12 h-12 rounded-full bg-blue-900/70 flex items-center justify-center mr-4">
                                     <i class="fas fa-shield-check text-blue-400 text-xl"></i>
@@ -1127,7 +1456,7 @@
                             </ul>
                         </div>
                         
-                        <div class="p-6 bg-gradient-to-br from-purple-900/30 to-transparent border border-purple-800/50 rounded-xl">
+                        <div class="p-6 bg-gradient-to-br from-purple-900/30 to-transparent border border-purple-800/50 rounded-xl hover-lift">
                             <div class="flex items-center mb-4">
                                 <div class="w-12 h-12 rounded-full bg-purple-900/70 flex items-center justify-center mr-4">
                                     <i class="fas fa-link text-purple-400 text-xl"></i>
@@ -1214,12 +1543,254 @@
             <div class="text-center fade-in">
                 <p class="text-xl text-gray-300 mb-6">המערכת כוללת הגנת HMAC מתקדמת עם מנגנוני Time-to-Live (TTL) ואנטי-רפליי למניעת התקפות וזיופים.</p>
                 <div class="flex flex-col md:flex-row justify-center gap-4">
-                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="accent-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="accent-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift">
                         <i class="fas fa-file-contract mr-2"></i>בדוק את החוזה החכם שלנו
                     </a>
-                    <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible">
+                    <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift glow-animation">
                         <i class="fas fa-shield-alt mr-2"></i>קבל הסבר טכני מפורט
                     </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Roadmap -->
+    <section id="roadmap" class="py-16 px-4 md:px-12 bg-gradient-to-l from-indigo-900/20 to-dark-bg">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">לוח זמנים וצמיחה</h2>
+            
+            <div class="feature-card p-8 fade-in hover-lift">
+                <div class="timeline-container">
+                    <div class="timeline-item">
+                        <div class="feature-card p-6 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-4">
+                                    <span class="font-bold">Q1</span>
+                                </div>
+                                <h4 class="text-xl font-bold">השקה והטמעה ראשונית</h4>
+                            </div>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>השקת האקוסיסטם המלא</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>גיוס ראשוני של 280 משתמשים</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>הפעלת חוזה חכם ב-BNB Chain</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="feature-card p-6 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-4">
+                                    <span class="font-bold">Q2</span>
+                                </div>
+                                <h4 class="text-xl font-bold">התרחבות ופיתוח</h4>
+                            </div>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2"></i>
+                                    <span>פיתוח ממשקי API מתקדמים</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2"></i>
+                                    <span>שילוב מערכות תשלום נוספות</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2"></i>
+                                    <span>הרחבת צוות הפיתוח</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="feature-card p-6 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-4">
+                                    <span class="font-bold">Q3</span>
+                                </div>
+                                <h4 class="text-xl font-bold">צמיחה גלובלית</h4>
+                            </div>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-purple-400 mt-1 mr-2"></i>
+                                    <span>הרחבה לשווקים בינלאומיים</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-purple-400 mt-1 mr-2"></i>
+                                    <span>שיתופי פעולה עם ארגונים גדולים</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-purple-400 mt-1 mr-2"></i>
+                                    <span>פיתוח יכולות AI מתקדמות</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="feature-card p-6 hover-lift">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4">
+                                    <span class="font-bold">Q4</span>
+                                </div>
+                                <h4 class="text-xl font-bold">בשלות ושילוב</h4>
+                            </div>
+                            <ul class="text-gray-400 space-y-2">
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-yellow-400 mt-1 mr-2"></i>
+                                    <span>שילוב עם מערכות פיננסיות מסורתיות</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-yellow-400 mt-1 mr-2"></i>
+                                    <span>פיתוח יכולות DAO מתקדמות</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-clock text-yellow-400 mt-1 mr-2"></i>
+                                    <span>השקת מערכת החינוך המלאה</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section id="team" class="py-16 px-4 md:px-12">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">הצוות המייסד</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 fade-in">
+                <div class="feature-card p-8 text-center hover-lift">
+                    <div class="team-card">
+                        <div class="team-img mb-6">
+                            <div class="w-full h-full bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center text-white text-4xl">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">אוסיף אונגר</h3>
+                        <p class="text-blue-400 font-semibold mb-4">אכיטקט מערכות ומייסד</p>
+                        <p class="text-gray-400 mb-6">מומחה לארכיטקטורת מערכות מורכבות, AI ובלוקצ'יין עם ניסיון של למעלה מ-15 שנה בתעשיית ההיי-טק.</p>
+                        <div class="flex justify-center space-x-4 space-x-reverse">
+                            <a href="tel:0584203384" class="text-blue-400 hover:text-blue-300">
+                                <i class="fas fa-phone"></i> 058-4203384
+                            </a>
+                            <a href="mailto:kaufmanungar@gmail.com" class="text-teal-400 hover:text-teal-300">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="feature-card p-8 text-center hover-lift">
+                    <div class="team-card">
+                        <div class="team-img mb-6">
+                            <div class="w-full h-full bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center text-white text-4xl">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                        </div>
+                        <h3 class="text-2xl font-bold mb-2">צביקה קאופמן</h3>
+                        <p class="text-purple-400 font-semibold mb-4">מייסד ואסטרטג</p>
+                        <p class="text-gray-400 mb-6">אסטרטג עסקי עם ניסיון בפיתוח עסקים גלובליים וניהול פרויקטים טכנולוגיים מורכבים.</p>
+                        <div class="flex justify-center space-x-4 space-x-reverse">
+                            <a href="tel:0546671882" class="text-blue-400 hover:text-blue-300">
+                                <i class="fas fa-phone"></i> 054-6671882
+                            </a>
+                            <a href="mailto:kaufmanungar@gmail.com" class="text-teal-400 hover:text-teal-300">
+                                <i class="fas fa-envelope"></i> Email
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card p-8 fade-in hover-lift">
+                <h3 class="text-2xl font-bold mb-8 text-center">הצוות הטכני</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 rounded-full bg-blue-900/30 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-code text-blue-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">מפתחי Full Stack</h4>
+                        <p class="text-gray-400 text-sm">צוות של 5 מפתחים מובילים בתחום Web3 ו-AI</p>
+                    </div>
+                    
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 rounded-full bg-green-900/30 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-shield-alt text-green-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">מומחי אבטחה</h4>
+                        <p class="text-gray-400 text-sm">צוות קריפטוגרפיה ואבטחת מידע</p>
+                    </div>
+                    
+                    <div class="text-center p-6">
+                        <div class="w-16 h-16 rounded-full bg-purple-900/30 flex items-center justify-center mx-auto mb-4">
+                            <i class="fas fa-robot text-purple-400 text-2xl"></i>
+                        </div>
+                        <h4 class="text-lg font-bold mb-2">חוקרי AI</h4>
+                        <p class="text-gray-400 text-sm">צוות מחקר ופיתוח בינה מלאכותית</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="py-16 px-4 md:px-12 bg-gradient-to-r from-gray-900/20 to-dark-bg">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">שאלות נפוצות</h2>
+            
+            <div class="feature-card p-8 fade-in hover-lift">
+                <div class="faq-container space-y-4">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>מה הופך את SELHA לשונה מפרויקטים קריפטו אחרים?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">SELHA היא לא רק עוד מטבע קריפטו, אלא תשתית כלכלית שלמה שכוללת AI, ממשל מבוזר, מערכת תשלומים, אקדמיה וקהילות חכמות. זוהי מערכת היברידית שמחברת את העולם המסורתי עם הטכנולוגיות החדשות.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>האם הפרויקט כבר פעיל?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">כן! SELHA כבר פעילה עם חוזה חכם על BNB Chain, 5 שערי גישה בטלגרם, פלטפורמות אינטרנט פעילות, ומעל 280 משתמשים רשומים. כל המערכות פעילות וניתנות לשימוש מיידי.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>כיצד ניתן להשקיע ב-SELHA?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">ניתן להשקיע דרך רכישת מטבעות SELHA, השתתפות בתוכנית הסטייקינג (4% ריבית חודשית), או השקעה ישירה בפרויקט. צרו קשר דרך הטופס באתר לפרטים נוספים על אפשרויות השקעה.</p>
+                        </div>
+                    </div>
+                    
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <span>מה עושה SELHA נגד הונאות ואבטחה?</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p class="text-gray-400">אנו משתמשים בשכבת אבטחה HMAC מתקדמת עם TTL ואנטי-רפליי, חוזה חכם שעבר ביקורות אבטחה, וארכיטקטורת מיקרו-שירותים מבודדת. כמו כן, יש לנו צוות אבטחה ייעודי שמנטר את המערכת 24/7.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1232,7 +1803,7 @@
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 rtl-grid">
                 <div class="fade-in">
-                    <div class="feature-card p-8 h-full">
+                    <div class="feature-card p-8 h-full hover-lift">
                         <h3 class="text-2xl font-bold mb-8 text-center text-purple-400">מנוע הכנסות היברידי</h3>
                         
                         <div class="space-y-6">
@@ -1294,24 +1865,24 @@
                                     <span class="text-gray-400">שנה ראשונה</span>
                                     <span class="font-bold">₪ 50M</span>
                                 </div>
-                                <div class="w-full bg-gray-800 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full w-1/4"></div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill w-1/4"></div>
                                 </div>
                                 
                                 <div class="flex justify-between">
                                     <span class="text-gray-400">שנה שנייה</span>
                                     <span class="font-bold">₪ 200M</span>
                                 </div>
-                                <div class="w-full bg-gray-800 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full w-2/3"></div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill w-2/3"></div>
                                 </div>
                                 
                                 <div class="flex justify-between">
                                     <span class="text-gray-400">שנה שלישית</span>
                                     <span class="font-bold">₪ 500M+</span>
                                 </div>
-                                <div class="w-full bg-gray-800 rounded-full h-2">
-                                    <div class="bg-gradient-to-r from-purple-500 to-blue-500 h-2 rounded-full w-full"></div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill w-full"></div>
                                 </div>
                             </div>
                         </div>
@@ -1319,13 +1890,13 @@
                 </div>
                 
                 <div class="fade-in">
-                    <div class="feature-card p-8 h-full">
+                    <div class="feature-card p-8 h-full hover-lift">
                         <h3 class="text-2xl font-bold mb-8 text-center text-blue-400">גיוס הון: ₪ 300 מיליון</h3>
                         
                         <p class="text-xl text-gray-300 mb-8">ההשקעה תשמש להאצת הפיתוח והתרחבות גלובלית של תשתית SELHA:</p>
                         
                         <div class="space-y-6 mb-10">
-                            <div class="flex justify-between items-center p-4 bg-blue-900/30 rounded-xl">
+                            <div class="flex justify-between items-center p-4 bg-blue-900/30 rounded-xl hover-lift">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-code text-blue-400"></i>
@@ -1335,7 +1906,7 @@
                                 <span class="text-blue-400 font-bold">25%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-purple-900/30 rounded-xl">
+                            <div class="flex justify-between items-center p-4 bg-purple-900/30 rounded-xl hover-lift">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-purple-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-robot text-purple-400"></i>
@@ -1345,7 +1916,7 @@
                                 <span class="text-purple-400 font-bold">20%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-red-900/30 rounded-xl">
+                            <div class="flex justify-between items-center p-4 bg-red-900/30 rounded-xl hover-lift">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-shield-alt text-red-400"></i>
@@ -1355,7 +1926,7 @@
                                 <span class="text-red-400 font-bold">15%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-green-900/30 rounded-xl">
+                            <div class="flex justify-between items-center p-4 bg-green-900/30 rounded-xl hover-lift">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-green-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-users text-green-400"></i>
@@ -1365,7 +1936,7 @@
                                 <span class="text-green-400 font-bold">15%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-yellow-900/30 rounded-xl">
+                            <div class="flex justify-between items-center p-4 bg-yellow-900/30 rounded-xl hover-lift">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-yellow-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-bullhorn text-yellow-400"></i>
@@ -1375,7 +1946,7 @@
                                 <span class="text-yellow-400 font-bold">10%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-teal-900/30 rounded-xl">
+                            <div class="flex justify-between items-center p-4 bg-teal-900/30 rounded-xl hover-lift">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-teal-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-graduation-cap text-teal-400"></i>
@@ -1385,7 +1956,7 @@
                                 <span class="text-teal-400 font-bold">10%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-indigo-900/30 rounded-xl">
+                            <div class="flex justify-between items-center p-4 bg-indigo-900/30 rounded-xl hover-lift">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-indigo-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-boxes text-indigo-400"></i>
@@ -1400,7 +1971,7 @@
                             <h4 class="text-xl font-bold mb-3">מדדי הצלחה צפויים</h4>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="text-center">
-                                    <div class="text-2xl font-bold text-blue-400">100K+</div>
+                                    <div class="text-2xl font-bold text-blue-400"><span class="counter" data-target="100">0</span>K+</div>
                                     <div class="text-sm text-gray-400">משתמשים פעילים</div>
                                 </div>
                                 <div class="text-center">
@@ -1408,15 +1979,60 @@
                                     <div class="text-sm text-gray-400">שווי שוק</div>
                                 </div>
                                 <div class="text-center">
-                                    <div class="text-2xl font-bold text-purple-400">50+</div>
+                                    <div class="text-2xl font-bold text-purple-400"><span class="counter" data-target="50">0</span>+</div>
                                     <div class="text-sm text-gray-400">מדינות</div>
                                 </div>
                                 <div class="text-center">
-                                    <div class="text-2xl font-bold text-teal-400">10K+</div>
+                                    <div class="text-2xl font-bold text-teal-400"><span class="counter" data-target="10">0</span>K+</div>
                                     <div class="text-sm text-gray-400">משתתפי סטייקינג</div>
                                 </div>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- News/Updates Section -->
+    <section id="news" class="py-16 px-4 md:px-12">
+        <div class="container mx-auto">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">חדשות ועדכונים</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in">
+                <div class="news-card feature-card overflow-hidden hover-lift">
+                    <div class="relative h-48 bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center">
+                        <i class="fas fa-rocket text-white text-6xl"></i>
+                        <div class="news-date">20 דצמ׳ 2023</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">השקת האקוסיסטם המלא</h3>
+                        <p class="text-gray-400 mb-4">השקנו בהצלחה את כל רכיבי SELHA כולל חוזה חכם, שערי טלגרם ופלטפורמות אינטרנט.</p>
+                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold">קרא עוד →</a>
+                    </div>
+                </div>
+                
+                <div class="news-card feature-card overflow-hidden hover-lift">
+                    <div class="relative h-48 bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center">
+                        <i class="fas fa-chart-line text-white text-6xl"></i>
+                        <div class="news-date">15 ינו׳ 2024</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">גידול של 300% במשתמשים</h3>
+                        <p class="text-gray-400 mb-4">מספר המשתמשים הרשומים במערכת גדל ב-300% בחודש האחרון, עם מעל 280 משתמשים פעילים.</p>
+                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold">קרא עוד →</a>
+                    </div>
+                </div>
+                
+                <div class="news-card feature-card overflow-hidden hover-lift">
+                    <div class="relative h-48 bg-gradient-to-br from-green-500 to-emerald-400 flex items-center justify-center">
+                        <i class="fas fa-handshake text-white text-6xl"></i>
+                        <div class="news-date">1 פבר׳ 2024</div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-xl font-bold mb-3">שיתופי פעולה חדשים</h3>
+                        <p class="text-gray-400 mb-4">חתמנו על שיתופי פעולה עם 3 חברות טכנולוגיה מובילות להטמעת SELHA בתעשייה.</p>
+                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold">קרא עוד →</a>
                     </div>
                 </div>
             </div>
@@ -1435,24 +2051,24 @@
                 </p>
                 
                 <div class="flex flex-col md:flex-row justify-center gap-6 mb-16">
-                    <a href="#contact-form" class="glow-button px-10 py-5 rounded-full font-bold text-xl focus-visible">
+                    <a href="#contact-form" class="glow-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift glow-animation">
                         <i class="fas fa-handshake mr-3"></i>צור קשר להשקעה
                     </a>
                     
-                    <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="accent-button px-10 py-5 rounded-full font-bold text-xl focus-visible">
+                    <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="accent-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift">
                         <i class="fas fa-chart-line mr-3"></i>פורטל משקיעים
                     </a>
                     
-                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="px-10 py-5 rounded-full font-bold text-xl border border-yellow-800 bg-yellow-900/20 text-yellow-400 hover:bg-yellow-900/40 transition focus-visible">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="px-10 py-5 rounded-full font-bold text-xl border border-yellow-800 bg-yellow-900/20 text-yellow-400 hover:bg-yellow-900/40 transition focus-visible hover-lift">
                         <i class="fas fa-file-contract mr-3"></i>חוזה חכם
                     </a>
                 </div>
                 
-                <div class="feature-card p-8 mb-8">
+                <div class="feature-card p-8 mb-8 hover-lift">
                     <h3 class="text-2xl font-bold mb-6">גישה מיידית לכל הפלטפורמות שלנו</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <a href="https://slhisrael.com/" target="_blank" class="p-5 bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-800/50 rounded-xl hover:border-blue-500 transition group focus-visible">
+                        <a href="https://slhisrael.com/" target="_blank" class="p-5 bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-800/50 rounded-xl hover:border-blue-500 transition group focus-visible hover-lift">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center">
                                     <i class="fas fa-home text-blue-400 text-xl"></i>
@@ -1462,7 +2078,7 @@
                             <p class="text-gray-400 text-sm">SLH ישראל - הפלטפורמה המרכזית</p>
                         </a>
                         
-                        <a href="https://t.me/SELHA_Official" target="_blank" class="p-5 bg-gradient-to-br from-teal-900/20 to-transparent border border-teal-800/50 rounded-xl hover:border-teal-500 transition group focus-visible">
+                        <a href="https://t.me/SELHA_Official" target="_blank" class="p-5 bg-gradient-to-br from-teal-900/20 to-transparent border border-teal-800/50 rounded-xl hover:border-teal-500 transition group focus-visible hover-lift">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-teal-900/50 flex items-center justify-center">
                                     <i class="fab fa-telegram text-teal-400 text-xl"></i>
@@ -1472,7 +2088,7 @@
                             <p class="text-gray-400 text-sm">@SELHA_Official - קבוצת הקהילה</p>
                         </a>
                         
-                        <a href="https://slh-nft.com/" target="_blank" class="p-5 bg-gradient-to-br from-purple-900/20 to-transparent border border-purple-800/50 rounded-xl hover:border-purple-500 transition group focus-visible">
+                        <a href="https://slh-nft.com/" target="_blank" class="p-5 bg-gradient-to-br from-purple-900/20 to-transparent border border-purple-800/50 rounded-xl hover:border-purple-500 transition group focus-visible hover-lift">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-purple-900/50 flex items-center justify-center">
                                     <i class="fas fa-palette text-purple-400 text-xl"></i>
@@ -1484,7 +2100,7 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="p-5 bg-gradient-to-br from-yellow-900/20 to-transparent border border-yellow-800/50 rounded-xl hover:border-yellow-500 transition group focus-visible">
+                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="p-5 bg-gradient-to-br from-yellow-900/20 to-transparent border border-yellow-800/50 rounded-xl hover:border-yellow-500 transition group focus-visible hover-lift">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-yellow-900/50 flex items-center justify-center">
                                     <i class="fab fa-btc text-yellow-400 text-xl"></i>
@@ -1494,7 +2110,7 @@
                             <p class="text-gray-400 text-sm">שער גישה ל-BNB Chain</p>
                         </a>
                         
-                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="p-5 bg-gradient-to-br from-green-900/20 to-transparent border border-green-800/50 rounded-xl hover:border-green-500 transition group focus-visible">
+                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="p-5 bg-gradient-to-br from-green-900/20 to-transparent border border-green-800/50 rounded-xl hover:border-green-500 transition group focus-visible hover-lift">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center">
                                     <i class="fas fa-robot text-green-400 text-xl"></i>
@@ -1504,7 +2120,7 @@
                             <p class="text-gray-400 text-sm">פלטפורמת AI ופיתוח</p>
                         </a>
                         
-                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="p-5 bg-gradient-to-br from-red-900/20 to-transparent border border-red-800/50 rounded-xl hover:border-red-500 transition group focus-visible">
+                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="p-5 bg-gradient-to-br from-red-900/20 to-transparent border border-red-800/50 rounded-xl hover:border-red-500 transition group focus-visible hover-lift">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-red-900/50 flex items-center justify-center">
                                     <i class="fas fa-chart-line text-red-400 text-xl"></i>
@@ -1516,7 +2132,7 @@
                     </div>
                 </div>
                 
-                <div id="contact-form" class="feature-card p-8">
+                <div id="contact-form" class="feature-card p-8 hover-lift">
                     <h3 class="text-2xl font-bold mb-6">פנה אלינו להצטרפות והשקעה</h3>
                     
                     <form class="space-y-6 text-right" id="main-contact-form">
@@ -1541,14 +2157,14 @@
                             <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible" rows="4" placeholder="ספר לנו על הרקע שלך ועל העניין שלך ב-SELHA..." required></textarea>
                         </div>
                         
-                        <div>
-                            <label class="flex items-center text-gray-300 cursor-pointer">
-                                <input type="checkbox" class="ml-2 rounded bg-gray-800 border-gray-700 focus:outline-none focus-visible" required>
-                                <span>אני מסכים לקבל מידע ועדכונים על SELHA</span>
+                        <div class="flex items-center">
+                            <input type="checkbox" id="consent" class="ml-2 rounded bg-gray-800 border-gray-700 focus:outline-none focus-visible" required>
+                            <label for="consent" class="text-gray-300 cursor-pointer">
+                                אני מסכים לקבל מידע ועדכונים על SELHA
                             </label>
                         </div>
                         
-                        <button type="submit" class="glow-button w-full py-4 rounded-lg font-bold text-xl focus-visible">
+                        <button type="submit" class="glow-button w-full py-4 rounded-lg font-bold text-xl focus-visible hover-lift glow-animation">
                             <i class="fas fa-paper-plane mr-2"></i>שלח פניה להצטרפות
                         </button>
                     </form>
@@ -1556,32 +2172,34 @@
                     <div class="mt-8 pt-8 border-t border-gray-800">
                         <h4 class="text-lg font-bold mb-4">צור קשר ישיר</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="text-center p-4 bg-blue-900/20 rounded-lg">
+                            <div class="text-center p-4 bg-blue-900/20 rounded-lg hover-lift">
                                 <i class="fas fa-user-tie text-blue-400 text-2xl mb-2"></i>
                                 <p class="font-bold">אוסיף אונגר</p>
                                 <p class="text-gray-400 text-sm">אכיטקט מערכות ומייסד</p>
                                 <p class="text-gray-400 text-sm mt-2">058-4203384</p>
+                                <a href="mailto:kaufmanungar@gmail.com" class="text-blue-400 text-sm hover:underline">kaufmanungar@gmail.com</a>
                             </div>
-                            <div class="text-center p-4 bg-teal-900/20 rounded-lg">
+                            <div class="text-center p-4 bg-teal-900/20 rounded-lg hover-lift">
                                 <i class="fas fa-user-tie text-teal-400 text-2xl mb-2"></i>
                                 <p class="font-bold">צביקה קאופמן</p>
                                 <p class="text-gray-400 text-sm">מייסד</p>
                                 <p class="text-gray-400 text-sm mt-2">054-6671882</p>
+                                <a href="mailto:kaufmanungar@gmail.com" class="text-teal-400 text-sm hover:underline">kaufmanungar@gmail.com</a>
                             </div>
                         </div>
                         
                         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="text-center p-4 bg-purple-900/20 rounded-lg">
+                            <div class="text-center p-4 bg-purple-900/20 rounded-lg hover-lift">
                                 <i class="fas fa-envelope text-purple-400 text-2xl mb-2"></i>
-                                <p class="font-bold">אימייל</p>
+                                <p class="font-bold">אימייל ראשי</p>
                                 <p class="text-gray-400 text-sm">kaufmanungar@gmail.com</p>
                             </div>
-                            <div class="text-center p-4 bg-green-900/20 rounded-lg">
+                            <div class="text-center p-4 bg-green-900/20 rounded-lg hover-lift">
                                 <i class="fab fa-telegram text-green-400 text-2xl mb-2"></i>
                                 <p class="font-bold">טלגרם</p>
                                 <p class="text-gray-400 text-sm">@SELHA_Official</p>
                             </div>
-                            <div class="text-center p-4 bg-red-900/20 rounded-lg">
+                            <div class="text-center p-4 bg-red-900/20 rounded-lg hover-lift">
                                 <i class="fab fa-telegram text-red-400 text-2xl mb-2"></i>
                                 <p class="font-bold">בוט ניהול</p>
                                 <p class="text-gray-400 text-sm">@MY_SUPER_ADMIN_bot</p>
@@ -1642,7 +2260,7 @@
             
             <!-- Accessibility statement -->
             <div class="mt-6 text-center text-gray-500 text-sm">
-                <p>אתר זה נבנה תוך התחשבות בהנחיות הנגישות לישראל (ת"י 5568)</p>
+                <p>אתר זה נבנה תוך התחשבות בהנחיות הנגישות לישראל (ת"י 5568) עם תמיכה בהגדלת גופן, ניגודיות גבוהה והקראת תוכן.</p>
                 <p class="mt-2">מצאתם בעיית נגישות? <a href="#contact" class="text-blue-400 hover:underline">דווחו לנו</a></p>
             </div>
         </div>
@@ -1724,6 +2342,146 @@
             }
         });
         
+        // Font size controls
+        const fontIncrease = document.getElementById('fontIncrease');
+        const fontDecrease = document.getElementById('fontDecrease');
+        
+        fontIncrease.addEventListener('click', () => {
+            if (document.body.classList.contains('font-xlarge')) return;
+            if (document.body.classList.contains('font-large')) {
+                document.body.classList.remove('font-large');
+                document.body.classList.add('font-xlarge');
+            } else {
+                document.body.classList.add('font-large');
+            }
+            localStorage.setItem('fontSize', document.body.classList.contains('font-xlarge') ? 'xlarge' : 
+                document.body.classList.contains('font-large') ? 'large' : 'normal');
+        });
+        
+        fontDecrease.addEventListener('click', () => {
+            if (!document.body.classList.contains('font-large') && !document.body.classList.contains('font-xlarge')) return;
+            if (document.body.classList.contains('font-xlarge')) {
+                document.body.classList.remove('font-xlarge');
+                document.body.classList.add('font-large');
+            } else {
+                document.body.classList.remove('font-large');
+            }
+            localStorage.setItem('fontSize', document.body.classList.contains('font-large') ? 'large' : 'normal');
+        });
+        
+        // Check for saved font size
+        const savedFontSize = localStorage.getItem('fontSize');
+        if (savedFontSize === 'large') {
+            document.body.classList.add('font-large');
+        } else if (savedFontSize === 'xlarge') {
+            document.body.classList.add('font-xlarge');
+        }
+        
+        // High contrast toggle
+        const contrastToggle = document.getElementById('contrastToggle');
+        contrastToggle.addEventListener('click', () => {
+            document.body.classList.toggle('high-contrast');
+            localStorage.setItem('highContrast', document.body.classList.contains('high-contrast'));
+        });
+        
+        // Check for saved contrast preference
+        if (localStorage.getItem('highContrast') === 'true') {
+            document.body.classList.add('high-contrast');
+        }
+        
+        // Speech synthesis for accessibility
+        const speechToggle = document.getElementById('speechToggle');
+        let speechActive = false;
+        let speechUtterance = null;
+        
+        speechToggle.addEventListener('click', () => {
+            if (!speechActive) {
+                // Start reading main content
+                const mainContent = document.getElementById('main-content');
+                if (mainContent) {
+                    const text = mainContent.innerText.substring(0, 1000); // Limit length
+                    speechUtterance = new SpeechSynthesisUtterance(text);
+                    speechUtterance.lang = 'he-IL';
+                    speechUtterance.rate = 1;
+                    speechUtterance.onend = () => {
+                        speechActive = false;
+                        speechToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+                    };
+                    window.speechSynthesis.speak(speechUtterance);
+                    speechActive = true;
+                    speechToggle.innerHTML = '<i class="fas fa-volume-mute"></i>';
+                }
+            } else {
+                // Stop speech
+                window.speechSynthesis.cancel();
+                speechActive = false;
+                speechToggle.innerHTML = '<i class="fas fa-volume-up"></i>';
+            }
+        });
+        
+        // Counter animation
+        function animateCounter(counter) {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 50;
+            let current = 0;
+            
+            const updateCounter = () => {
+                current += increment;
+                if (current < target) {
+                    counter.textContent = Math.floor(current);
+                    setTimeout(updateCounter, 30);
+                } else {
+                    counter.textContent = target;
+                }
+            };
+            
+            updateCounter();
+        }
+        
+        // Start counters when in view
+        const counterObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counters = entry.target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                        animateCounter(counter);
+                    });
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        // Observe all sections with counters
+        document.querySelectorAll('section').forEach(section => {
+            if (section.querySelector('.counter')) {
+                counterObserver.observe(section);
+            }
+        });
+        
+        // FAQ functionality
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+            });
+        });
+        
+        // Back to top button
+        const backToTop = document.getElementById('backToTop');
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTop.classList.add('visible');
+            } else {
+                backToTop.classList.remove('visible');
+            }
+        });
+        
+        backToTop.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+        
         // Form submission handler
         const contactForm = document.getElementById('main-contact-form');
         if(contactForm) {
@@ -1731,7 +2489,6 @@
                 e.preventDefault();
                 
                 // Collect form data
-                const formData = new FormData(this);
                 const name = this.querySelector('input[type="text"]').value;
                 const email = this.querySelector('input[type="email"]').value;
                 const phone = this.querySelector('input[type="tel"]').value;
@@ -1758,31 +2515,8 @@
                 yearElement.textContent = yearElement.textContent.replace('2023', new Date().getFullYear());
             }
             
-            // Add animation to stats
-            const statElements = document.querySelectorAll('.text-4xl.font-bold');
-            statElements.forEach(stat => {
-                const finalValue = stat.textContent;
-                if(finalValue.includes('+')) return;
-                
-                let current = 0;
-                const target = parseInt(finalValue.replace(/[^0-9]/g, ''));
-                const increment = target / 50;
-                
-                const updateStat = () => {
-                    current += increment;
-                    if(current < target) {
-                        stat.textContent = Math.floor(current) + '+';
-                        setTimeout(updateStat, 30);
-                    } else {
-                        stat.textContent = finalValue;
-                    }
-                };
-                
-                setTimeout(updateStat, 1000);
-            });
-            
             // Add focus-visible class to all focusable elements
-            const focusableElements = document.querySelectorAll('a, button, input, textarea, select');
+            const focusableElements = document.querySelectorAll('a, button, input, textarea, select, [tabindex]');
             focusableElements.forEach(el => {
                 el.addEventListener('focus', () => {
                     el.classList.add('focus-visible');
@@ -1808,17 +2542,8 @@
         
         // Initialize social media sharing
         function initSocialSharing() {
-            // Twitter sharing
-            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent('גלו את SELHA - שכבת כלכלה ריבונית חדשה לעולם הדיגיטלי!')}&url=${encodeURIComponent(window.location.href)}`;
-            
-            // Facebook sharing
-            const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`;
-            
-            // LinkedIn sharing
-            const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(window.location.href)}`;
-            
-            // Add sharing buttons if needed
-            console.log('Social sharing URLs ready:', { twitterUrl, facebookUrl, linkedinUrl });
+            console.log('Social sharing ready for SELHA');
+            console.log('Image for sharing: https://slh-nft.com/assets/start_banner.jpg');
         }
         
         // Initialize when DOM is loaded
