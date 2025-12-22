@@ -222,6 +222,8 @@
             --dark-blue: #1d4ed8;
             --light-blue: #eff6ff;
             --accent-teal: #0d9488;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            --text-contrast: #000000;
         }
         
         .high-contrast {
@@ -232,11 +234,13 @@
             --accent-teal: #008080;
             --dark-bg: #ffffff;
             --card-bg: #f0f0f0;
+            --text-contrast: #000000;
         }
         
         .high-contrast.light-mode {
             --dark-bg: #ffffff;
             --card-bg: #f0f0f0;
+            --text-contrast: #000000;
         }
         
         * {
@@ -306,15 +310,17 @@
         }
         
         .light-mode .feature-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             border: 1px solid rgba(0, 0, 0, 0.1);
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            color: #1f2937;
         }
         
         .high-contrast .feature-card {
             background: var(--card-bg);
             border: 2px solid #000000;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            color: #000000;
         }
         
         .feature-card:hover {
@@ -325,6 +331,7 @@
         
         .light-mode .feature-card:hover {
             box-shadow: 0 10px 30px rgba(37, 99, 235, 0.15);
+            border-color: var(--primary-blue);
         }
         
         .high-contrast .feature-card:hover {
@@ -639,6 +646,7 @@
         
         .light-mode .comparison-table td {
             border: 1px solid rgba(0, 0, 0, 0.1);
+            color: #333;
         }
         
         .high-contrast .comparison-table td {
@@ -1408,11 +1416,579 @@
             margin: 1rem auto;
             display: none;
         }
+        
+        /* ========== שיפורים חדשים ========== */
+        
+        /* שיפור ניגודיות במצב בהיר - טקסט שחור ברור יותר */
+        .light-mode h1, .light-mode h2, .light-mode h3, .light-mode h4, .light-mode h5, .light-mode h6 {
+            color: #111827 !important;
+            font-weight: 700;
+        }
+        
+        .light-mode p, .light-mode span, .light-mode li, .light-mode td, .light-mode .text-gray-300, .light-mode .text-gray-400 {
+            color: #374151 !important;
+        }
+        
+        .light-mode .text-white {
+            color: #111827 !important;
+        }
+        
+        /* אנימציות חדשות */
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .slide-in-left {
+            animation: slideInLeft 0.8s ease-out;
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                transform: translateX(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        .slide-in-right {
+            animation: slideInRight 0.8s ease-out;
+        }
+        
+        @keyframes slideInRight {
+            from {
+                transform: translateX(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        /* מפת דרכים אינטראקטיבית */
+        .interactive-roadmap {
+            position: relative;
+            padding: 2rem 0;
+        }
+        
+        .roadmap-line {
+            position: absolute;
+            right: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, var(--primary-blue), var(--accent-teal));
+            transform: translateX(50%);
+        }
+        
+        .roadmap-item {
+            position: relative;
+            width: 45%;
+            margin-bottom: 3rem;
+        }
+        
+        .roadmap-item.left {
+            margin-right: 55%;
+        }
+        
+        .roadmap-item.right {
+            margin-left: 55%;
+        }
+        
+        .roadpoint {
+            position: absolute;
+            top: 10px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            border: 3px solid var(--dark-bg);
+        }
+        
+        .roadmap-item.left .roadpoint {
+            right: -42px;
+        }
+        
+        .roadmap-item.right .roadpoint {
+            left: -42px;
+        }
+        
+        /* טיימר גיוס */
+        .funding-timer {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%);
+            border: 2px solid var(--primary-blue);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin: 2rem 0;
+        }
+        
+        .timer-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .timer-box {
+            background: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-width: 80px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timer-value {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary-blue);
+        }
+        
+        .timer-label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+        
+        /* גלריית תמונות לצוות */
+        .team-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+        
+        .team-member {
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .team-member:hover {
+            transform: translateY(-5px);
+        }
+        
+        .team-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            overflow: hidden;
+            border: 3px solid var(--primary-blue);
+        }
+        
+        .team-photo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        /* וולידציה לטופסים */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-error {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            display: none;
+        }
+        
+        .form-success {
+            background: linear-gradient(135deg, rgba(0, 212, 170, 0.1) 0%, rgba(0, 102, 255, 0.1) 100%);
+            border: 1px solid var(--accent-teal);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            text-align: center;
+            display: none;
+        }
+        
+        /* אפקט Parallax */
+        .parallax-section {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .parallax-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            z-index: -1;
+            background-size: cover;
+            background-attachment: fixed;
+            background-position: center;
+            opacity: 0.1;
+        }
+        
+        /* אינדיקטור התקדמות גיוס */
+        .funding-progress {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+        
+        .progress-stats .amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+        }
+        
+        /* מודל 3D לסטטיסטיקות */
+        .stats-3d {
+            perspective: 1000px;
+        }
+        
+        .stats-card-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        
+        .stats-card-3d:hover {
+            transform: rotateY(10deg) rotateX(5deg);
+        }
+        
+        /* אנימציית טיפות גשם דיגיטלי */
+        .digital-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+            opacity: 0.03;
+        }
+        
+        .rain-drop {
+            position: absolute;
+            width: 1px;
+            height: 20px;
+            background: var(--primary-blue);
+            animation: rainFall linear infinite;
+        }
+        
+        @keyframes rainFall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+        
+        /* אנימציית חלקיקים */
+        .particles-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            background: var(--primary-blue);
+            opacity: 0.1;
+            animation: particleFloat linear infinite;
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(0) translateX(0);
+            }
+            100% {
+                transform: translateY(-100vh) translateX(100px);
+            }
+        }
+        
+        /* אפקט זוהר מתקדם */
+        .advanced-glow {
+            position: relative;
+        }
+        
+        .advanced-glow::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, var(--primary-blue), var(--accent-teal), var(--primary-blue));
+            border-radius: inherit;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .advanced-glow:hover::after {
+            opacity: 0.5;
+        }
+        
+        /* כפתור עם אפקט גלים */
+        .ripple-button {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ripple-effect {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.7);
+            transform: scale(0);
+            animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+        
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        
+        /* קרדיטים עם אנימציה */
+        .credits-marquee {
+            overflow: hidden;
+            white-space: nowrap;
+            background: linear-gradient(90deg, transparent, rgba(0, 102, 255, 0.1), transparent);
+            padding: 1rem 0;
+            margin: 2rem 0;
+        }
+        
+        .marquee-content {
+            display: inline-block;
+            animation: marquee 30s linear infinite;
+        }
+        
+        @keyframes marquee {
+            0% {
+                transform: translateX(100%);
+            }
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+        
+        /* טעינה עדינה */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--dark-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loading-content {
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        /* שיפורים לטלפונים - גלילה חלקה יותר */
+        @media (max-width: 768px) {
+            .interactive-roadmap {
+                padding: 1rem 0;
+            }
+            
+            .roadmap-line {
+                right: 30px;
+            }
+            
+            .roadmap-item {
+                width: calc(100% - 60px);
+                margin: 0 0 2rem 0 !important;
+            }
+            
+            .roadpoint {
+                right: -40px !important;
+                left: auto !important;
+            }
+            
+            .timer-container {
+                flex-wrap: wrap;
+                gap: 0.5rem;
+            }
+            
+            .timer-box {
+                flex: 1;
+                min-width: 70px;
+                padding: 1rem;
+            }
+            
+            .timer-value {
+                font-size: 2rem;
+            }
+        }
+        
+        /* שיפור קוראי מסך */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+        
+        /* שיפור טעינה מתקדמת */
+        .lazy-load {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        
+        .lazy-load.loaded {
+            opacity: 1;
+        }
+        
+        /* עיצוב מתקדם לכפתורים */
+        .btn-advanced {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-advanced::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+        
+        .btn-advanced:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+        
+        /* שיפור גריד גמיש */
+        .flex-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .flex-grid-item {
+            flex: 1 0 300px;
+        }
+        
+        /* עיצוב כרטיסים מתקדם */
+        .card-3d {
+            transform: perspective(1000px) rotateY(0deg);
+            transition: transform 0.6s ease;
+        }
+        
+        .card-3d:hover {
+            transform: perspective(1000px) rotateY(5deg);
+        }
+        
+        /* שיפור טופסים */
+        .form-input-enhanced {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .form-input-enhanced:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0, 102, 255, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        /* אנימציית עדכון סטטוס */
+        .status-update {
+            animation: statusPulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes statusPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        /* שיפור פרוגרס בר */
+        .progress-bar-enhanced {
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .progress-bar-enhanced::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
     </style>
 </head>
 <body class="gradient-bg">
     <!-- Bubble Animation Background -->
     <div id="bubble-container"></div>
+    
+    <!-- Digital Rain Effect -->
+    <div class="digital-rain" id="digitalRain"></div>
+    
+    <!-- Particles Effect -->
+    <div class="particles-container" id="particlesContainer"></div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <h3 class="text-xl font-bold mt-4">טוען את SELHA...</h3>
+            <p class="text-gray-400 mt-2">מאתחל את המערכת הכלכלית החדשה</p>
+        </div>
+    </div>
     
     <!-- Image Selection Modal -->
     <div id="imageSelectionModal" class="image-selection-container">
@@ -1543,11 +2119,11 @@
         <i class="fas fa-arrow-up"></i>
     </div>
     
-    <!-- ניווט -->
-    <nav class="py-6 px-4 md:px-12 border-b border-gray-800 sticky top-0 z-50 bg-dark-bg/90 backdrop-blur-md no-print">
+    <!-- ניווט משופר עם אנימציה -->
+    <nav class="py-6 px-4 md:px-12 border-b border-gray-800 sticky top-0 z-50 bg-dark-bg/90 backdrop-blur-md no-print" id="mainNav">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 space-x-reverse">
-                <div class="nav-logo">
+                <div class="nav-logo pulse-animation">
                     <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/logo.png" alt="SELHA Logo" onerror="this.src='https://via.placeholder.com/40/0066ff/ffffff?text=SELHA'">
                 </div>
                 <div>
@@ -1557,40 +2133,40 @@
             </div>
             
             <div class="hidden md:flex space-x-8 space-x-reverse">
-                <a href="#about" class="hover:text-blue-400 transition focus-visible">אודות</a>
-                <a href="#solution" class="hover:text-blue-400 transition focus-visible">הפתרון</a>
-                <a href="#technology" class="hover:text-blue-400 transition focus-visible">טכנולוגיה</a>
-                <a href="#ecosystem" class="hover:text-blue-400 transition focus-visible">אקוסיסטם חי</a>
-                <a href="#partners" class="hover:text-yellow-400 transition focus-visible gold-gradient font-bold">תוכנית שותפים</a>
-                <a href="#security" class="hover:text-blue-400 transition focus-visible">אבטחה</a>
-                <a href="#investment" class="hover:text-blue-400 transition focus-visible">השקעה</a>
-                <a href="#team" class="hover:text-blue-400 transition focus-visible">צוות</a>
-                <a href="#news" class="hover:text-blue-400 transition focus-visible">חדשות</a>
+                <a href="#about" class="hover:text-blue-400 transition focus-visible nav-link">אודות</a>
+                <a href="#solution" class="hover:text-blue-400 transition focus-visible nav-link">הפתרון</a>
+                <a href="#technology" class="hover:text-blue-400 transition focus-visible nav-link">טכנולוגיה</a>
+                <a href="#ecosystem" class="hover:text-blue-400 transition focus-visible nav-link">אקוסיסטם חי</a>
+                <a href="#partners" class="hover:text-yellow-400 transition focus-visible gold-gradient font-bold nav-link">תוכנית שותפים</a>
+                <a href="#security" class="hover:text-blue-400 transition focus-visible nav-link">אבטחה</a>
+                <a href="#investment" class="hover:text-blue-400 transition focus-visible nav-link">השקעה</a>
+                <a href="#team" class="hover:text-blue-400 transition focus-visible nav-link">צוות</a>
+                <a href="#news" class="hover:text-blue-400 transition focus-visible nav-link">חדשות</a>
             </div>
             
             <div class="flex items-center space-x-4 space-x-reverse">
-                <button id="openShareModal" class="accent-button px-4 py-2 rounded-full text-sm focus-visible" title="שתף וקבל מתנה">
+                <button id="openShareModal" class="accent-button px-4 py-2 rounded-full text-sm focus-visible ripple-button" title="שתף וקבל מתנה">
                     <i class="fas fa-share-alt mr-2"></i>שתף וקבל מתנה
                 </button>
-                <a href="#contact" class="glow-button px-6 py-3 rounded-full font-semibold focus-visible glow-animation">
+                <a href="#contact" class="glow-button px-6 py-3 rounded-full font-semibold focus-visible glow-animation btn-advanced">
                     <i class="fas fa-chart-line mr-2"></i>להשקעה בפרויקט
                 </a>
             </div>
         </div>
     </nav>
 
-    <!-- Hero Section -->
+    <!-- Hero Section משודרג -->
     <section id="main-content" class="pt-24 pb-16 px-4 md:px-12">
         <div class="container mx-auto">
-            <!-- Hero Banner Carousel -->
-            <div class="hero-banner-carousel fade-in mb-16">
+            <!-- Hero Banner Carousel עם אנימציות חדשות -->
+            <div class="hero-banner-carousel fade-in mb-16 slide-in-left">
                 <div class="carousel-container">
                     <div class="carousel-slides">
                         <div class="carousel-slide">
                             <div class="carousel-slide-content">
-                                <h2>בונים שכבת כלכלה חדשה לעולם הדיגיטלי</h2>
-                                <p>תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.</p>
-                                <a href="#about" class="glow-button inline-block px-6 py-3 rounded-full font-bold focus-visible">
+                                <h2 class="slide-in-right">בונים שכבת כלכלה חדשה לעולם הדיגיטלי</h2>
+                                <p class="slide-in-right">תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.</p>
+                                <a href="#about" class="glow-button inline-block px-6 py-3 rounded-full font-bold focus-visible btn-advanced mt-4">
                                     גלה עוד
                                 </a>
                             </div>
@@ -1599,7 +2175,7 @@
                             <div class="carousel-slide-content">
                                 <h2>הצטרף למהפכה הכלכלית</h2>
                                 <p>תוכנית שותפים ייחודית עם הכנסות פסיביות והזדמנויות צמיחה משמעותיות</p>
-                                <a href="#partners" class="gold-button inline-block px-6 py-3 rounded-full font-bold focus-visible">
+                                <a href="#partners" class="gold-button inline-block px-6 py-3 rounded-full font-bold focus-visible btn-advanced mt-4">
                                     הצטרף כשותף
                                 </a>
                             </div>
@@ -1608,7 +2184,7 @@
                             <div class="carousel-slide-content">
                                 <h2>טכנולוגיה מתקדמת לאבטחה מרבית</h2>
                                 <p>שכבת אבטחה HMAC מתקדמת עם Time-to-Live ואנטי-רפליי להגנה על נתונים ותקשורת</p>
-                                <a href="#technology" class="accent-button inline-block px-6 py-3 rounded-full font-bold focus-visible">
+                                <a href="#technology" class="accent-button inline-block px-6 py-3 rounded-full font-bold focus-visible btn-advanced mt-4">
                                     למידע טכני
                                 </a>
                             </div>
@@ -1627,8 +2203,8 @@
             </div>
             
             <div class="flex flex-col md:flex-row items-center justify-between">
-                <div class="md:w-1/2 mb-12 md:mb-0 fade-in">
-                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-900/30 text-blue-300 mb-6">
+                <div class="md:w-1/2 mb-12 md:mb-0 fade-in slide-in-left">
+                    <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-900/30 text-blue-300 mb-6 pulse-animation">
                         <span class="live-badge"></span>
                         <span class="mr-2">פרויקט חי ופעיל - תשתית מוכנה לשימוש</span>
                     </div>
@@ -1652,21 +2228,21 @@
                     </div>
                     
                     <div class="flex flex-col sm:flex-row gap-4">
-                        <a href="#contact" class="glow-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift">
+                        <a href="#contact" class="glow-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift btn-advanced ripple-button">
                             <i class="fas fa-handshake mr-2"></i>הצטרף לאקוסיסטם של SELHA
                         </a>
-                        <a href="#partners" class="gold-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift gold-glow-animation">
+                        <a href="#partners" class="gold-button px-8 py-4 rounded-full font-bold text-lg text-center focus-visible hover-lift gold-glow-animation btn-advanced ripple-button">
                             <i class="fas fa-crown mr-2"></i>הצטרף כתוכנית שותפים
                         </a>
                     </div>
                 </div>
                 
-                <div class="md:w-2/5 fade-in">
+                <div class="md:w-2/5 fade-in slide-in-right">
                     <div class="relative">
                         <div class="absolute -top-10 -right-10 w-64 h-64 bg-blue-500/20 rounded-full blur-3xl"></div>
                         <div class="absolute -bottom-10 -left-10 w-64 h-64 bg-teal-500/20 rounded-full blur-3xl"></div>
                         
-                        <div class="relative bg-card-bg border border-gray-800 rounded-3xl p-8 shadow-2xl hover-lift">
+                        <div class="relative bg-card-bg border border-gray-800 rounded-3xl p-8 shadow-2xl hover-lift card-3d">
                             <div class="flex justify-between items-center mb-8">
                                 <h3 class="text-2xl font-bold">מטבע SELHA</h3>
                                 <div class="coin-animation">
@@ -1680,7 +2256,7 @@
                                         <span class="text-gray-400">מחיר נוכחי</span>
                                         <span class="font-bold">₿ 0.00025 ~ $15</span>
                                     </div>
-                                    <div class="progress-bar">
+                                    <div class="progress-bar-enhanced">
                                         <div class="progress-fill w-3/4"></div>
                                     </div>
                                 </div>
@@ -1690,7 +2266,7 @@
                                         <span class="text-gray-400">סטייקינג חודשי</span>
                                         <span class="font-bold text-green-400">4% ריבית</span>
                                     </div>
-                                    <div class="progress-bar">
+                                    <div class="progress-bar-enhanced">
                                         <div class="progress-fill w-full"></div>
                                     </div>
                                 </div>
@@ -1700,8 +2276,31 @@
                                         <span class="text-gray-400">משקיעים פעילים</span>
                                         <span class="font-bold"><span class="counter" data-target="280">0</span>+ בלוקצ'יין</span>
                                     </div>
-                                    <div class="progress-bar">
+                                    <div class="progress-bar-enhanced">
                                         <div class="progress-fill w-1/3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- טיימר גיוס -->
+                            <div class="funding-timer mt-8">
+                                <h4 class="text-lg font-bold mb-2">זמן לסיום הגיוס:</h4>
+                                <div class="timer-container" id="fundingTimer">
+                                    <div class="timer-box">
+                                        <div class="timer-value" id="timerDays">00</div>
+                                        <div class="timer-label">ימים</div>
+                                    </div>
+                                    <div class="timer-box">
+                                        <div class="timer-value" id="timerHours">00</div>
+                                        <div class="timer-label">שעות</div>
+                                    </div>
+                                    <div class="timer-box">
+                                        <div class="timer-value" id="timerMinutes">00</div>
+                                        <div class="timer-label">דקות</div>
+                                    </div>
+                                    <div class="timer-box">
+                                        <div class="timer-value" id="timerSeconds">00</div>
+                                        <div class="timer-label">שניות</div>
                                     </div>
                                 </div>
                             </div>
@@ -1710,7 +2309,7 @@
                                 <p class="text-center text-gray-300 mb-4">מגייסים כעת:</p>
                                 <p class="text-3xl font-bold text-center text-blue-400">300M ₪</p>
                                 <p class="text-center text-gray-400 text-sm mt-2">לפיתוח תשתיות, AI, אבטחה וצוות</p>
-                                <div class="mt-4 progress-bar">
+                                <div class="mt-4 progress-bar-enhanced">
                                     <div class="progress-fill w-2/3"></div>
                                 </div>
                                 <p class="text-center text-xs text-gray-500 mt-2">67% הושגו</p>
@@ -1722,19 +2321,20 @@
         </div>
     </section>
 
-    <!-- About SELHA -->
-    <section id="about" class="py-16 px-4 md:px-12">
-        <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">מהי SELHA?</h2>
+    <!-- About SELHA עם אפקט parallax -->
+    <section id="about" class="py-16 px-4 md:px-12 parallax-section">
+        <div class="parallax-bg"></div>
+        <div class="container mx-auto relative">
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">מהי SELHA?</h2>
             
-            <div class="feature-card p-8 mb-12 fade-in hover-lift">
+            <div class="feature-card p-8 mb-12 fade-in hover-lift card-3d">
                 <p class="text-xl leading-relaxed text-gray-300">
                     SELHA היא שכבת תשתית כלכלית חדשה — שילוב של פיננסים, קהילה ומדינה — המאפשרת יצירת שוק חדש לחלוטין, מבוזר, יציב ורווחי. המערכת כוללת:
                 </p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid fade-in">
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-brain"></i>
                     </div>
@@ -1742,7 +2342,7 @@
                     <p class="text-gray-400">מערכת בינה מלאכותית מתקדמת לניהול ואופטימיזציה של התהליכים הכלכליים והקהילתיים.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-money-bill-transfer"></i>
                     </div>
@@ -1750,7 +2350,7 @@
                     <p class="text-gray-400">תשתית תשלומים מאובטחת ותמיכה מלאה במטבעות קריפטוגרפיים עם חיבור למערכות פיננסיות מסורתיות.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-users-gear"></i>
                     </div>
@@ -1758,7 +2358,7 @@
                     <p class="text-gray-400">מערכת ממשל מבוזרת (DAO) וממשק ניהול מתקדם (DAX) לניהול קהילתי וארגוני.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-graduation-cap"></i>
                     </div>
@@ -1766,7 +2366,7 @@
                     <p class="text-gray-400">פלטפורמת למידה והכשרה משולבת לתרבות ידע וצמיחה קהילתית בתוך המערכת.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-database"></i>
                     </div>
@@ -1774,7 +2374,7 @@
                     <p class="text-gray-400">בסיסי ידע משותפים וניהול מידע קהילתי מבוזר עם גישה מבוקרת.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-shield-alt"></i>
                     </div>
@@ -1782,7 +2382,7 @@
                     <p class="text-gray-400">הגנה קריפטוגרפית מתקדמת עם Time-to-Live ואנטי-רפליי להגנה על נתונים ותקשורת.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-globe"></i>
                     </div>
@@ -1790,7 +2390,7 @@
                     <p class="text-gray-400">רשת של שערי גישה פעילים בפלטפורמות ווב וטלגרם לנגישות ושימוש מידיים.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-file-contract"></i>
                     </div>
@@ -1798,7 +2398,7 @@
                     <p class="text-gray-400">חוזה חכם פעיל על BNB Chain לניהול נכסים דיגיטליים ואינטראקציות מבוזרות.</p>
                 </div>
                 
-                <div class="feature-card p-6 hover-lift">
+                <div class="feature-card p-6 hover-lift card-3d advanced-glow">
                     <div class="tech-icon mb-4">
                         <i class="fas fa-infinity"></i>
                     </div>
@@ -1809,12 +2409,12 @@
         </div>
     </section>
 
-    <!-- The Problem -->
+    <!-- The Problem עם אנימציות -->
     <section class="py-16 px-4 md:px-12 bg-gradient-to-l from-red-900/20 to-dark-bg">
         <div class="container mx-auto">
             <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">האתגר העולמי</h2>
             
-            <div class="feature-card p-8 mb-8 fade-in hover-lift">
+            <div class="feature-card p-8 mb-8 fade-in hover-lift card-3d">
                 <p class="text-xl text-gray-300 mb-8">
                     העולם מתמודד עם משברים מבניים עמוקים שיוצרים חוסר יציבות וחוסר אימון במערכות הקיימות:
                 </p>
@@ -1870,7 +2470,7 @@
                         <p class="text-gray-400 text-sm">קהילות מתקשות להשפיע על המערכות ששולטות בחייהן ופועלות בנפרד מהן.</p>
                     </div>
                     
-                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-red-900/30 border border-red-800/50 rounded-xl hover-lift advanced-glow">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-plug-circle-exclamation text-red-400"></i>
@@ -1889,12 +2489,12 @@
         </div>
     </section>
 
-    <!-- The SELHA Solution -->
+    <!-- The SELHA Solution עם אינטראקטיביות -->
     <section id="solution" class="py-16 px-4 md:px-12">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">פתרון SELHA</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">פתרון SELHA</h2>
             
-            <div class="feature-card p-8 mb-12 fade-in hover-lift">
+            <div class="feature-card p-8 mb-12 fade-in hover-lift card-3d">
                 <h3 class="text-2xl md:text-3xl font-bold mb-6 text-center">
                     <span class="hero-gradient">Sovereign Economic Layer for Human Advancement</span>
                 </h3>
@@ -1903,7 +2503,7 @@
                 </p>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift" data-tooltip="כלכלה מבוזרת - מערכת שאינה תלויה בגורם מרכזי אחד">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-network-wired text-blue-400"></i>
@@ -1913,7 +2513,7 @@
                         <p class="text-gray-400 text-sm">מערכת כלכלית שאינה תלויה בגורם מרכזי אחד, עם חלוקת כוח ושליטה רחבה.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift" data-tooltip="תשלומים וקריפטו - תשתית תשלומים גלובלית">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-coins text-yellow-400"></i>
@@ -1923,7 +2523,7 @@
                         <p class="text-gray-400 text-sm">תשתית תשלומים גלובלית מהירה ובטוחה עם תמיכה במטבעות דיגיטליים.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift" data-tooltip="AI - בינה מלאכותית מתקדמת לניהול ואופטימיזציה">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-robot text-purple-400"></i>
@@ -1933,7 +2533,7 @@
                         <p class="text-gray-400 text-sm">בינה מלאכותית מתקדמת לניהול, אופטימיזציה וצמיחה של המערכת הכלכלית.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift" data-tooltip="קהילות חכמות - קהילות מקושרות עם כלים לניהול עצמי">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-users-between-lines text-green-400"></i>
@@ -1943,7 +2543,7 @@
                         <p class="text-gray-400 text-sm">קהילות מקושרות עם כלים לניהול עצמי, קבלת החלטות ושיתוף פעולה.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift" data-tooltip="אקדמיה - מערכת למידה והכשרה פנימית">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-book-open text-teal-400"></i>
@@ -1953,7 +2553,7 @@
                         <p class="text-gray-400 text-sm">מערכת למידה והכשרה פנימית לצמיחה אישית וקהילתית בתוך האקוסיסטם.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift" data-tooltip="DAO / DAX - מנגנוני ממשל מבוזרים">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-vote-yea text-orange-400"></i>
@@ -1963,7 +2563,7 @@
                         <p class="text-gray-400 text-sm">מנגנוני ממשל מבוזרים וממשקי ניהול מתקדמים לקבלת החלטות קהילתיות.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift advanced-glow" data-tooltip="אבטחה קריפטוגרפית - הגנה מתקדמת עם HMAC ו-TTL">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-lock text-red-400"></i>
@@ -1973,7 +2573,7 @@
                         <p class="text-gray-400 text-sm">שכבת הגנה מתקדמת עם HMAC, TTL ואנטי-רפליי לאבטחת מידע ותקשורת.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift" data-tooltip="תשתיות ווב וטלגרם - רשת פעילה של שערי גישה">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-satellite-dish text-cyan-400"></i>
@@ -1983,7 +2583,7 @@
                         <p class="text-gray-400 text-sm">רשת פעילה של שערי גישה ופלטפורמות לשימוש מיידי ונגישות גלובלית.</p>
                     </div>
                     
-                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift">
+                    <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl hover-lift advanced-glow" data-tooltip="מערכת שלמה - מסוגלת לשרת יחידים, קהילות, ארגונים ומדינות">
                         <div class="flex items-center mb-3">
                             <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-3">
                                 <i class="fas fa-cubes text-indigo-400"></i>
@@ -1997,21 +2597,21 @@
             
             <div class="text-center fade-in">
                 <p class="text-2xl font-bold mb-6">מערכת שמסוגלת לשרת יחידים, קהילות, ארגונים ואף מדינות.</p>
-                <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift glow-animation">
+                <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift glow-animation btn-advanced ripple-button">
                     <i class="fas fa-rocket mr-2"></i>הצטרף למהפכה הכלכלית
                 </a>
             </div>
         </div>
     </section>
 
-    <!-- Live Ecosystem -->
+    <!-- Live Ecosystem עם אינדיקטורים אינטראקטיביים -->
     <section id="ecosystem" class="py-16 px-4 md:px-12 bg-gradient-to-r from-blue-900/20 to-dark-bg">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">האקוסיסטם החי של SELHA</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">האקוסיסטם החי של SELHA</h2>
             
-            <div class="feature-card p-8 mb-8 fade-in hover-lift">
+            <div class="feature-card p-8 mb-8 fade-in hover-lift card-3d">
                 <div class="flex items-center mb-8">
-                    <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center mr-4">
+                    <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center mr-4 pulse-animation">
                         <i class="fas fa-play text-green-400"></i>
                     </div>
                     <div>
@@ -2025,7 +2625,7 @@
                         <i class="fab fa-telegram mr-3 text-blue-400"></i> שערי טלגרם פעילים
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 rtl-grid">
-                        <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
+                        <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-store text-blue-400"></i>
@@ -2039,7 +2639,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://t.me/Osifs_Factory_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
+                        <a href="https://t.me/Osifs_Factory_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-industry text-purple-400"></i>
@@ -2053,7 +2653,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://t.me/SLH_Academia_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
+                        <a href="https://t.me/SLH_Academia_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-teal-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-graduation-cap text-teal-400"></i>
@@ -2067,7 +2667,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://t.me/MY_SUPER_ADMIN_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift">
+                        <a href="https://t.me/MY_SUPER_ADMIN_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-red-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-user-shield text-red-400"></i>
@@ -2088,7 +2688,7 @@
                         <i class="fas fa-globe mr-3 text-green-400"></i> תשתיות אינטרנט פעילות
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
-                        <a href="https://slh-nft.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
+                        <a href="https://slh-nft.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-pink-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-palette text-pink-400"></i>
@@ -2102,7 +2702,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://slhisrael.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
+                        <a href="https://slhisrael.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-star-of-david text-green-400"></i>
@@ -2116,7 +2716,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
+                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-3">
                                     <i class="fab fa-btc text-yellow-400"></i>
@@ -2130,7 +2730,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
+                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-project-diagram text-purple-400"></i>
@@ -2144,7 +2744,7 @@
                             </div>
                         </a>
                         
-                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift">
+                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group focus-visible hover-lift ripple-button advanced-glow">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-3">
                                     <i class="fas fa-chart-line text-blue-400"></i>
@@ -2164,7 +2764,7 @@
                     <h4 class="text-xl font-bold mb-6 flex items-center">
                         <i class="fas fa-link mr-3 text-orange-400"></i> חוזה Web3 פעיל (BNB Chain)
                     </h4>
-                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="feature-card p-6 hover:border-orange-500 transition group block focus-visible hover-lift">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="feature-card p-6 hover:border-orange-500 transition group block focus-visible hover-lift ripple-button">
                         <div class="flex items-center mb-4">
                             <div class="w-10 h-10 rounded-full bg-orange-900/50 flex items-center justify-center mr-3">
                                 <i class="fas fa-file-contract text-orange-400"></i>
@@ -2183,26 +2783,27 @@
                 </div>
             </div>
             
-            <div class="feature-card p-8 fade-in hover-lift">
+            <!-- מדדים עם אפקט 3D -->
+            <div class="feature-card p-8 fade-in hover-lift stats-3d">
                 <h3 class="text-2xl font-bold mb-8 text-center">מדדים וצמיחה - כבר היום!</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 rtl-grid">
-                    <div class="text-center p-6 bg-gradient-to-b from-blue-900/30 to-transparent rounded-xl">
+                    <div class="text-center p-6 bg-gradient-to-b from-blue-900/30 to-transparent rounded-xl stats-card-3d">
                         <div class="text-4xl font-bold text-blue-400 mb-2"><span class="counter" data-target="280">0</span>+</div>
                         <p class="text-gray-400">משתמשים רשומים בבלוקצ'יין</p>
                     </div>
                     
-                    <div class="text-center p-6 bg-gradient-to-b from-green-900/30 to-transparent rounded-xl">
+                    <div class="text-center p-6 bg-gradient-to-b from-green-900/30 to-transparent rounded-xl stats-card-3d">
                         <div class="text-4xl font-bold text-green-400 mb-2"><span class="counter" data-target="5">0</span></div>
                         <p class="text-gray-400">שערי גישה פעילים + 2 בפיתוח</p>
                     </div>
                     
-                    <div class="text-center p-6 bg-gradient-to-b from-purple-900/30 to-transparent rounded-xl">
+                    <div class="text-center p-6 bg-gradient-to-b from-purple-900/30 to-transparent rounded-xl stats-card-3d">
                         <div class="text-4xl font-bold text-purple-400 mb-2"><span class="counter" data-target="4">0</span></div>
                         <p class="text-gray-400">תרגום לשפות שונות</p>
                     </div>
                     
-                    <div class="text-center p-6 bg-gradient-to-b from-teal-900/30 to-transparent rounded-xl">
-                        <div class="text-4xl font-bold text-teal-400 mb-2">24/7</div>
+                    <div class="text-center p-6 bg-gradient-to-b from-teal-900/30 to-transparent rounded-xl stats-card-3d">
+                        <div class="text-4xl font-bold text-teal-400 mb-2 pulse-animation">24/7</div>
                         <p class="text-gray-400">פעילות, סטייקינג ומכירות</p>
                     </div>
                 </div>
@@ -2210,27 +2811,27 @@
         </div>
     </section>
 
-    <!-- תוכנית השותפים החדשה -->
+    <!-- תוכנית השותפים החדשה - משודרגת -->
     <section id="partners" class="py-16 px-4 md:px-12 bg-gradient-to-l from-yellow-900/10 to-purple-900/10">
         <div class="container mx-auto">
-            <h2 class="section-title partner-section-title text-3xl md:text-4xl font-bold mb-12 fade-in gold-gradient">תוכנית השותפים היוקרתית של SELHA</h2>
+            <h2 class="section-title partner-section-title text-3xl md:text-4xl font-bold mb-12 fade-in gold-gradient slide-in-left">תוכנית השותפים היוקרתית של SELHA</h2>
             
-            <div class="partner-banner fade-in">
+            <div class="partner-banner fade-in slide-in-right">
                 <h3 class="text-3xl font-bold mb-4 purple-gradient">🚀 הזדמנות ייחודית להצטרף למהפכה הכלכלית!</h3>
                 <p class="text-xl text-gray-300 mb-6">
                     הצטרפו לתוכנית השותפים היוקרתית שלנו והפוך לחלק מצמיחה כלכלית חסרת תקדים. 
                     קבלו כלים, הכשרה והזדמנויות להכנסה פסיבית ומשמעותית.
                 </p>
-                <a href="#partner-form" class="gold-button inline-block px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                <a href="#partner-form" class="gold-button inline-block px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation btn-advanced ripple-button pulse-animation">
                     <i class="fas fa-crown mr-3"></i>הצטרף לתוכנית השותפים עכשיו!
                 </a>
             </div>
             
-            <!-- 6 יתרונות עיקריים -->
+            <!-- 6 יתרונות עיקריים עם אנימציות -->
             <div class="mb-16 fade-in">
                 <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient">6 יתרונות עיקריים לשותפים</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 rtl-grid">
-                    <div class="partner-card p-6 text-center hover-lift">
+                    <div class="partner-card p-6 text-center hover-lift card-3d" data-tooltip="אתר מותאם אישית לכל שותף">
                         <div class="benefit-icon mb-4">
                             <i class="fas fa-globe"></i>
                         </div>
@@ -2238,7 +2839,7 @@
                         <p class="text-gray-300">כל שותף מקבל אתר משלו עם עיצוב מותאם אישית וניתן להתאמה מלאה.</p>
                     </div>
                     
-                    <div class="partner-card p-6 text-center hover-lift">
+                    <div class="partner-card p-6 text-center hover-lift card-3d" data-tooltip="10% עמלה מכל הפקדה שמגיעה דרך האתר שלך">
                         <div class="benefit-icon mb-4">
                             <i class="fas fa-money-bill-wave"></i>
                         </div>
@@ -2246,7 +2847,7 @@
                         <p class="text-gray-300">הכנסה פסיבית של 10% מכל הפקדה שמגיעה דרך האתר שלך או הקישורים שלך.</p>
                     </div>
                     
-                    <div class="partner-card p-6 text-center hover-lift">
+                    <div class="partner-card p-6 text-center hover-lift card-3d" data-tooltip="ניהול תיק סטייקינג עם תשואה של 4% בחודש">
                         <div class="benefit-icon mb-4">
                             <i class="fas fa-chart-line"></i>
                         </div>
@@ -2254,7 +2855,7 @@
                         <p class="text-gray-300">אופציה לניהול תיק סטייקינג עם תשואה של 4% בחודש על ההשקעות שלך.</p>
                     </div>
                     
-                    <div class="partner-card p-6 text-center hover-lift">
+                    <div class="partner-card p-6 text-center hover-lift card-3d" data-tooltip="גישה לקהילת עסקים בלעדית עם מפגשים ואירועים">
                         <div class="benefit-icon mb-4">
                             <i class="fas fa-users"></i>
                         </div>
@@ -2262,7 +2863,7 @@
                         <p class="text-gray-300">גישה לקהילת עסקים בלעדית עם מפגשים, אירועים ורשת עמיתים.</p>
                     </div>
                     
-                    <div class="partner-card p-6 text-center hover-lift">
+                    <div class="partner-card p-6 text-center hover-lift card-3d" data-tooltip="קבלת מטבעות SLH פנימיים בעלי ערך ייחודי">
                         <div class="benefit-icon mb-4">
                             <i class="fas fa-coins"></i>
                         </div>
@@ -2270,7 +2871,7 @@
                         <p class="text-gray-300">קבלת מטבעות SLH פנימיים בעלי ערך ייחודי לשימוש באקוסיסטם.</p>
                     </div>
                     
-                    <div class="partner-card p-6 text-center hover-lift">
+                    <div class="partner-card p-6 text-center hover-lift card-3d advanced-glow" data-tooltip="תגמולים במטבעות על שיתופים ופעילות ברשתות החברתיות">
                         <div class="benefit-icon mb-4">
                             <i class="fas fa-gift"></i>
                         </div>
@@ -2282,8 +2883,8 @@
             
             <!-- הטבות נוספות -->
             <div class="mb-16 fade-in">
-                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient">הטבות נוספות לשותפים</h3>
-                <div class="partner-card p-8 hover-lift">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient slide-in-left">הטבות נוספות לשותפים</h3>
+                <div class="partner-card p-8 hover-lift card-3d">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 rtl-grid">
                         <div>
                             <h4 class="text-xl font-bold mb-6 text-yellow-400">כלים ופלטפורמות</h4>
@@ -2310,9 +2911,9 @@
                 </div>
             </div>
             
-            <!-- טבלת רמות שותפים -->
+            <!-- טבלת רמות שותפים אינטראקטיבית -->
             <div class="mb-16 fade-in">
-                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient">רמות שותפים והטבות</h3>
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient slide-in-right">רמות שותפים והטבות</h3>
                 <div class="overflow-x-auto">
                     <table class="partner-table">
                         <thead>
@@ -2324,31 +2925,31 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr class="hover:bg-yellow-900/20 transition">
                                 <td><span class="level-badge level-bronze">ברונזה</span></td>
                                 <td class="text-xl font-bold">10%</td>
                                 <td>אתר בסיסי + הדרכה ראשונית + גישה לקהילה</td>
                                 <td>הרשמה + ראיון התאמה</td>
                             </tr>
-                            <tr>
+                            <tr class="hover:bg-yellow-900/20 transition">
                                 <td><span class="level-badge level-silver">כסף</span></td>
                                 <td class="text-xl font-bold">12%</td>
                                 <td>דשבורד מתקדם + ערכת שיווק + תמיכה טכנית</td>
                                 <td>פעילות חודשית + 3 הפקדות</td>
                             </tr>
-                            <tr>
+                            <tr class="hover:bg-yellow-900/20 transition">
                                 <td><span class="level-badge level-gold">זהב</span></td>
                                 <td class="text-xl font-bold">15%</td>
                                 <td>אתר מותאם אישית + תמיכה VIP + הדרכות מתקדמות</td>
                                 <td>10 הפקדות חודשיות + צוות של 5 שותפים</td>
                             </tr>
-                            <tr>
+                            <tr class="hover:bg-yellow-900/20 transition">
                                 <td><span class="level-badge level-platinum">פלטינום</span></td>
                                 <td class="text-xl font-bold">18%</td>
                                 <td>אירועים בלעדיים + מנטורינג אישי + הטבות מיוחדות</td>
                                 <td>צוות של 20 שותפים + הכנסה חודשית של 50K+</td>
                             </tr>
-                            <tr>
+                            <tr class="hover:bg-yellow-900/20 transition">
                                 <td><span class="level-badge level-diamond">יהלום</span></td>
                                 <td class="text-xl font-bold">20%</td>
                                 <td>שותפות באקוסיסטם + הכנסות מהמערכת + השפעה על החלטות</td>
@@ -2359,11 +2960,11 @@
                 </div>
             </div>
             
-            <!-- דוגמאות הכנסות -->
+            <!-- דוגמאות הכנסות עם אינטראקטיביות -->
             <div class="mb-16 fade-in">
-                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient">דוגמאות הכנסות מהתוכנית</h3>
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient slide-in-left">דוגמאות הכנסות מהתוכנית</h3>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8 rtl-grid">
-                    <div class="income-example hover-lift">
+                    <div class="income-example hover-lift card-3d" data-tooltip="השקעה התחלתית - 10% עמלה + הכנסות נוספות">
                         <h4 class="text-xl font-bold mb-4 text-green-400">מתחיל</h4>
                         <div class="text-4xl font-bold mb-2 gold-gradient">₪5,000</div>
                         <p class="text-gray-300 mb-4">השקעה ממוצעת</p>
@@ -2371,7 +2972,7 @@
                         <p class="text-gray-400 text-sm">10% מההפקדות + הכנסות נוספות</p>
                     </div>
                     
-                    <div class="income-example hover-lift">
+                    <div class="income-example hover-lift card-3d" data-tooltip="רמת ביניים - 12%-15% עמלה + הכנסות צוות">
                         <h4 class="text-xl font-bold mb-4 text-blue-400">מתקדם</h4>
                         <div class="text-4xl font-bold mb-2 gold-gradient">₪50,000</div>
                         <p class="text-gray-300 mb-4">השקעה חודשית ממוצעת</p>
@@ -2379,7 +2980,7 @@
                         <p class="text-gray-400 text-sm">12%-15% מההפקדות + הכנסות צוות</p>
                     </div>
                     
-                    <div class="income-example hover-lift">
+                    <div class="income-example hover-lift card-3d advanced-glow" data-tooltip="רמת מקצוען - 18%-20% עמלה + הכנסות מהמערכת">
                         <h4 class="text-xl font-bold mb-4 text-purple-400">מקצוען</h4>
                         <div class="text-4xl font-bold mb-2 gold-gradient">₪500,000+</div>
                         <p class="text-gray-300 mb-4">השקעה חודשית ממוצעת</p>
@@ -2389,82 +2990,102 @@
                 </div>
             </div>
             
-            <!-- טופס הרשמה לשותפים -->
+            <!-- טופס הרשמה לשותפים משודרג -->
             <div id="partner-form" class="fade-in">
-                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient">טופס הרשמה לתוכנית השותפים</h3>
-                <div class="partner-form hover-lift">
-                    <form class="space-y-6 text-right" id="partner-contact-form">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center gold-gradient slide-in-right">טופס הרשמה לתוכנית השותפים</h3>
+                <div class="partner-form hover-lift card-3d">
+                    <form class="space-y-6 text-right" id="partner-contact-form" novalidate>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">שם מלא</label>
-                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="הזן את שמך המלא" required>
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">שם מלא *</label>
+                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" 
+                                       placeholder="הזן את שמך המלא" required data-validation="name">
+                                <div class="form-error" id="name-error">שדה חובה. אנא הזן שם מלא.</div>
                             </div>
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">דוא"ל</label>
-                                <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="your@email.com" required>
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">דוא"ל *</label>
+                                <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" 
+                                       placeholder="your@email.com" required data-validation="email">
+                                <div class="form-error" id="email-error">אנא הזן כתובת אימייל תקינה.</div>
                             </div>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">טלפון</label>
-                                <input type="tel" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="05X-XXXXXXX" required>
-                            </div>
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">עיר מגורים</label>
-                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" placeholder="עיר המגורים שלך" required>
-                            </div>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-gray-300 mb-2 text-right">רקע מקצועי / ניסיון</label>
-                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" rows="3" placeholder="ספר לנו על הרקע המקצועי שלך, ניסיון בשיווק, רשתות חברתיות וכו'..." required></textarea>
-                        </div>
-                        
-                        <div>
-                            <label class="block text-gray-300 mb-2 text-right">מדוע אתה מעוניין להצטרף כתוכנית שותפים?</label>
-                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" rows="3" placeholder="הסבר את המוטיבציה שלך להצטרפות..." required></textarea>
                         </div>
                         
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">באיזו רמת שותפות אתה מעוניין להתחיל?</label>
-                                <select class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" required>
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">טלפון *</label>
+                                <input type="tel" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" 
+                                       placeholder="05X-XXXXXXX" required data-validation="phone">
+                                <div class="form-error" id="phone-error">אנא הזן מספר טלפון תקין.</div>
+                            </div>
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">עיר מגורים *</label>
+                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" 
+                                       placeholder="עיר המגורים שלך" required>
+                                <div class="form-error" id="city-error">שדה חובה.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="block text-gray-300 mb-2 text-right">רקע מקצועי / ניסיון *</label>
+                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" 
+                                      rows="3" placeholder="ספר לנו על הרקע המקצועי שלך, ניסיון בשיווק, רשתות חברתיות וכו'..." required></textarea>
+                            <div class="form-error" id="background-error">שדה חובה.</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="block text-gray-300 mb-2 text-right">מדוע אתה מעוניין להצטרף כתוכנית שותפים? *</label>
+                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" 
+                                      rows="3" placeholder="הסבר את המוטיבציה שלך להצטרפות..." required></textarea>
+                            <div class="form-error" id="motivation-error">שדה חובה.</div>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">באיזו רמת שותפות אתה מעוניין להתחיל? *</label>
+                                <select class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" required>
                                     <option value="">בחר רמה</option>
                                     <option value="bronze">ברונזה (10%)</option>
                                     <option value="silver">כסף (12%)</option>
                                     <option value="gold">זהב (15%)</option>
                                 </select>
+                                <div class="form-error" id="level-error">אנא בחר רמת שותפות.</div>
                             </div>
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">כמה שעות שבועיות אתה יכול להקדיש?</label>
-                                <select class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible" required>
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">כמה שעות שבועיות אתה יכול להקדיש? *</label>
+                                <select class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-yellow-500 focus:outline-none focus-visible form-input-enhanced" required>
                                     <option value="">בחר טווח שעות</option>
                                     <option value="5-10">5-10 שעות</option>
                                     <option value="10-20">10-20 שעות</option>
                                     <option value="20+">20+ שעות</option>
                                 </select>
+                                <div class="form-error" id="hours-error">אנא בחר טווח שעות.</div>
                             </div>
                         </div>
                         
                         <div class="flex items-center">
                             <input type="checkbox" id="partner-consent" class="ml-2 rounded bg-gray-800 border-gray-700 focus:outline-none focus-visible" required>
                             <label for="partner-consent" class="text-gray-300 cursor-pointer">
-                                אני מסכים לתנאי השותפות ומאשר קבלת עדכונים והצעות מהתוכנית
+                                אני מסכים לתנאי השותפות ומאשר קבלת עדכונים והצעות מהתוכנית *
                             </label>
                         </div>
                         
-                        <button type="submit" class="gold-button w-full py-4 rounded-lg font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                        <div class="form-success" id="partner-form-success">
+                            <i class="fas fa-check-circle text-green-400 text-2xl mb-2"></i>
+                            <h4 class="text-lg font-bold mb-2">הטופס נשלח בהצלחה!</h4>
+                            <p class="text-gray-300">נציגנו יצרו איתך קשר תוך 24 שעות לקביעת ראיון.</p>
+                        </div>
+                        
+                        <button type="submit" class="gold-button w-full py-4 rounded-lg font-bold text-xl focus-visible hover-lift gold-glow-animation btn-advanced ripple-button" id="partner-submit-btn">
                             <i class="fas fa-user-plus mr-2"></i>הגש מועמדות לתוכנית השותפים
                         </button>
                     </form>
                 </div>
             </div>
             
-            <!-- תהליך הצטרפות -->
+            <!-- תהליך הצטרפות אינטראקטיבי -->
             <div class="mt-16 fade-in">
-                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient">תהליך הצטרפות לשותפים - 4 שלבים פשוטים</h3>
-                <div class="partner-card p-8 hover-lift">
+                <h3 class="text-2xl md:text-3xl font-bold mb-8 text-center purple-gradient slide-in-left">תהליך הצטרפות לשותפים - 4 שלבים פשוטים</h3>
+                <div class="partner-card p-8 hover-lift card-3d">
                     <div class="step-process">
                         <div class="step-item">
                             <div class="ml-12">
@@ -2500,7 +3121,7 @@
                         <p class="text-xl text-gray-300 mb-8">
                             אל תחכו - מספר המקומות בתוכנית השותפים מוגבל. הצטרפו עכשיו והתחילו לבנות את ההכנסה הפסיבית שלכם!
                         </p>
-                        <a href="#partner-form" class="gold-button inline-block px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                        <a href="#partner-form" class="gold-button inline-block px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation btn-advanced ripple-button pulse-animation">
                             <i class="fas fa-crown mr-3"></i>הצטרף לתוכנית השותפים עכשיו!
                         </a>
                     </div>
@@ -2509,30 +3130,30 @@
         </div>
     </section>
 
-    <!-- Technology & Security Architecture -->
+    <!-- Technology & Security Architecture משודרג -->
     <section id="technology" class="py-16 px-4 md:px-12">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">טכנולוגיה מתקדמת</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">טכנולוגיה מתקדמת</h2>
             
-            <div class="feature-card p-8 mb-8 fade-in hover-lift">
+            <div class="feature-card p-8 mb-8 fade-in hover-lift card-3d">
                 <h3 class="text-2xl font-bold mb-8 text-center">ארכיטקטורת מערכת מתקדמת</h3>
                 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 rtl-grid">
                     <div>
                         <h4 class="text-xl font-bold mb-6 text-blue-400">ליבת המערכת</h4>
                         <ul class="space-y-5">
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-blue-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-blue-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-microchip text-blue-400"></i>
                                 </div>
                                 <div>
-                                    <h5 class="font-bold mb-1">מיקרו־שירותים (Microservices)</h5>
+                                    <h5 class="font-bold mb-1">מיקרו‑שירותים (Microservices)</h5>
                                     <p class="text-gray-400 text-sm">ארכיטקטורה מבוססת שירותים עצמאיים לגמישות, סקיילביליות ואמינות מקסימלית.</p>
                                 </div>
                             </li>
                             
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-purple-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-purple-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-brain text-purple-400"></i>
                                 </div>
                                 <div>
@@ -2541,8 +3162,8 @@
                                 </div>
                             </li>
                             
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-green-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-green-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fab fa-ethereum text-green-400"></i>
                                 </div>
                                 <div>
@@ -2551,8 +3172,8 @@
                                 </div>
                             </li>
                             
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-orange-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-orange-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-vote-yea text-orange-400"></i>
                                 </div>
                                 <div>
@@ -2566,8 +3187,8 @@
                     <div>
                         <h4 class="text-xl font-bold mb-6 text-teal-400">שכבת אבטחה ותשתית</h4>
                         <ul class="space-y-5">
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-red-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-red-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-shield-alt text-red-400"></i>
                                 </div>
                                 <div>
@@ -2576,8 +3197,8 @@
                                 </div>
                             </li>
                             
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-cyan-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-cyan-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-route text-cyan-400"></i>
                                 </div>
                                 <div>
@@ -2586,8 +3207,8 @@
                                 </div>
                             </li>
                             
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-indigo-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-indigo-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-language text-indigo-400"></i>
                                 </div>
                                 <div>
@@ -2596,8 +3217,8 @@
                                 </div>
                             </li>
                             
-                            <li class="flex items-start">
-                                <div class="w-8 h-8 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4 mt-1">
+                            <li class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-8 h-8 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-server text-yellow-400"></i>
                                 </div>
                                 <div>
@@ -2611,20 +3232,20 @@
             </div>
             
             <!-- Security Gateway vs Blockchain Section -->
-            <div id="security" class="feature-card p-8 mb-8 fade-in hover-lift">
+            <div id="security" class="feature-card p-8 mb-8 fade-in hover-lift card-3d advanced-glow">
                 <h3 class="text-2xl font-bold mb-8 text-center">אבטחה מתקדמת: השילוב המושלם</h3>
                 
                 <div class="integrated-architecture">
-                    <h4 class="text-xl font-bold mb-6 text-center">ארכיטקטורת אבטחה משולבת</h4>
-                    <p class="text-gray-300 mb-6 text-center">
+                    <h4 class="text-xl font-bold mb-6 text-center slide-in-left">ארכיטקטורת אבטחה משולבת</h4>
+                    <p class="text-gray-300 mb-6 text-center slide-in-right">
                         SELHA משתמשת בשתי שכבות אבטחה משלימות: Security Gateway פנימי לאבטחת תקשורת, 
                         ו-Blockchain ציבורי לשקיפות וביזור. כך אנחנו משיגים גם ביצועים גבוהים וגם אמינות ציבורית.
                     </p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                        <div class="p-6 bg-gradient-to-br from-blue-900/30 to-transparent border border-blue-800/50 rounded-xl hover-lift">
+                        <div class="p-6 bg-gradient-to-br from-blue-900/30 to-transparent border border-blue-800/50 rounded-xl hover-lift card-3d">
                             <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 rounded-full bg-blue-900/70 flex items-center justify-center mr-4">
+                                <div class="w-12 h-12 rounded-full bg-blue-900/70 flex items-center justify-center mr-4 pulse-animation">
                                     <i class="fas fa-shield-check text-blue-400 text-xl"></i>
                                 </div>
                                 <h4 class="text-lg font-bold">Security Gateway</h4>
@@ -2649,9 +3270,9 @@
                             </ul>
                         </div>
                         
-                        <div class="p-6 bg-gradient-to-br from-purple-900/30 to-transparent border border-purple-800/50 rounded-xl hover-lift">
+                        <div class="p-6 bg-gradient-to-br from-purple-900/30 to-transparent border border-purple-800/50 rounded-xl hover-lift card-3d">
                             <div class="flex items-center mb-4">
-                                <div class="w-12 h-12 rounded-full bg-purple-900/70 flex items-center justify-center mr-4">
+                                <div class="w-12 h-12 rounded-full bg-purple-900/70 flex items-center justify-center mr-4 pulse-animation">
                                     <i class="fas fa-link text-purple-400 text-xl"></i>
                                 </div>
                                 <h4 class="text-lg font-bold">Blockchain</h4>
@@ -2722,7 +3343,7 @@
                         </table>
                     </div>
                     
-                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-xl">
+                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-xl slide-in-left">
                         <h5 class="text-lg font-bold mb-3">🏆 יתרון SELHA: ארכיטקטורה משולבת</h5>
                         <p class="text-gray-300">
                             אנחנו משתמשים ב־<strong>Security Gateway</strong> לאבטחת שירותים פרטיים ותקשורת פנימית מהירה, 
@@ -2734,12 +3355,12 @@
             </div>
             
             <div class="text-center fade-in">
-                <p class="text-xl text-gray-300 mb-6">המערכת כוללת הגנת HMAC מתקדמת עם מנגנוני Time-to-Live (TTL) ואנטי-רפליי למניעת התקפות וזיופים.</p>
+                <p class="text-xl text-gray-300 mb-6 slide-in-right">המערכת כוללת הגנת HMAC מתקדמת עם מנגנוני Time-to-Live (TTL) ואנטי-רפליי למניעת התקפות וזיופים.</p>
                 <div class="flex flex-col md:flex-row justify-center gap-4">
-                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="accent-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="accent-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift btn-advanced ripple-button">
                         <i class="fas fa-file-contract mr-2"></i>בדוק את החוזה החכם שלנו
                     </a>
-                    <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift glow-animation">
+                    <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg focus-visible hover-lift glow-animation btn-advanced ripple-button">
                         <i class="fas fa-shield-alt mr-2"></i>קבל הסבר טכני מפורט
                     </a>
                 </div>
@@ -2747,17 +3368,20 @@
         </div>
     </section>
 
-    <!-- Roadmap -->
+    <!-- Roadmap אינטראקטיבי -->
     <section id="roadmap" class="py-16 px-4 md:px-12 bg-gradient-to-l from-indigo-900/20 to-dark-bg">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">לוח זמנים וצמיחה</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">לוח זמנים וצמיחה</h2>
             
-            <div class="feature-card p-8 fade-in hover-lift">
-                <div class="timeline-container">
-                    <div class="timeline-item">
+            <div class="feature-card p-8 fade-in hover-lift card-3d">
+                <div class="interactive-roadmap">
+                    <div class="roadmap-line"></div>
+                    
+                    <div class="roadmap-item left">
                         <div class="feature-card p-6 hover-lift">
+                            <div class="roadpoint"></div>
                             <div class="flex items-center mb-4">
-                                <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-4">
+                                <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-4 pulse-animation">
                                     <span class="font-bold">Q1</span>
                                 </div>
                                 <h4 class="text-xl font-bold">השקה והטמעה ראשונית</h4>
@@ -2779,33 +3403,35 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item">
+                    <div class="roadmap-item right">
                         <div class="feature-card p-6 hover-lift">
+                            <div class="roadpoint"></div>
                             <div class="flex items-center mb-4">
-                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-4 status-update">
                                     <span class="font-bold">Q2</span>
                                 </div>
                                 <h4 class="text-xl font-bold">התרחבות ופיתוח</h4>
                             </div>
                             <ul class="text-gray-400 space-y-2">
                                 <li class="flex items-start">
-                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2"></i>
+                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2 pulse-animation"></i>
                                     <span>פיתוח ממשקי API מתקדמים</span>
                                 </li>
                                 <li class="flex items-start">
-                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2"></i>
+                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2 pulse-animation"></i>
                                     <span>שילוב מערכות תשלום נוספות</span>
                                 </li>
                                 <li class="flex items-start">
-                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2"></i>
+                                    <i class="fas fa-spinner text-blue-400 mt-1 mr-2 pulse-animation"></i>
                                     <span>הרחבת צוות הפיתוח</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     
-                    <div class="timeline-item">
+                    <div class="roadmap-item left">
                         <div class="feature-card p-6 hover-lift">
+                            <div class="roadpoint"></div>
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-4">
                                     <span class="font-bold">Q3</span>
@@ -2829,8 +3455,9 @@
                         </div>
                     </div>
                     
-                    <div class="timeline-item">
+                    <div class="roadmap-item right advanced-glow">
                         <div class="feature-card p-6 hover-lift">
+                            <div class="roadpoint"></div>
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4">
                                     <span class="font-bold">Q4</span>
@@ -2858,44 +3485,44 @@
         </div>
     </section>
 
-    <!-- Team Section -->
+    <!-- Team Section עם גלריה -->
     <section id="team" class="py-16 px-4 md:px-12">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">הצוות המייסד</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">הצוות המייסד</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-2 gap-12 mb-16 fade-in">
-                <div class="feature-card p-8 text-center hover-lift">
+                <div class="feature-card p-8 text-center hover-lift card-3d">
                     <div class="team-card">
                         <div class="team-img mb-6">
-                            <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/osif.jpg" alt="אוסיף אונגר" onerror="this.src='https://via.placeholder.com/180/0066ff/ffffff?text=Osif'">
+                            <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/osif.jpg" alt="אוסיף אונגר" onerror="this.src='https://via.placeholder.com/180/0066ff/ffffff?text=Osif'" class="lazy-load">
                         </div>
                         <h3 class="text-2xl font-bold mb-2">אוסיף אונגר</h3>
                         <p class="text-blue-400 font-semibold mb-4">אכיטקט מערכות ומייסד</p>
                         <p class="text-gray-400 mb-6">מומחה לארכיטקטורת מערכות מורכבות, AI ובלוקצ'יין עם ניסיון של למעלה מ-15 שנה בתעשיית ההיי-טק.</p>
                         <div class="flex justify-center space-x-4 space-x-reverse">
-                            <a href="tel:0584203384" class="text-blue-400 hover:text-blue-300">
+                            <a href="tel:0584203384" class="text-blue-400 hover:text-blue-300 transition">
                                 <i class="fas fa-phone"></i> 058-4203384
                             </a>
-                            <a href="mailto:kaufmanungar@gmail.com" class="text-teal-400 hover:text-teal-300">
+                            <a href="mailto:kaufmanungar@gmail.com" class="text-teal-400 hover:text-teal-300 transition">
                                 <i class="fas fa-envelope"></i> Email
                             </a>
                         </div>
                     </div>
                 </div>
                 
-                <div class="feature-card p-8 text-center hover-lift">
+                <div class="feature-card p-8 text-center hover-lift card-3d">
                     <div class="team-card">
                         <div class="team-img mb-6">
-                            <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/tzvika.jpg" alt="צביקה קאופמן" onerror="this.src='https://via.placeholder.com/180/00d4aa/ffffff?text=Tzvika'">
+                            <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/tzvika.jpg" alt="צביקה קאופמן" onerror="this.src='https://via.placeholder.com/180/00d4aa/ffffff?text=Tzvika'" class="lazy-load">
                         </div>
                         <h3 class="text-2xl font-bold mb-2">צביקה קאופמן</h3>
                         <p class="text-purple-400 font-semibold mb-4">מייסד ואסטרטג</p>
                         <p class="text-gray-400 mb-6">אסטרטג עסקי עם ניסיון בפיתוח עסקים גלובליים וניהול פרויקטים טכנולוגיים מורכבים.</p>
                         <div class="flex justify-center space-x-4 space-x-reverse">
-                            <a href="tel:0546671882" class="text-blue-400 hover:text-blue-300">
+                            <a href="tel:0546671882" class="text-blue-400 hover:text-blue-300 transition">
                                 <i class="fas fa-phone"></i> 054-6671882
                             </a>
-                            <a href="mailto:kaufmanungar@gmail.com" class="text-teal-400 hover:text-teal-300">
+                            <a href="mailto:kaufmanungar@gmail.com" class="text-teal-400 hover:text-teal-300 transition">
                                 <i class="fas fa-envelope"></i> Email
                             </a>
                         </div>
@@ -2903,43 +3530,64 @@
                 </div>
             </div>
             
-            <div class="feature-card p-8 fade-in hover-lift">
-                <h3 class="text-2xl font-bold mb-8 text-center">הצוות הטכני</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="text-center p-6">
-                        <div class="w-16 h-16 rounded-full bg-blue-900/30 flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-code text-blue-400 text-2xl"></i>
+            <!-- גלריית תמונות לצוות -->
+            <div class="feature-card p-8 fade-in hover-lift card-3d">
+                <h3 class="text-2xl font-bold mb-8 text-center slide-in-left">הצוות הטכני</h3>
+                <div class="team-gallery">
+                    <div class="team-member">
+                        <div class="team-photo">
+                            <img src="https://via.placeholder.com/120/0066ff/ffffff?text=Dev1" alt="מפתח 1" class="lazy-load">
                         </div>
-                        <h4 class="text-lg font-bold mb-2">מפתחי Full Stack</h4>
-                        <p class="text-gray-400 text-sm">צוות של 5 מפתחים מובילים בתחום Web3 ו-AI</p>
+                        <h4 class="font-bold">מתן לוי</h4>
+                        <p class="text-gray-400 text-sm">Full Stack Developer</p>
                     </div>
-                    
-                    <div class="text-center p-6">
-                        <div class="w-16 h-16 rounded-full bg-green-900/30 flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-shield-alt text-green-400 text-2xl"></i>
+                    <div class="team-member">
+                        <div class="team-photo">
+                            <img src="https://via.placeholder.com/120/00d4aa/ffffff?text=Dev2" alt="מפתח 2" class="lazy-load">
                         </div>
-                        <h4 class="text-lg font-bold mb-2">מומחי אבטחה</h4>
-                        <p class="text-gray-400 text-sm">צוות קריפטוגרפיה ואבטחת מידע</p>
+                        <h4 class="font-bold">נועה כהן</h4>
+                        <p class="text-gray-400 text-sm">AI Researcher</p>
                     </div>
-                    
-                    <div class="text-center p-6">
-                        <div class="w-16 h-16 rounded-full bg-purple-900/30 flex items-center justify-center mx-auto mb-4">
-                            <i class="fas fa-robot text-purple-400 text-2xl"></i>
+                    <div class="team-member">
+                        <div class="team-photo">
+                            <img src="https://via.placeholder.com/120/9333ea/ffffff?text=Dev3" alt="מפתח 3" class="lazy-load">
                         </div>
-                        <h4 class="text-lg font-bold mb-2">חוקרי AI</h4>
-                        <p class="text-gray-400 text-sm">צוות מחקר ופיתוח בינה מלאכותית</p>
+                        <h4 class="font-bold">דוד אברהם</h4>
+                        <p class="text-gray-400 text-sm">Security Expert</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-photo">
+                            <img src="https://via.placeholder.com/120/ff9900/ffffff?text=Dev4" alt="מפתח 4" class="lazy-load">
+                        </div>
+                        <h4 class="font-bold">שירה מלכה</h4>
+                        <p class="text-gray-400 text-sm">Blockchain Developer</p>
+                    </div>
+                    <div class="team-member">
+                        <div class="team-photo">
+                            <img src="https://via.placeholder.com/120/ff3366/ffffff?text=Dev5" alt="מפתח 5" class="lazy-load">
+                        </div>
+                        <h4 class="font-bold">אלירן ישראלי</h4>
+                        <p class="text-gray-400 text-sm">UX/UI Designer</p>
+                    </div>
+                    <div class="team-member advanced-glow">
+                        <div class="team-photo">
+                            <img src="https://via.placeholder.com/120/0066ff/ffffff?text=You" alt="מקום פנוי" class="lazy-load">
+                        </div>
+                        <h4 class="font-bold gold-gradient">המקום שלך?</h4>
+                        <p class="text-gray-400 text-sm">הצטרף לצוות שלנו</p>
+                        <a href="#contact" class="text-blue-400 text-sm hover:underline mt-2 inline-block">הגש מועמדות</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ Section -->
+    <!-- FAQ Section משודרג -->
     <section class="py-16 px-4 md:px-12 bg-gradient-to-r from-gray-900/20 to-dark-bg">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">שאלות נפוצות</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">שאלות נפוצות</h2>
             
-            <div class="feature-card p-8 fade-in hover-lift">
+            <div class="feature-card p-8 fade-in hover-lift card-3d">
                 <div class="faq-container space-y-4">
                     <div class="faq-item">
                         <div class="faq-question">
@@ -2991,7 +3639,7 @@
                         </div>
                     </div>
                     
-                    <div class="faq-item">
+                    <div class="faq-item advanced-glow">
                         <div class="faq-question">
                             <span>כמה זמן לוקח להתחיל להרוויח כתוכנית שותפים?</span>
                             <i class="fas fa-chevron-down"></i>
@@ -3005,19 +3653,40 @@
         </div>
     </section>
 
-    <!-- Business Model & Funding -->
+    <!-- Business Model & Funding עם אינדיקטור התקדמות -->
     <section id="investment" class="py-16 px-4 md:px-12 bg-gradient-to-l from-purple-900/20 to-dark-bg">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">מודל עסקי ומימון</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">מודל עסקי ומימון</h2>
+            
+            <!-- אינדיקטור התקדמות גיוס -->
+            <div class="funding-progress fade-in slide-in-right">
+                <h3 class="text-2xl font-bold mb-6 text-center text-purple-400">התקדמות גיוס ההון</h3>
+                <div class="progress-stats">
+                    <div>
+                        <div class="amount">₪ 200M</div>
+                        <div class="text-gray-400">גויס עד כה</div>
+                    </div>
+                    <div class="text-right">
+                        <div class="amount">₪ 300M</div>
+                        <div class="text-gray-400">יעד הגיוס</div>
+                    </div>
+                </div>
+                <div class="progress-bar-enhanced mt-4">
+                    <div class="progress-fill w-2/3"></div>
+                </div>
+                <div class="text-center mt-2 text-gray-400">
+                    <span class="text-green-400 font-bold">67% הושגו</span> • עוד ₪ 100M לגיוס
+                </div>
+            </div>
             
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 rtl-grid">
-                <div class="fade-in">
-                    <div class="feature-card p-8 h-full hover-lift">
+                <div class="fade-in slide-in-left">
+                    <div class="feature-card p-8 h-full hover-lift card-3d">
                         <h3 class="text-2xl font-bold mb-8 text-center text-purple-400">מנוע הכנסות היברידי</h3>
                         
                         <div class="space-y-6">
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-4 mt-1">
+                            <div class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-coins text-yellow-500"></i>
                                 </div>
                                 <div>
@@ -3026,8 +3695,8 @@
                                 </div>
                             </div>
                             
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-4 mt-1">
+                            <div class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-percentage text-blue-400"></i>
                                 </div>
                                 <div>
@@ -3036,8 +3705,8 @@
                                 </div>
                             </div>
                             
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-4 mt-1">
+                            <div class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-cloud text-green-400"></i>
                                 </div>
                                 <div>
@@ -3046,8 +3715,8 @@
                                 </div>
                             </div>
                             
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 rounded-full bg-teal-900/50 flex items-center justify-center mr-4 mt-1">
+                            <div class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-10 h-10 rounded-full bg-teal-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-users-gear text-teal-400"></i>
                                 </div>
                                 <div>
@@ -3056,8 +3725,8 @@
                                 </div>
                             </div>
                             
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 rounded-full bg-red-900/50 flex items-center justify-center mr-4 mt-1">
+                            <div class="flex items-start hover:scale-105 transition-transform">
+                                <div class="w-10 h-10 rounded-full bg-red-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-graduation-cap text-red-400"></i>
                                 </div>
                                 <div>
@@ -3066,8 +3735,8 @@
                                 </div>
                             </div>
                             
-                            <div class="flex items-start">
-                                <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4 mt-1">
+                            <div class="flex items-start hover:scale-105 transition-transform advanced-glow">
+                                <div class="w-10 h-10 rounded-full bg-yellow-900/50 flex items-center justify-center mr-4 mt-1 pulse-animation">
                                     <i class="fas fa-handshake text-yellow-400"></i>
                                 </div>
                                 <div>
@@ -3084,7 +3753,7 @@
                                     <span class="text-gray-400">שנה ראשונה</span>
                                     <span class="font-bold">₪ 50M</span>
                                 </div>
-                                <div class="progress-bar">
+                                <div class="progress-bar-enhanced">
                                     <div class="progress-fill w-1/4"></div>
                                 </div>
                                 
@@ -3092,7 +3761,7 @@
                                     <span class="text-gray-400">שנה שנייה</span>
                                     <span class="font-bold">₪ 200M</span>
                                 </div>
-                                <div class="progress-bar">
+                                <div class="progress-bar-enhanced">
                                     <div class="progress-fill w-2/3"></div>
                                 </div>
                                 
@@ -3100,7 +3769,7 @@
                                     <span class="text-gray-400">שנה שלישית</span>
                                     <span class="font-bold">₪ 500M+</span>
                                 </div>
-                                <div class="progress-bar">
+                                <div class="progress-bar-enhanced">
                                     <div class="progress-fill w-full"></div>
                                 </div>
                             </div>
@@ -3108,14 +3777,14 @@
                     </div>
                 </div>
                 
-                <div class="fade-in">
-                    <div class="feature-card p-8 h-full hover-lift">
+                <div class="fade-in slide-in-right">
+                    <div class="feature-card p-8 h-full hover-lift card-3d">
                         <h3 class="text-2xl font-bold mb-8 text-center text-blue-400">גיוס הון: ₪ 300 מיליון</h3>
                         
                         <p class="text-xl text-gray-300 mb-8">ההשקעה תשמש להאצת הפיתוח והתרחבות גלובלית של תשתית SELHA:</p>
                         
                         <div class="space-y-6 mb-10">
-                            <div class="flex justify-between items-center p-4 bg-blue-900/30 rounded-xl hover-lift">
+                            <div class="flex justify-between items-center p-4 bg-blue-900/30 rounded-xl hover-lift hover:scale-105 transition-transform" data-tooltip="פיתוח תשתיות ופלטפורמות">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-blue-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-code text-blue-400"></i>
@@ -3125,7 +3794,7 @@
                                 <span class="text-blue-400 font-bold">25%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-purple-900/30 rounded-xl hover-lift">
+                            <div class="flex justify-between items-center p-4 bg-purple-900/30 rounded-xl hover-lift hover:scale-105 transition-transform" data-tooltip="מחקר ופיתוח בינה מלאכותית">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-purple-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-robot text-purple-400"></i>
@@ -3135,7 +3804,7 @@
                                 <span class="text-purple-400 font-bold">20%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-red-900/30 rounded-xl hover-lift">
+                            <div class="flex justify-between items-center p-4 bg-red-900/30 rounded-xl hover-lift hover:scale-105 transition-transform" data-tooltip="אבטחה, קריפטוגרפיה וביקורות">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-red-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-shield-alt text-red-400"></i>
@@ -3145,7 +3814,7 @@
                                 <span class="text-red-400 font-bold">15%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-green-900/30 rounded-xl hover-lift">
+                            <div class="flex justify-between items-center p-4 bg-green-900/30 rounded-xl hover-lift hover:scale-105 transition-transform" data-tooltip="צוות פיתוח וניהול קהילה">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-green-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-users text-green-400"></i>
@@ -3155,7 +3824,7 @@
                                 <span class="text-green-400 font-bold">15%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-yellow-900/30 rounded-xl hover-lift">
+                            <div class="flex justify-between items-center p-4 bg-yellow-900/30 rounded-xl hover-lift hover:scale-105 transition-transform" data-tooltip="שיווק, פרסום ותקשורת">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-yellow-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-bullhorn text-yellow-400"></i>
@@ -3165,7 +3834,7 @@
                                 <span class="text-yellow-400 font-bold">10%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-teal-900/30 rounded-xl hover-lift">
+                            <div class="flex justify-between items-center p-4 bg-teal-900/30 rounded-xl hover-lift hover:scale-105 transition-transform" data-tooltip="פיתוח אקדמיה וממשקים למדיניות">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-teal-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-graduation-cap text-teal-400"></i>
@@ -3175,7 +3844,7 @@
                                 <span class="text-teal-400 font-bold">10%</span>
                             </div>
                             
-                            <div class="flex justify-between items-center p-4 bg-indigo-900/30 rounded-xl hover-lift">
+                            <div class="flex justify-between items-center p-4 bg-indigo-900/30 rounded-xl hover-lift hover:scale-105 transition-transform" data-tooltip="תפעול שוטף ורזרבות">
                                 <div class="flex items-center">
                                     <div class="w-10 h-10 rounded-full bg-indigo-900/70 flex items-center justify-center mr-4">
                                         <i class="fas fa-boxes text-indigo-400"></i>
@@ -3186,7 +3855,7 @@
                             </div>
                         </div>
                         
-                        <div class="mt-8 p-6 bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-xl border border-blue-800/50">
+                        <div class="mt-8 p-6 bg-gradient-to-r from-blue-900/40 to-purple-900/40 rounded-xl border border-blue-800/50 slide-in-left">
                             <h4 class="text-xl font-bold mb-3">מדדי הצלחה צפויים</h4>
                             <div class="grid grid-cols-2 gap-4">
                                 <div class="text-center">
@@ -3213,85 +3882,85 @@
         </div>
     </section>
 
-    <!-- News/Updates Section -->
+    <!-- News/Updates Section עם אנימציות -->
     <section id="news" class="py-16 px-4 md:px-12">
         <div class="container mx-auto">
-            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">חדשות ועדכונים</h2>
+            <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in slide-in-left">חדשות ועדכונים</h2>
             
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 fade-in">
-                <div class="news-card feature-card overflow-hidden hover-lift">
+                <div class="news-card feature-card overflow-hidden hover-lift card-3d">
                     <div class="relative h-48 bg-gradient-to-br from-blue-500 to-teal-400 flex items-center justify-center">
-                        <i class="fas fa-rocket text-white text-6xl"></i>
+                        <i class="fas fa-rocket text-white text-6xl pulse-animation"></i>
                         <div class="news-date">20 דצמ׳ 2023</div>
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-3">השקת האקוסיסטם המלא</h3>
                         <p class="text-gray-400 mb-4">השקנו בהצלחה את כל רכיבי SELHA כולל חוזה חכם, שערי טלגרם ופלטפורמות אינטרנט.</p>
-                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold">קרא עוד →</a>
+                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold transition">קרא עוד →</a>
                     </div>
                 </div>
                 
-                <div class="news-card feature-card overflow-hidden hover-lift">
+                <div class="news-card feature-card overflow-hidden hover-lift card-3d">
                     <div class="relative h-48 bg-gradient-to-br from-purple-500 to-pink-400 flex items-center justify-center">
-                        <i class="fas fa-chart-line text-white text-6xl"></i>
+                        <i class="fas fa-chart-line text-white text-6xl pulse-animation"></i>
                         <div class="news-date">15 ינו׳ 2024</div>
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-3">גידול של 300% במשתמשים</h3>
                         <p class="text-gray-400 mb-4">מספר המשתמשים הרשומים במערכת גדל ב-300% בחודש האחרון, עם מעל 280 משתמשים פעילים.</p>
-                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold">קרא עוד →</a>
+                        <a href="#contact" class="text-blue-400 hover:text-blue-300 font-semibold transition">קרא עוד →</a>
                     </div>
                 </div>
                 
-                <div class="news-card feature-card overflow-hidden hover-lift">
+                <div class="news-card feature-card overflow-hidden hover-lift card-3d advanced-glow">
                     <div class="relative h-48 bg-gradient-to-br from-green-500 to-emerald-400 flex items-center justify-center">
-                        <i class="fas fa-handshake text-white text-6xl"></i>
+                        <i class="fas fa-handshake text-white text-6xl pulse-animation"></i>
                         <div class="news-date">1 פבר׳ 2024</div>
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold mb-3">השקת תוכנית שותפים חדשה</h3>
                         <p class="text-gray-400 mb-4">השקנו תוכנית שותפים יוקרתית עם הטבות משמעותיות והזדמנויות להכנסה פסיבית.</p>
-                        <a href="#partners" class="text-yellow-400 hover:text-yellow-300 font-semibold gold-gradient">קרא עוד →</a>
+                        <a href="#partners" class="text-yellow-400 hover:text-yellow-300 font-semibold gold-gradient transition">קרא עוד →</a>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Contact/CTA -->
+    <!-- Contact/CTA משודרג -->
     <section id="contact" class="py-20 px-4 md:px-12">
         <div class="container mx-auto">
             <div class="max-w-4xl mx-auto text-center fade-in">
-                <h2 class="text-4xl md:text-5xl font-bold mb-8">מוכנים לבנות את העתיד הכלכלי יחד?</h2>
+                <h2 class="text-4xl md:text-5xl font-bold mb-8 slide-in-left">מוכנים לבנות את העתיד הכלכלי יחד?</h2>
                 
-                <p class="text-xl text-gray-300 mb-12 leading-relaxed">
+                <p class="text-xl text-gray-300 mb-12 leading-relaxed slide-in-right">
                     הצטרפו לאקוסיסטם SELHA והשקיעו בשכבת התשתית הכלכלית החדשה לעולם הדיגיטלי. 
                     קבלו גישה למסמכים טכניים מפורטים, פורטל המשקיעים החי, ותוכנית הפיתוח המלאה.
                 </p>
                 
                 <div class="flex flex-col md:flex-row justify-center gap-6 mb-16">
-                    <a href="#contact-form" class="glow-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift glow-animation">
+                    <a href="#contact-form" class="glow-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift glow-animation btn-advanced ripple-button">
                         <i class="fas fa-handshake mr-3"></i>צור קשר להשקעה
                     </a>
                     
-                    <a href="#partners" class="gold-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation">
+                    <a href="#partners" class="gold-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift gold-glow-animation btn-advanced ripple-button pulse-animation">
                         <i class="fas fa-crown mr-3"></i>הצטרף כתוכנית שותפים
                     </a>
                     
-                    <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="accent-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift">
+                    <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="accent-button px-10 py-5 rounded-full font-bold text-xl focus-visible hover-lift btn-advanced ripple-button">
                         <i class="fas fa-chart-line mr-3"></i>פורטל משקיעים
                     </a>
                     
-                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="px-10 py-5 rounded-full font-bold text-xl border border-yellow-800 bg-yellow-900/20 text-yellow-400 hover:bg-yellow-900/40 transition focus-visible hover-lift">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="px-10 py-5 rounded-full font-bold text-xl border border-yellow-800 bg-yellow-900/20 text-yellow-400 hover:bg-yellow-900/40 transition focus-visible hover-lift btn-advanced ripple-button">
                         <i class="fas fa-file-contract mr-3"></i>חוזה חכם
                     </a>
                 </div>
                 
-                <div class="feature-card p-8 mb-8 hover-lift">
-                    <h3 class="text-2xl font-bold mb-6">גישה מיידית לכל הפלטפורמות שלנו</h3>
+                <div class="feature-card p-8 mb-8 hover-lift card-3d">
+                    <h3 class="text-2xl font-bold mb-6 slide-in-left">גישה מיידית לכל הפלטפורמות שלנו</h3>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                        <a href="https://slhisrael.com/" target="_blank" class="p-5 bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-800/50 rounded-xl hover:border-blue-500 transition group focus-visible hover-lift">
+                        <a href="https://slhisrael.com/" target="_blank" class="p-5 bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-800/50 rounded-xl hover:border-blue-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center">
                                     <i class="fas fa-home text-blue-400 text-xl"></i>
@@ -3301,7 +3970,7 @@
                             <p class="text-gray-400 text-sm">SLH ישראל - הפלטפורמה המרכזית</p>
                         </a>
                         
-                        <a href="https://t.me/SELHA_Official" target="_blank" class="p-5 bg-gradient-to-br from-teal-900/20 to-transparent border border-teal-800/50 rounded-xl hover:border-teal-500 transition group focus-visible hover-lift">
+                        <a href="https://t.me/SELHA_Official" target="_blank" class="p-5 bg-gradient-to-br from-teal-900/20 to-transparent border border-teal-800/50 rounded-xl hover:border-teal-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-teal-900/50 flex items-center justify-center">
                                     <i class="fab fa-telegram text-teal-400 text-xl"></i>
@@ -3311,7 +3980,7 @@
                             <p class="text-gray-400 text-sm">@SELHA_Official - קבוצת הקהילה</p>
                         </a>
                         
-                        <a href="https://slh-nft.com/" target="_blank" class="p-5 bg-gradient-to-br from-purple-900/20 to-transparent border border-purple-800/50 rounded-xl hover:border-purple-500 transition group focus-visible hover-lift">
+                        <a href="https://slh-nft.com/" target="_blank" class="p-5 bg-gradient-to-br from-purple-900/20 to-transparent border border-purple-800/50 rounded-xl hover:border-purple-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-purple-900/50 flex items-center justify-center">
                                     <i class="fas fa-palette text-purple-400 text-xl"></i>
@@ -3323,7 +3992,7 @@
                     </div>
                     
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="p-5 bg-gradient-to-br from-yellow-900/20 to-transparent border border-yellow-800/50 rounded-xl hover:border-yellow-500 transition group focus-visible hover-lift">
+                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="p-5 bg-gradient-to-br from-yellow-900/20 to-transparent border border-yellow-800/50 rounded-xl hover:border-yellow-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-yellow-900/50 flex items-center justify-center">
                                     <i class="fab fa-btc text-yellow-400 text-xl"></i>
@@ -3333,7 +4002,7 @@
                             <p class="text-gray-400 text-sm">שער גישה ל-BNB Chain</p>
                         </a>
                         
-                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="p-5 bg-gradient-to-br from-green-900/20 to-transparent border border-green-800/50 rounded-xl hover:border-green-500 transition group focus-visible hover-lift">
+                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="p-5 bg-gradient-to-br from-green-900/20 to-transparent border border-green-800/50 rounded-xl hover:border-green-500 transition group focus-visible hover-lift ripple-button">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center">
                                     <i class="fas fa-robot text-green-400 text-xl"></i>
@@ -3343,7 +4012,7 @@
                             <p class="text-gray-400 text-sm">פלטפורמת AI ופיתוח</p>
                         </a>
                         
-                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="p-5 bg-gradient-to-br from-red-900/20 to-transparent border border-red-800/50 rounded-xl hover:border-red-500 transition group focus-visible hover-lift">
+                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="p-5 bg-gradient-to-br from-red-900/20 to-transparent border border-red-800/50 rounded-xl hover:border-red-500 transition group focus-visible hover-lift ripple-button advanced-glow">
                             <div class="flex items-center justify-center mb-3">
                                 <div class="w-12 h-12 rounded-full bg-red-900/50 flex items-center justify-center">
                                     <i class="fas fa-chart-line text-red-400 text-xl"></i>
@@ -3355,54 +4024,69 @@
                     </div>
                 </div>
                 
-                <div id="contact-form" class="feature-card p-8 hover-lift">
-                    <h3 class="text-2xl font-bold mb-6">פנה אלינו להצטרפות והשקעה</h3>
+                <!-- טופס יצירת קשר משודרג -->
+                <div id="contact-form" class="feature-card p-8 hover-lift card-3d">
+                    <h3 class="text-2xl font-bold mb-6 slide-in-right">פנה אלינו להצטרפות והשקעה</h3>
                     
-                    <form class="space-y-6 text-right" id="main-contact-form">
+                    <form class="space-y-6 text-right" id="main-contact-form" novalidate>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">שם מלא</label>
-                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible" placeholder="הזן את שמך המלא" required>
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">שם מלא *</label>
+                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible form-input-enhanced" 
+                                       placeholder="הזן את שמך המלא" required data-validation="name">
+                                <div class="form-error" id="main-name-error">שדה חובה. אנא הזן שם מלא.</div>
                             </div>
-                            <div>
-                                <label class="block text-gray-300 mb-2 text-right">דוא"ל</label>
-                                <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible" placeholder="your@email.com" required>
+                            <div class="form-group">
+                                <label class="block text-gray-300 mb-2 text-right">דוא"ל *</label>
+                                <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible form-input-enhanced" 
+                                       placeholder="your@email.com" required data-validation="email">
+                                <div class="form-error" id="main-email-error">אנא הזן כתובת אימייל תקינה.</div>
                             </div>
                         </div>
                         
-                        <div>
-                            <label class="block text-gray-300 mb-2 text-right">טלפון</label>
-                            <input type="tel" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible" placeholder="05X-XXXXXXX" required>
+                        <div class="form-group">
+                            <label class="block text-gray-300 mb-2 text-right">טלפון *</label>
+                            <input type="tel" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible form-input-enhanced" 
+                                   placeholder="05X-XXXXXXX" required data-validation="phone">
+                            <div class="form-error" id="main-phone-error">אנא הזן מספר טלפון תקין.</div>
                         </div>
                         
-                        <div>
-                            <label class="block text-gray-300 mb-2 text-right">הודעתך</label>
-                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible" rows="4" placeholder="ספר לנו על הרקע שלך ועל העניין שלך ב-SELHA..." required></textarea>
+                        <div class="form-group">
+                            <label class="block text-gray-300 mb-2 text-right">הודעתך *</label>
+                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none focus-visible form-input-enhanced" 
+                                      rows="4" placeholder="ספר לנו על הרקע שלך ועל העניין שלך ב-SELHA..." required></textarea>
+                            <div class="form-error" id="main-message-error">שדה חובה.</div>
                         </div>
                         
                         <div class="flex items-center">
-                            <input type="checkbox" id="consent" class="ml-2 rounded bg-gray-800 border-gray-700 focus:outline-none focus-visible" required>
-                            <label for="consent" class="text-gray-300 cursor-pointer">
-                                אני מסכים לקבל מידע ועדכונים על SELHA
+                            <input type="checkbox" id="main-consent" class="ml-2 rounded bg-gray-800 border-gray-700 focus:outline-none focus-visible" required>
+                            <label for="main-consent" class="text-gray-300 cursor-pointer">
+                                אני מסכים לקבל מידע ועדכונים על SELHA *
                             </label>
                         </div>
                         
-                        <button type="submit" class="glow-button w-full py-4 rounded-lg font-bold text-xl focus-visible hover-lift glow-animation">
+                        <div class="form-success" id="main-form-success">
+                            <i class="fas fa-check-circle text-green-400 text-2xl mb-2"></i>
+                            <h4 class="text-lg font-bold mb-2">הטופס נשלח בהצלחה!</h4>
+                            <p class="text-gray-300">נציגינו יצרו איתך קשר בהקדם.</p>
+                        </div>
+                        
+                        <button type="submit" class="glow-button w-full py-4 rounded-lg font-bold text-xl focus-visible hover-lift glow-animation btn-advanced ripple-button" id="main-submit-btn">
                             <i class="fas fa-paper-plane mr-2"></i>שלח פניה להצטרפות
                         </button>
                     </form>
                     
                     <div class="mt-8 pt-8 border-t border-gray-800">
-                        <h4 class="text-lg font-bold mb-4">צור קשר ישיר</h4>
+                        <h4 class="text-lg font-bold mb-4 slide-in-left">צור קשר ישיר</h4>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="text-center p-4 bg-blue-900/20 rounded-lg hover-lift">
+                            <div class="text-center p-4 bg-blue-900/20 rounded-lg hover-lift hover:scale-105 transition-transform">
                                 <i class="fas fa-user-tie text-blue-400 text-2xl mb-2"></i>
                                 <p class="font-bold">אוסיף אונגר</p>
                                 <p class="text-gray-400 text-sm">אכיטקט מערכות ומייסד</p>
                                 <p class="text-gray-400 text-sm mt-2">058-4203384</p>
                                 <a href="mailto:kaufmanungar@gmail.com" class="text-blue-400 text-sm hover:underline">kaufmanungar@gmail.com</a>
                             </div>
-                            <div class="text-center p-4 bg-teal-900/20 rounded-lg hover-lift">
+                            <div class="text-center p-4 bg-teal-900/20 rounded-lg hover-lift hover:scale-105 transition-transform">
                                 <i class="fas fa-user-tie text-teal-400 text-2xl mb-2"></i>
                                 <p class="font-bold">צביקה קאופמן</p>
                                 <p class="text-gray-400 text-sm">מייסד</p>
@@ -3412,22 +4096,29 @@
                         </div>
                         
                         <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="text-center p-4 bg-purple-900/20 rounded-lg hover-lift">
+                            <div class="text-center p-4 bg-purple-900/20 rounded-lg hover-lift hover:scale-105 transition-transform">
                                 <i class="fas fa-envelope text-purple-400 text-2xl mb-2"></i>
                                 <p class="font-bold">אימייל ראשי</p>
                                 <p class="text-gray-400 text-sm">kaufmanungar@gmail.com</p>
                             </div>
-                            <div class="text-center p-4 bg-green-900/20 rounded-lg hover-lift">
+                            <div class="text-center p-4 bg-green-900/20 rounded-lg hover-lift hover:scale-105 transition-transform">
                                 <i class="fab fa-telegram text-green-400 text-2xl mb-2"></i>
                                 <p class="font-bold">טלגרם</p>
                                 <p class="text-gray-400 text-sm">@SELHA_Official</p>
                             </div>
-                            <div class="text-center p-4 bg-red-900/20 rounded-lg hover-lift">
+                            <div class="text-center p-4 bg-red-900/20 rounded-lg hover-lift hover:scale-105 transition-transform">
                                 <i class="fab fa-telegram text-red-400 text-2xl mb-2"></i>
                                 <p class="font-bold">בוט ניהול</p>
                                 <p class="text-gray-400 text-sm">@MY_SUPER_ADMIN_bot</p>
                             </div>
                         </div>
+                    </div>
+                </div>
+                
+                <!-- קרדיטים עם אנימציית מרקיז -->
+                <div class="credits-marquee mt-12">
+                    <div class="marquee-content">
+                        <span class="mx-8">🏆 אבטחה מתקדמת • 🤖 AI חכם • 🌐 Web3 מתקדם • 💰 סטייקינג 4% • 🤝 שותפים יוקרתיים • 🔗 בלוקצ'יין פעיל • 🎓 אקדמיה מובנית • 🌍 כלכלה גלובלית • 🚀 צמיחה אקספוננציאלית • 💎 הזדמנות חד פעמית • 🏆 אבטחה מתקדמת • 🤖 AI חכם • 🌐 Web3 מתקדם • 💰 סטייקינג 4% • 🤝 שותפים יוקרתיים • 🔗 בלוקצ'יין פעיל • 🎓 אקדמיה מובנית • 🌍 כלכלה גלובלית • 🚀 צמיחה אקספוננציאלית • 💎 הזדמנות חד פעמית</span>
                     </div>
                 </div>
                 
@@ -3444,13 +4135,13 @@
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- Footer משודרג -->
     <footer class="py-8 px-4 md:px-12 border-t border-gray-800">
         <div class="container mx-auto">
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="flex items-center space-x-3 space-x-reverse mb-6 md:mb-0">
-                    <div class="nav-logo">
-                        <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/logo.png" alt="SELHA Logo" onerror="this.src='https://via.placeholder.com/40/0066ff/ffffff?text=SELHA'">
+                    <div class="nav-logo pulse-animation">
+                        <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/logo.png" alt="SELHA Logo" onerror="this.src='https://via.placeholder.com/40/0066ff/ffffff?text=SELHA'" class="lazy-load">
                     </div>
                     <div>
                         <h2 class="text-xl font-bold">SELHA</h2>
@@ -3483,7 +4174,7 @@
                 </div>
                 
                 <div class="text-gray-400 text-sm">
-                    © 2023 SELHA. כל הזכויות שמורות.
+                    © 2023-<span id="currentYear"></span> SELHA. כל הזכויות שמורות.
                 </div>
             </div>
             
@@ -3533,9 +4224,271 @@
             }
         }
         
-        // Initialize bubbles on load
-        document.addEventListener('DOMContentLoaded', createBubbles);
-        window.addEventListener('resize', createBubbles);
+        // ========== Digital Rain Effect ==========
+        function createDigitalRain() {
+            const container = document.getElementById('digitalRain');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const dropCount = Math.floor(window.innerWidth / 10);
+            
+            for (let i = 0; i < dropCount; i++) {
+                const drop = document.createElement('div');
+                drop.classList.add('rain-drop');
+                
+                // Random position
+                drop.style.left = `${Math.random() * 100}%`;
+                
+                // Random animation delay and duration
+                const delay = Math.random() * 5;
+                const duration = Math.random() * 2 + 1;
+                drop.style.animationDelay = `${delay}s`;
+                drop.style.animationDuration = `${duration}s`;
+                
+                // Random height
+                const height = Math.random() * 30 + 10;
+                drop.style.height = `${height}px`;
+                
+                // Random opacity
+                drop.style.opacity = Math.random() * 0.1 + 0.01;
+                
+                container.appendChild(drop);
+            }
+        }
+        
+        // ========== Particles Effect ==========
+        function createParticles() {
+            const container = document.getElementById('particlesContainer');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            const particleCount = window.innerWidth < 768 ? 20 : 50;
+            
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                // Random size
+                const size = Math.random() * 8 + 2;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                
+                // Random position
+                particle.style.left = `${Math.random() * 100}%`;
+                particle.style.top = `${Math.random() * 100}%`;
+                
+                // Random color
+                const colors = ['#0066ff', '#00d4aa', '#ffd700', '#8a2be2'];
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                particle.style.backgroundColor = color;
+                
+                // Random animation
+                const duration = Math.random() * 20 + 10;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${Math.random() * 5}s`;
+                
+                container.appendChild(particle);
+            }
+        }
+        
+        // ========== Ripple Effect for Buttons ==========
+        function createRipple(event) {
+            const button = event.currentTarget;
+            const circle = document.createElement('span');
+            const diameter = Math.max(button.clientWidth, button.clientHeight);
+            const radius = diameter / 2;
+            
+            circle.style.width = circle.style.height = `${diameter}px`;
+            circle.style.left = `${event.clientX - button.getBoundingClientRect().left - radius}px`;
+            circle.style.top = `${event.clientY - button.getBoundingClientRect().top - radius}px`;
+            circle.classList.add('ripple-effect');
+            
+            const ripple = button.getElementsByClassName('ripple-effect')[0];
+            
+            if (ripple) {
+                ripple.remove();
+            }
+            
+            button.appendChild(circle);
+        }
+        
+        // ========== Funding Timer ==========
+        function startFundingTimer() {
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 45); // 45 days from now
+            
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = endDate.getTime() - now;
+                
+                if (distance < 0) {
+                    // Timer finished
+                    document.getElementById('timerDays').textContent = '00';
+                    document.getElementById('timerHours').textContent = '00';
+                    document.getElementById('timerMinutes').textContent = '00';
+                    document.getElementById('timerSeconds').textContent = '00';
+                    return;
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById('timerDays').textContent = days.toString().padStart(2, '0');
+                document.getElementById('timerHours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('timerMinutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('timerSeconds').textContent = seconds.toString().padStart(2, '0');
+            }
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+        }
+        
+        // ========== Lazy Load Images ==========
+        function lazyLoadImages() {
+            const lazyImages = document.querySelectorAll('.lazy-load');
+            
+            const imageObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            });
+            
+            lazyImages.forEach(img => imageObserver.observe(img));
+        }
+        
+        // ========== Tooltip System ==========
+        function initTooltips() {
+            const elements = document.querySelectorAll('[data-tooltip]');
+            
+            elements.forEach(element => {
+                const tooltipText = element.getAttribute('data-tooltip');
+                
+                element.addEventListener('mouseenter', (e) => {
+                    const tooltip = document.createElement('div');
+                    tooltip.className = 'tooltip';
+                    tooltip.textContent = tooltipText;
+                    
+                    // Position tooltip
+                    const rect = element.getBoundingClientRect();
+                    tooltip.style.position = 'fixed';
+                    tooltip.style.top = `${rect.top - 40}px`;
+                    tooltip.style.right = `${window.innerWidth - rect.right}px`;
+                    tooltip.style.zIndex = '9999';
+                    
+                    document.body.appendChild(tooltip);
+                    
+                    element.tooltipElement = tooltip;
+                });
+                
+                element.addEventListener('mouseleave', (e) => {
+                    if (element.tooltipElement) {
+                        element.tooltipElement.remove();
+                        element.tooltipElement = null;
+                    }
+                });
+            });
+        }
+        
+        // ========== Form Validation ==========
+        function initFormValidation() {
+            const forms = document.querySelectorAll('form');
+            
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    
+                    let isValid = true;
+                    const errors = form.querySelectorAll('.form-error');
+                    errors.forEach(error => error.style.display = 'none');
+                    
+                    // Validate all required fields
+                    const inputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            isValid = false;
+                            const errorId = input.id ? `${input.id}-error` : null;
+                            const errorElement = errorId ? document.getElementById(errorId) : null;
+                            if (errorElement) {
+                                errorElement.style.display = 'block';
+                            }
+                        }
+                        
+                        // Email validation
+                        if (input.type === 'email' && input.value.trim()) {
+                            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                            if (!emailRegex.test(input.value)) {
+                                isValid = false;
+                                const errorId = input.id ? `${input.id}-error` : null;
+                                const errorElement = errorId ? document.getElementById(errorId) : null;
+                                if (errorElement) {
+                                    errorElement.textContent = 'אנא הזן כתובת אימייל תקינה';
+                                    errorElement.style.display = 'block';
+                                }
+                            }
+                        }
+                        
+                        // Phone validation (Israeli format)
+                        if (input.type === 'tel' && input.value.trim()) {
+                            const phoneRegex = /^05\d-?\d{7}$/;
+                            if (!phoneRegex.test(input.value.replace(/-/g, ''))) {
+                                isValid = false;
+                                const errorId = input.id ? `${input.id}-error` : null;
+                                const errorElement = errorId ? document.getElementById(errorId) : null;
+                                if (errorElement) {
+                                    errorElement.textContent = 'אנא הזן מספר טלפון ישראלי תקין (05X-XXXXXXX)';
+                                    errorElement.style.display = 'block';
+                                }
+                            }
+                        }
+                    });
+                    
+                    // Check consent checkbox
+                    const consentCheckbox = form.querySelector('input[type="checkbox"][required]');
+                    if (consentCheckbox && !consentCheckbox.checked) {
+                        isValid = false;
+                    }
+                    
+                    if (isValid) {
+                        // Show success message
+                        const successElement = form.querySelector('.form-success');
+                        if (successElement) {
+                            successElement.style.display = 'block';
+                        }
+                        
+                        // Disable submit button
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            submitBtn.disabled = true;
+                            submitBtn.innerHTML = '<i class="fas fa-check mr-2"></i>נשלח בהצלחה!';
+                        }
+                        
+                        // Reset form after 3 seconds
+                        setTimeout(() => {
+                            form.reset();
+                            if (successElement) {
+                                successElement.style.display = 'none';
+                            }
+                            if (submitBtn) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = form.id === 'partner-contact-form' 
+                                    ? '<i class="fas fa-user-plus mr-2"></i>הגש מועמדות לתוכנית השותפים'
+                                    : '<i class="fas fa-paper-plane mr-2"></i>שלח פניה להצטרפות';
+                            }
+                        }, 3000);
+                    }
+                    
+                    return false;
+                });
+            });
+        }
         
         // ========== Carousel Functionality ==========
         class Carousel {
@@ -3923,6 +4876,18 @@
         
         // ========== Main Initialization ==========
         document.addEventListener('DOMContentLoaded', function() {
+            // Hide loading overlay
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            setTimeout(() => {
+                loadingOverlay.style.opacity = '0';
+                loadingOverlay.style.visibility = 'hidden';
+            }, 1000);
+            
+            // Initialize animations
+            createBubbles();
+            createDigitalRain();
+            createParticles();
+            
             // Initialize carousel
             const carouselContainer = document.querySelector('.hero-banner-carousel');
             if (carouselContainer) {
@@ -3934,6 +4899,18 @@
             
             // Configure social sharing meta tags
             configureSocialSharing();
+            
+            // Start funding timer
+            startFundingTimer();
+            
+            // Initialize lazy loading
+            lazyLoadImages();
+            
+            // Initialize tooltips
+            initTooltips();
+            
+            // Initialize form validation
+            initFormValidation();
             
             // Fade-in animation on scroll
             const fadeElements = document.querySelectorAll('.fade-in');
@@ -4149,66 +5126,11 @@
                 });
             });
             
-            // Form submission handlers
-            const contactForm = document.getElementById('main-contact-form');
-            if(contactForm) {
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Collect form data
-                    const name = this.querySelector('input[type="text"]').value;
-                    const email = this.querySelector('input[type="email"]').value;
-                    const phone = this.querySelector('input[type="tel"]').value;
-                    const message = this.querySelector('textarea').value;
-                    
-                    // Create email body
-                    const emailBody = `שם: ${name}%0Aאימייל: ${email}%0Aטלפון: ${phone}%0Aהודעה: ${message}`;
-                    
-                    // Open mail client
-                    window.location.href = `mailto:kaufmanungar@gmail.com?subject=פנייה מהאתר SELHA&body=${emailBody}`;
-                    
-                    // Show confirmation message
-                    setTimeout(() => {
-                        alert('תודה על פנייתך! הודעה נשלחה לדוא"ל שלנו. נציגנו יחזרו אליך בהקדם.');
-                        contactForm.reset();
-                    }, 1000);
-                });
-            }
-            
-            // Partner form submission handler
-            const partnerForm = document.getElementById('partner-contact-form');
-            if(partnerForm) {
-                partnerForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    
-                    // Collect form data
-                    const name = this.querySelector('input[type="text"]').value;
-                    const email = this.querySelector('input[type="email"]').value;
-                    const phone = this.querySelector('input[type="tel"]').value;
-                    const city = this.querySelectorAll('input[type="text"]')[2].value;
-                    const background = this.querySelectorAll('textarea')[0].value;
-                    const motivation = this.querySelectorAll('textarea')[1].value;
-                    const level = this.querySelector('select').value;
-                    const hours = this.querySelectorAll('select')[1].value;
-                    
-                    // Create email body
-                    const emailBody = `שם: ${name}%0Aאימייל: ${email}%0Aטלפון: ${phone}%0Aעיר: ${city}%0Aרמה רצויה: ${level}%0Aשעות שבועיות: ${hours}%0A%0Aרקע מקצועי:%0A${background}%0A%0Aמוטיבציה:%0A${motivation}`;
-                    
-                    // Open mail client
-                    window.location.href = `mailto:kaufmanungar@gmail.com?subject=מועמדות לתוכנית שותפים SELHA&body=${emailBody}`;
-                    
-                    // Show confirmation message
-                    setTimeout(() => {
-                        alert('תודה על הגשת המועמדות לתוכנית השותפים! נציגנו ייצרו איתך קשר תוך 24 שעות לקביעת ראיון.');
-                        partnerForm.reset();
-                    }, 1000);
-                });
-            }
-            
             // Update current year in footer
-            const yearElement = document.querySelector('footer .text-gray-400');
+            const currentYear = new Date().getFullYear();
+            const yearElement = document.getElementById('currentYear');
             if(yearElement) {
-                yearElement.textContent = yearElement.textContent.replace('2023', new Date().getFullYear());
+                yearElement.textContent = currentYear;
             }
             
             // Add focus-visible class to all focusable elements
@@ -4244,8 +5166,33 @@
                 });
             });
             
+            // Add ripple effect to all ripple buttons
+            const rippleButtons = document.querySelectorAll('.ripple-button');
+            rippleButtons.forEach(button => {
+                button.addEventListener('click', createRipple);
+            });
+            
+            // Parallax effect
+            window.addEventListener('scroll', () => {
+                const scrolled = window.pageYOffset;
+                const parallaxElements = document.querySelectorAll('.parallax-bg');
+                
+                parallaxElements.forEach(element => {
+                    if (element) {
+                        element.style.transform = `translateY(${scrolled * 0.5}px)`;
+                    }
+                });
+            });
+            
             // Mobile menu toggle (for future implementation)
             // You can add a hamburger menu for mobile if needed
+            
+            // Resize handlers
+            window.addEventListener('resize', () => {
+                createBubbles();
+                createDigitalRain();
+                createParticles();
+            });
         });
         
         function configureSocialSharing() {
