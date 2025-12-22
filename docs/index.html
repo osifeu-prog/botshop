@@ -143,6 +143,55 @@
             transform: translateY(0);
         }
         
+        .comparison-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 2rem 0;
+        }
+        
+        .comparison-table th {
+            background: rgba(0, 102, 255, 0.2);
+            padding: 1rem;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .comparison-table td {
+            padding: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+        }
+        
+        .comparison-table tr:nth-child(even) {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .security-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            margin: 0.2rem;
+        }
+        
+        .badge-green {
+            background: rgba(0, 212, 170, 0.2);
+            color: var(--accent-teal);
+            border: 1px solid var(--accent-teal);
+        }
+        
+        .badge-blue {
+            background: rgba(0, 102, 255, 0.2);
+            color: var(--primary-blue);
+            border: 1px solid var(--primary-blue);
+        }
+        
+        .badge-purple {
+            background: rgba(147, 51, 234, 0.2);
+            color: #9333ea;
+            border: 1px solid #9333ea;
+        }
+        
         /* RTL specific fixes */
         .rtl-grid {
             direction: rtl;
@@ -165,6 +214,14 @@
         ::-webkit-scrollbar-thumb:hover {
             background: var(--dark-blue);
         }
+        
+        .integrated-architecture {
+            background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%);
+            border: 1px solid rgba(0, 102, 255, 0.3);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
     </style>
 </head>
 <body class="gradient-bg">
@@ -185,7 +242,8 @@
                 <a href="#about" class="hover:text-blue-400 transition">אודות</a>
                 <a href="#solution" class="hover:text-blue-400 transition">הפתרון</a>
                 <a href="#technology" class="hover:text-blue-400 transition">טכנולוגיה</a>
-                <a href="#ecosystem" class="hover:text-blue-400 transition">אקוסיסטם</a>
+                <a href="#ecosystem" class="hover:text-blue-400 transition">אקוסיסטם חי</a>
+                <a href="#security" class="hover:text-blue-400 transition">אבטחה</a>
                 <a href="#investment" class="hover:text-blue-400 transition">השקעה</a>
             </div>
             
@@ -202,7 +260,7 @@
                 <div class="md:w-1/2 mb-12 md:mb-0 fade-in">
                     <div class="inline-flex items-center px-4 py-2 rounded-full bg-blue-900/30 text-blue-300 mb-6">
                         <span class="live-badge"></span>
-                        <span class="mr-2">פרויקט חי ופעיל</span>
+                        <span class="mr-2">פרויקט חי ופעיל - תשתית מוכנה לשימוש</span>
                     </div>
                     
                     <h1 class="text-4xl md:text-6xl font-bold mb-6">
@@ -269,8 +327,8 @@
                                 
                                 <div>
                                     <div class="flex justify-between mb-2">
-                                        <span class="text-gray-400">משקיעים עד כה</span>
-                                        <span class="font-bold">280+</span>
+                                        <span class="text-gray-400">משקיעים פעילים</span>
+                                        <span class="font-bold">280+ בלוקצ'יין</span>
                                     </div>
                                     <div class="w-full bg-gray-800 rounded-full h-2">
                                         <div class="bg-gradient-to-r from-yellow-500 to-orange-500 h-2 rounded-full w-1/3"></div>
@@ -347,7 +405,7 @@
                         <i class="fas fa-shield-alt"></i>
                     </div>
                     <h3 class="text-xl font-bold mb-3">שכבת אבטחה HMAC</h3>
-                    <p class="text-gray-400">הגנה קריפטוגרפית מתקדמת עם Time-to-Live ואנטי-רפליי� להגנה על נתונים ותקשורת.</p>
+                    <p class="text-gray-400">הגנה קריפטוגרפית מתקדמת עם Time-to-Live ואנטי-רפליי להגנה על נתונים ותקשורת.</p>
                 </div>
                 
                 <div class="feature-card p-6">
@@ -538,7 +596,7 @@
                             </div>
                             <h3 class="text-lg font-bold">אבטחה קריפטוגרפית</h3>
                         </div>
-                        <p class="text-gray-400 text-sm">שכבת הגנה מתקדמת עם HMAC, TTL ואנטי-רפליי� לאבטחת מידע ותקשורת.</p>
+                        <p class="text-gray-400 text-sm">שכבת הגנה מתקדמת עם HMAC, TTL ואנטי-רפליי לאבטחת מידע ותקשורת.</p>
                     </div>
                     
                     <div class="p-5 bg-gradient-to-br from-blue-900/30 to-teal-900/30 border border-blue-800/50 rounded-xl">
@@ -590,7 +648,7 @@
                 
                 <div class="mb-10">
                     <h4 class="text-xl font-bold mb-6 flex items-center">
-                        <i class="fab fa-telegram mr-3 text-blue-400"></i> שערי טלגרם
+                        <i class="fab fa-telegram mr-3 text-blue-400"></i> שערי טלגרם פעילים
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 rtl-grid">
                         <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="feature-card p-6 hover:border-blue-500 transition group">
@@ -653,9 +711,23 @@
                 
                 <div class="mb-10">
                     <h4 class="text-xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-globe mr-3 text-green-400"></i> תשתיות אינטרנט
+                        <i class="fas fa-globe mr-3 text-green-400"></i> תשתיות אינטרנט פעילות
                     </h4>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 rtl-grid">
+                        <a href="https://slh-nft.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
+                            <div class="flex items-center mb-4">
+                                <div class="w-10 h-10 rounded-full bg-pink-900/50 flex items-center justify-center mr-3">
+                                    <i class="fas fa-palette text-pink-400"></i>
+                                </div>
+                                <h5 class="text-lg font-bold">SLH NFT Landing Page</h5>
+                            </div>
+                            <p class="text-gray-400 mb-4">דף נחיתה לשוק NFT פעיל ליצירה וסחר בנכסים דיגיטליים ייחודיים.</p>
+                            <div class="flex justify-between items-center">
+                                <span class="text-sm text-green-400 group-hover:text-green-300">לחץ לגישה</span>
+                                <i class="fas fa-external-link-alt text-gray-500"></i>
+                            </div>
+                        </a>
+                        
                         <a href="https://slhisrael.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-3">
@@ -698,20 +770,6 @@
                             </div>
                         </a>
                         
-                        <a href="https://slh-nft.com/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
-                            <div class="flex items-center mb-4">
-                                <div class="w-10 h-10 rounded-full bg-pink-900/50 flex items-center justify-center mr-3">
-                                    <i class="fas fa-palette text-pink-400"></i>
-                                </div>
-                                <h5 class="text-lg font-bold">SLH NFT Marketplace</h5>
-                            </div>
-                            <p class="text-gray-400 mb-4">שוק NFT פעיל ליצירה וסחר בנכסים דיגיטליים ייחודיים.</p>
-                            <div class="flex justify-between items-center">
-                                <span class="text-sm text-green-400 group-hover:text-green-300">לחץ לגישה</span>
-                                <i class="fas fa-external-link-alt text-gray-500"></i>
-                            </div>
-                        </a>
-                        
                         <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="feature-card p-6 hover:border-green-500 transition group">
                             <div class="flex items-center mb-4">
                                 <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-3">
@@ -730,7 +788,7 @@
                 
                 <div>
                     <h4 class="text-xl font-bold mb-6 flex items-center">
-                        <i class="fas fa-link mr-3 text-orange-400"></i> חוזים חכמים
+                        <i class="fas fa-link mr-3 text-orange-400"></i> חוזה Web3 פעיל (BNB Chain)
                     </h4>
                     <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="feature-card p-6 hover:border-orange-500 transition group block">
                         <div class="flex items-center mb-4">
@@ -742,7 +800,7 @@
                                 <p class="text-gray-400 text-sm">0xACb0A09414CEA1C879c67bB7A877E4e19480f022</p>
                             </div>
                         </div>
-                        <p class="text-gray-400 mb-4">חוזה ה-Web3 הפעיל של SELHA על רשת BNB Chain עם אפשרויות סטייקינג, העברה וניהול.</p>
+                        <p class="text-gray-400 mb-4">חוזה ה-Web3 הפעיל של SELHA על רשת BNB Chain עם אפשרויות סטייקינג, העברה וניהול נכסים דיגיטליים.</p>
                         <div class="flex justify-between items-center">
                             <span class="text-sm text-orange-400 group-hover:text-orange-300">לצפייה בחוזה ב-BscScan</span>
                             <i class="fas fa-external-link-alt text-gray-500"></i>
@@ -752,7 +810,7 @@
             </div>
             
             <div class="feature-card p-8 fade-in">
-                <h3 class="text-2xl font-bold mb-8 text-center">מדדים וצמיחה</h3>
+                <h3 class="text-2xl font-bold mb-8 text-center">מדדים וצמיחה - כבר היום!</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 rtl-grid">
                     <div class="text-center p-6 bg-gradient-to-b from-blue-900/30 to-transparent rounded-xl">
                         <div class="text-4xl font-bold text-blue-400 mb-2">280+</div>
@@ -778,7 +836,7 @@
         </div>
     </section>
 
-    <!-- Technology -->
+    <!-- Technology & Security Architecture -->
     <section id="technology" class="py-16 px-4 md:px-12">
         <div class="container mx-auto">
             <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">טכנולוגיה מתקדמת</h2>
@@ -850,7 +908,7 @@
                                     <i class="fas fa-route text-cyan-400"></i>
                                 </div>
                                 <div>
-                                    <h5 class="font-bold mb-1">ארכיטקטורת מולטי־גייטוויי</h5>
+                                    <h5 class="font-bold mb-1">ארכיטקטורת מולטי‑גייטוויי</h5>
                                     <p class="text-gray-400 text-sm">רשת של שערי גישה מרובים לזמינות גבוהה, עמידות בכשלים ונגישות גלובלית.</p>
                                 </div>
                             </li>
@@ -879,11 +937,139 @@
                 </div>
             </div>
             
+            <!-- Security Gateway vs Blockchain Section -->
+            <div id="security" class="feature-card p-8 mb-8 fade-in">
+                <h3 class="text-2xl font-bold mb-8 text-center">אבטחה מתקדמת: השילוב המושלם</h3>
+                
+                <div class="integrated-architecture">
+                    <h4 class="text-xl font-bold mb-6 text-center">ארכיטקטורת אבטחה משולבת</h4>
+                    <p class="text-gray-300 mb-6 text-center">
+                        SELHA משתמשת בשתי שכבות אבטחה משלימות: Security Gateway פנימי לאבטחת תקשורת, 
+                        ו-Blockchain ציבורי לשקיפות וביזור. כך אנחנו משיגים גם ביצועים גבוהים וגם אמינות ציבורית.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                        <div class="p-6 bg-gradient-to-br from-blue-900/30 to-transparent border border-blue-800/50 rounded-xl">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 rounded-full bg-blue-900/70 flex items-center justify-center mr-4">
+                                    <i class="fas fa-shield-check text-blue-400 text-xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold">Security Gateway</h4>
+                            </div>
+                            <ul class="space-y-3 text-sm text-gray-300">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>תכלית:</strong> אבטחת תקשורת פנימית בין שירותים</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>אמון:</strong> מפתחות משותפים בין שירותים מוכרים</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>ביצועים:</strong> מהיר וקל - אידיאלי לתקשורת פנימית</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>שימוש:</strong> מערכות SaaS, תקשורת בין מיקרו-שירותים</span>
+                                </li>
+                            </ul>
+                        </div>
+                        
+                        <div class="p-6 bg-gradient-to-br from-purple-900/30 to-transparent border border-purple-800/50 rounded-xl">
+                            <div class="flex items-center mb-4">
+                                <div class="w-12 h-12 rounded-full bg-purple-900/70 flex items-center justify-center mr-4">
+                                    <i class="fas fa-link text-purple-400 text-xl"></i>
+                                </div>
+                                <h4 class="text-lg font-bold">Blockchain</h4>
+                            </div>
+                            <ul class="space-y-3 text-sm text-gray-300">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>תכלית:</strong> מערכת ציבורית ללא צורך באמון מראש</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>אמון:</strong> מבוזר - נבנה דרך קונצנזוס</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>שקיפות:</strong> ציבורית - בלתי ניתנת לשינוי</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span><strong>שימוש:</strong> מטבעות דיגיטליים, חוזים חכמים, רישום שקוף</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="overflow-x-auto">
+                        <table class="comparison-table">
+                            <thead>
+                                <tr>
+                                    <th>מאפיין</th>
+                                    <th class="bg-blue-900/30">Security Gateway</th>
+                                    <th class="bg-purple-900/30">Blockchain</th>
+                                    <th class="bg-gradient-to-r from-blue-900/30 to-purple-900/30">SELHA המשולבת</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>אמון</strong></td>
+                                    <td>יש – מפתחות משותפים</td>
+                                    <td>אין – קונצנזוס מבוזר</td>
+                                    <td><span class="security-badge badge-green">שילוב אופטימלי</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>שימוש עיקרי</strong></td>
+                                    <td>תקשורת שירותים פנימיים</td>
+                                    <td>מערכת ציבורית/מבוזרת</td>
+                                    <td><span class="security-badge badge-blue">שניהם יחד</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>ביצועים</strong></td>
+                                    <td>מהיר וקל</td>
+                                    <td>איטי וכבד (ביחס)</td>
+                                    <td><span class="security-badge badge-teal">אופטימיזציה מלאה</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>שקיפות</strong></td>
+                                    <td>פרטית</td>
+                                    <td>ציבורית</td>
+                                    <td><span class="security-badge badge-purple">מדורגת לפי צורך</span></td>
+                                </tr>
+                                <tr>
+                                    <td><strong>יכולת שינוי נתונים</strong></td>
+                                    <td>אפשרי</td>
+                                    <td>בלתי ניתן לשינוי</td>
+                                    <td><span class="security-badge badge-green">גמישות מבוקרת</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="mt-8 p-6 bg-gradient-to-r from-blue-900/20 to-purple-900/20 border border-blue-800/30 rounded-xl">
+                        <h5 class="text-lg font-bold mb-3">🏆 יתרון SELHA: ארכיטקטורה משולבת</h5>
+                        <p class="text-gray-300">
+                            אנחנו משתמשים ב־<strong>Security Gateway</strong> לאבטחת שירותים פרטיים ותקשורת פנימית מהירה, 
+                            וב־<strong>Blockchain</strong> לצורך שקיפות ציבורית, ניהול נכסים והתחשבנות מבוזרת. 
+                            השילוב יוצר מערכת שמצד אחד מאובטחת וביצועית, ומצד שני שקופה ואמינה לציבור.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
             <div class="text-center fade-in">
-                <p class="text-xl text-gray-300 mb-6">המערכת כוללת הגנת HMAC מתקדמת עם מנגנוני Time-to-Live (TTL) ואנטי-רפליי� למניעת התקפות וזיופים.</p>
-                <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="accent-button inline-block px-8 py-4 rounded-full font-bold text-lg">
-                    <i class="fas fa-file-contract mr-2"></i>בדוק את החוזה החכם שלנו
-                </a>
+                <p class="text-xl text-gray-300 mb-6">המערכת כוללת הגנת HMAC מתקדמת עם מנגנוני Time-to-Live (TTL) ואנטי-רפליי למניעת התקפות וזיופים.</p>
+                <div class="flex flex-col md:flex-row justify-center gap-4">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="accent-button inline-block px-8 py-4 rounded-full font-bold text-lg">
+                        <i class="fas fa-file-contract mr-2"></i>בדוק את החוזה החכם שלנו
+                    </a>
+                    <a href="#contact" class="glow-button inline-block px-8 py-4 rounded-full font-bold text-lg">
+                        <i class="fas fa-shield-alt mr-2"></i>קבל הסבר טכני מפורט
+                    </a>
+                </div>
             </div>
         </div>
     </section>
@@ -1098,7 +1284,7 @@
                 </p>
                 
                 <div class="flex flex-col md:flex-row justify-center gap-6 mb-16">
-                    <a href="#contact" class="glow-button px-10 py-5 rounded-full font-bold text-xl">
+                    <a href="#contact-form" class="glow-button px-10 py-5 rounded-full font-bold text-xl">
                         <i class="fas fa-handshake mr-3"></i>צור קשר להשקעה
                     </a>
                     
@@ -1111,31 +1297,129 @@
                     </a>
                 </div>
                 
-                <div class="feature-card p-8">
-                    <h3 class="text-2xl font-bold mb-6">פרטי התקשרות למשקיעים</h3>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 rtl-grid">
-                        <div class="p-6 bg-blue-900/20 rounded-xl">
-                            <div class="w-14 h-14 rounded-full bg-blue-900/50 flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-envelope text-blue-400 text-2xl"></i>
+                <div class="feature-card p-8 mb-8">
+                    <h3 class="text-2xl font-bold mb-6">גישה מיידית לכל הפלטפורמות שלנו</h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <a href="https://slhisrael.com/" target="_blank" class="p-5 bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-800/50 rounded-xl hover:border-blue-500 transition group">
+                            <div class="flex items-center justify-center mb-3">
+                                <div class="w-12 h-12 rounded-full bg-blue-900/50 flex items-center justify-center">
+                                    <i class="fas fa-home text-blue-400 text-xl"></i>
+                                </div>
                             </div>
-                            <h4 class="text-lg font-bold mb-2">אימייל</h4>
-                            <p class="text-gray-400">invest@selha.eco</p>
-                        </div>
+                            <h4 class="text-lg font-bold mb-2">אתר ראשי</h4>
+                            <p class="text-gray-400 text-sm">SLH ישראל - הפלטפורמה המרכזית</p>
+                        </a>
                         
-                        <div class="p-6 bg-purple-900/20 rounded-xl">
-                            <div class="w-14 h-14 rounded-full bg-purple-900/50 flex items-center justify-center mx-auto mb-4">
-                                <i class="fab fa-telegram text-purple-400 text-2xl"></i>
+                        <a href="https://t.me/SLH_Academia_bot" target="_blank" class="p-5 bg-gradient-to-br from-teal-900/20 to-transparent border border-teal-800/50 rounded-xl hover:border-teal-500 transition group">
+                            <div class="flex items-center justify-center mb-3">
+                                <div class="w-12 h-12 rounded-full bg-teal-900/50 flex items-center justify-center">
+                                    <i class="fab fa-telegram text-teal-400 text-xl"></i>
+                                </div>
                             </div>
                             <h4 class="text-lg font-bold mb-2">טלגרם</h4>
-                            <p class="text-gray-400">@SELHA_Official</p>
+                            <p class="text-gray-400 text-sm">קבוצת הקהילה והבוטים</p>
+                        </a>
+                        
+                        <a href="https://slh-nft.com/" target="_blank" class="p-5 bg-gradient-to-br from-purple-900/20 to-transparent border border-purple-800/50 rounded-xl hover:border-purple-500 transition group">
+                            <div class="flex items-center justify-center mb-3">
+                                <div class="w-12 h-12 rounded-full bg-purple-900/50 flex items-center justify-center">
+                                    <i class="fas fa-palette text-purple-400 text-xl"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2">NFT Marketplace</h4>
+                            <p class="text-gray-400 text-sm">שוק הנכסים הדיגיטליים</p>
+                        </a>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <a href="https://osifeu-prog.github.io/SLH_BNB/" target="_blank" class="p-5 bg-gradient-to-br from-yellow-900/20 to-transparent border border-yellow-800/50 rounded-xl hover:border-yellow-500 transition group">
+                            <div class="flex items-center justify-center mb-3">
+                                <div class="w-12 h-12 rounded-full bg-yellow-900/50 flex items-center justify-center">
+                                    <i class="fab fa-btc text-yellow-400 text-xl"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2">BNB Gateway</h4>
+                            <p class="text-gray-400 text-sm">שער גישה ל-BNB Chain</p>
+                        </a>
+                        
+                        <a href="https://osifeu-prog.github.io/Eliezer/" target="_blank" class="p-5 bg-gradient-to-br from-green-900/20 to-transparent border border-green-800/50 rounded-xl hover:border-green-500 transition group">
+                            <div class="flex items-center justify-center mb-3">
+                                <div class="w-12 h-12 rounded-full bg-green-900/50 flex items-center justify-center">
+                                    <i class="fas fa-robot text-green-400 text-xl"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2">פרויקט אליעזר</h4>
+                            <p class="text-gray-400 text-sm">פלטפורמת AI ופיתוח</p>
+                        </a>
+                        
+                        <a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="p-5 bg-gradient-to-br from-red-900/20 to-transparent border border-red-800/50 rounded-xl hover:border-red-500 transition group">
+                            <div class="flex items-center justify-center mb-3">
+                                <div class="w-12 h-12 rounded-full bg-red-900/50 flex items-center justify-center">
+                                    <i class="fas fa-chart-line text-red-400 text-xl"></i>
+                                </div>
+                            </div>
+                            <h4 class="text-lg font-bold mb-2">פורטל משקיעים</h4>
+                            <p class="text-gray-400 text-sm">נתונים ודוחות למשקיעים</p>
+                        </a>
+                    </div>
+                </div>
+                
+                <div id="contact-form" class="feature-card p-8">
+                    <h3 class="text-2xl font-bold mb-6">פנה אלינו להצטרפות והשקעה</h3>
+                    
+                    <form class="space-y-6 text-right">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">שם מלא</label>
+                                <input type="text" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none" placeholder="הזן את שמך המלא">
+                            </div>
+                            <div>
+                                <label class="block text-gray-300 mb-2 text-right">דוא"ל</label>
+                                <input type="email" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none" placeholder="your@email.com">
+                            </div>
                         </div>
                         
-                        <div class="p-6 bg-teal-900/20 rounded-xl">
-                            <div class="w-14 h-14 rounded-full bg-teal-900/50 flex items-center justify-center mx-auto mb-4">
-                                <i class="fas fa-file-invoice text-teal-400 text-2xl"></i>
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-right">טלפון</label>
+                            <input type="tel" class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none" placeholder="05X-XXXXXXX">
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-300 mb-2 text-right">הודעתך</label>
+                            <textarea class="w-full bg-gray-900 border border-gray-800 rounded-lg p-3 text-white focus:border-blue-500 focus:outline-none" rows="4" placeholder="ספר לנו על הרקע שלך ועל העניין שלך ב-SELHA..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label class="flex items-center text-gray-300">
+                                <input type="checkbox" class="ml-2 rounded bg-gray-800 border-gray-700">
+                                <span>אני מסכים לקבל מידע ועדכונים על SELHA</span>
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="glow-button w-full py-4 rounded-lg font-bold text-xl">
+                            <i class="fas fa-paper-plane mr-2"></i>שלח פניה להצטרפות
+                        </button>
+                    </form>
+                    
+                    <div class="mt-8 pt-8 border-t border-gray-800">
+                        <h4 class="text-lg font-bold mb-4">אופציות התקשרות נוספות</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <div class="text-center p-4 bg-blue-900/20 rounded-lg">
+                                <i class="fas fa-envelope text-blue-400 text-2xl mb-2"></i>
+                                <p class="font-bold">אימייל</p>
+                                <p class="text-gray-400 text-sm">invest@selha.eco</p>
                             </div>
-                            <h4 class="text-lg font-bold mb-2">מסמכי השקעה</h4>
-                            <p class="text-gray-400">פניה לקבלת חבילת משקיעים</p>
+                            <div class="text-center p-4 bg-teal-900/20 rounded-lg">
+                                <i class="fab fa-telegram text-teal-400 text-2xl mb-2"></i>
+                                <p class="font-bold">טלגרם</p>
+                                <p class="text-gray-400 text-sm">@SELHA_Official</p>
+                            </div>
+                            <div class="text-center p-4 bg-purple-900/20 rounded-lg">
+                                <i class="fas fa-file-invoice-dollar text-purple-400 text-2xl mb-2"></i>
+                                <p class="font-bold">מסמכי השקעה</p>
+                                <p class="text-gray-400 text-sm">פניה לקבלת חבילה</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1168,16 +1452,19 @@
                 </div>
                 
                 <div class="flex space-x-6 space-x-reverse mb-6 md:mb-0">
-                    <a href="https://slhisrael.com/" target="_blank" class="text-gray-400 hover:text-white transition">
+                    <a href="https://slhisrael.com/" target="_blank" class="text-gray-400 hover:text-white transition" title="אתר ראשי">
                         <i class="fas fa-globe"></i>
                     </a>
-                    <a href="https://t.me/SLH_Academia_bot" target="_blank" class="text-gray-400 hover:text-blue-400 transition">
+                    <a href="https://t.me/SLH_Academia_bot" target="_blank" class="text-gray-400 hover:text-blue-400 transition" title="טלגרם">
                         <i class="fab fa-telegram"></i>
                     </a>
-                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="text-gray-400 hover:text-orange-400 transition">
+                    <a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="text-gray-400 hover:text-orange-400 transition" title="חוזה חכם">
                         <i class="fab fa-ethereum"></i>
                     </a>
-                    <a href="#contact" class="text-gray-400 hover:text-green-400 transition">
+                    <a href="https://slh-nft.com/" target="_blank" class="text-gray-400 hover:text-purple-400 transition" title="NFT Marketplace">
+                        <i class="fas fa-palette"></i>
+                    </a>
+                    <a href="#contact" class="text-gray-400 hover:text-green-400 transition" title="צור קשר">
                         <i class="fas fa-envelope"></i>
                     </a>
                 </div>
@@ -1253,6 +1540,16 @@
                 
                 setTimeout(updateStat, 1000);
             });
+            
+            // Form submission handler
+            const contactForm = document.querySelector('form');
+            if(contactForm) {
+                contactForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    alert('תודה על פנייתך! נציגנו יחזרו אליך בהקדם.');
+                    contactForm.reset();
+                });
+            }
         });
     </script>
 </body>
