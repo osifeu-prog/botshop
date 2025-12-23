@@ -5329,6 +5329,1301 @@
 ================================================================================
 סיום הערות טכניות
 ================================================================================
--->
+<!-- ========== הרחבות חדשות נוספות ========== -->
+
+<!-- מערכת התראות בזמן אמת -->
+<div id="notificationSystem" class="fixed top-4 right-4 z-50 max-w-sm w-full">
+    <div class="notification-container space-y-3"></div>
+</div>
+
+<!-- צ'אטבוט חכם -->
+<div id="selhaChatbot" class="fixed bottom-24 left-4 z-40">
+    <div class="chatbot-container hidden w-80 bg-card-bg border border-gray-800 rounded-2xl shadow-2xl">
+        <div class="chatbot-header p-4 border-b border-gray-800 flex justify-between items-center bg-gradient-to-r from-blue-900/30 to-purple-900/30 rounded-t-2xl">
+            <div class="flex items-center">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mr-3">
+                    <i class="fas fa-robot text-white text-sm"></i>
+                </div>
+                <h3 class="font-bold">SELHA Assistant</h3>
+            </div>
+            <button id="closeChatbot" class="text-gray-400 hover:text-white">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chatbot-body p-4 h-96 overflow-y-auto">
+            <div class="chat-message bot mb-4">
+                <div class="bg-blue-900/30 p-3 rounded-2xl rounded-tl-none max-w-[80%]">
+                    <p class="text-sm">שלום! אני העוזר החכם של SELHA. איך אני יכול לעזור לך היום?</p>
+                </div>
+            </div>
+        </div>
+        <div class="chatbot-footer p-4 border-t border-gray-800">
+            <div class="flex">
+                <input type="text" id="chatbotInput" placeholder="שאל שאלה..." class="flex-1 bg-gray-900 border border-gray-800 rounded-l-lg p-3 text-sm focus:outline-none focus:border-blue-500">
+                <button id="sendChatbotMessage" class="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700 transition">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            <div class="mt-2 flex flex-wrap gap-1">
+                <button class="quick-question" data-question="מה זה SELHA?">מה זה SELHA?</button>
+                <button class="quick-question" data-question="איך משקיעים?">איך משקיעים?</button>
+                <button class="quick-question" data-question="תוכנית שותפים">תוכנית שותפים</button>
+            </div>
+        </div>
+    </div>
+    <button id="openChatbot" class="w-14 h-14 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 shadow-lg flex items-center justify-center hover:scale-110 transition-transform">
+        <i class="fas fa-robot text-white text-xl"></i>
+    </button>
+</div>
+
+<!-- מחשבון רווחים אינטראקטיבי -->
+<div id="profitCalculatorModal" class="fixed inset-0 bg-black/70 z-50 hidden items-center justify-center p-4">
+    <div class="bg-card-bg rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div class="p-6 border-b border-gray-800 flex justify-between items-center">
+            <h3 class="text-2xl font-bold text-blue-400">מחשבון רווחים SELHA</h3>
+            <button id="closeCalculator" class="text-gray-400 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
+            </button>
+        </div>
+        <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-gray-300 mb-2">סכום השקעה ראשוני (₪)</label>
+                        <input type="range" id="investmentAmount" min="1000" max="1000000" step="1000" value="50000" class="w-full">
+                        <div class="flex justify-between mt-2">
+                            <span class="text-gray-400">1,000₪</span>
+                            <span id="amountValue" class="text-xl font-bold text-blue-400">50,000₪</span>
+                            <span class="text-gray-400">1,000,000₪</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">תקופת השקעה (חודשים)</label>
+                        <input type="range" id="investmentPeriod" min="1" max="60" value="12" class="w-full">
+                        <div class="flex justify-between mt-2">
+                            <span class="text-gray-400">1 חודש</span>
+                            <span id="periodValue" class="text-xl font-bold text-green-400">12 חודשים</span>
+                            <span class="text-gray-400">60 חודשים</span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-gray-300 mb-2">ריבית שנתית משוערת (%)</label>
+                        <input type="range" id="interestRate" min="5" max="100" value="48" class="w-full">
+                        <div class="flex justify-between mt-2">
+                            <span class="text-gray-400">5%</span>
+                            <span id="rateValue" class="text-xl font-bold text-yellow-400">48%</span>
+                            <span class="text-gray-400">100%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-blue-900/20 to-purple-900/20 p-6 rounded-2xl border border-blue-800/30">
+                    <h4 class="text-xl font-bold mb-4 text-center">תחזית רווחים</h4>
+                    <div class="space-y-4">
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">השקעה ראשונית:</span>
+                            <span id="initialAmount" class="font-bold">50,000₪</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">ריבית שנתית:</span>
+                            <span id="annualInterest" class="font-bold text-green-400">48%</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-300">סך רווחים:</span>
+                            <span id="totalProfit" class="font-bold text-yellow-400">24,000₪</span>
+                        </div>
+                        <div class="flex justify-between text-lg">
+                            <span class="text-gray-300">סה"כ סיום:</span>
+                            <span id="totalAmount" class="font-bold text-blue-400">74,000₪</span>
+                        </div>
+                        <div class="mt-6 pt-6 border-t border-gray-800">
+                            <div class="text-center">
+                                <p class="text-gray-400 text-sm mb-2">רווח חודשי ממוצע</p>
+                                <p id="monthlyProfit" class="text-2xl font-bold text-green-400">2,000₪</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+                <button class="calculator-preset" data-amount="10000" data-period="12">השקעה בסיסית</button>
+                <button class="calculator-preset" data-amount="50000" data-period="24">השקעה בינונית</button>
+                <button class="calculator-preset" data-amount="250000" data-period="36">השקעה מתקדמת</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- סקציית וידאו משופרת -->
+<section id="video-section" class="py-16 px-4 md:px-12 bg-gradient-to-r from-gray-900/30 to-dark-bg">
+    <div class="container mx-auto">
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">הסברים בוידאו</h2>
+        
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 fade-in">
+            <div class="feature-card p-8 hover-lift card-3d">
+                <div class="aspect-w-16 aspect-h-9 mb-6 rounded-xl overflow-hidden">
+                    <div class="video-placeholder bg-gradient-to-br from-blue-900/40 to-purple-900/40 flex items-center justify-center h-64 rounded-xl">
+                        <div class="text-center">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-r from-blue-500 to-purple-500 flex items-center justify-center mx-auto mb-4 cursor-pointer hover:scale-110 transition-transform" id="playMainVideo">
+                                <i class="fas fa-play text-white text-2xl"></i>
+                            </div>
+                            <h4 class="text-xl font-bold mb-2">הסבר על SELHA בעברית</h4>
+                            <p class="text-gray-400">סרטון אינפורמטיבי על הפרויקט והטכנולוגיה</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4 mt-6">
+                    <div class="text-center p-4 bg-blue-900/20 rounded-xl hover:bg-blue-900/30 transition cursor-pointer">
+                        <i class="fas fa-chart-line text-blue-400 text-2xl mb-2"></i>
+                        <p class="font-bold text-sm">מודל כלכלי</p>
+                    </div>
+                    <div class="text-center p-4 bg-purple-900/20 rounded-xl hover:bg-purple-900/30 transition cursor-pointer">
+                        <i class="fas fa-shield-alt text-purple-400 text-2xl mb-2"></i>
+                        <p class="font-bold text-sm">אבטחה מתקדמת</p>
+                    </div>
+                    <div class="text-center p-4 bg-green-900/20 rounded-xl hover:bg-green-900/30 transition cursor-pointer">
+                        <i class="fas fa-handshake text-green-400 text-2xl mb-2"></i>
+                        <p class="font-bold text-sm">תוכנית שותפים</p>
+                    </div>
+                    <div class="text-center p-4 bg-yellow-900/20 rounded-xl hover:bg-yellow-900/30 transition cursor-pointer">
+                        <i class="fas fa-graduation-cap text-yellow-400 text-2xl mb-2"></i>
+                        <p class="font-bold text-sm">הדרכות</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="feature-card p-8 hover-lift card-3d">
+                <h3 class="text-2xl font-bold mb-6">סרטונים נוספים</h3>
+                
+                <div class="space-y-4">
+                    <div class="flex items-start p-4 bg-gray-900/30 rounded-xl hover:bg-gray-900/50 transition cursor-pointer">
+                        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-blue-900/50 to-blue-600/50 flex items-center justify-center mr-4">
+                            <i class="fas fa-play text-blue-300"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">מדריך למתחילים</h4>
+                            <p class="text-gray-400 text-sm">איך להתחיל להשקיע ב-SELHA</p>
+                            <div class="flex items-center mt-2 text-xs text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>
+                                <span>12:45 דקות</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start p-4 bg-gray-900/30 rounded-xl hover:bg-gray-900/50 transition cursor-pointer">
+                        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-purple-900/50 to-purple-600/50 flex items-center justify-center mr-4">
+                            <i class="fas fa-play text-purple-300"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">ביקורת טכנית</h4>
+                            <p class="text-gray-400 text-sm">עומק טכנולוגיית הבלוקצ'יין שלנו</p>
+                            <div class="flex items-center mt-2 text-xs text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>
+                                <span>18:30 דקות</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-start p-4 bg-gray-900/30 rounded-xl hover:bg-gray-900/50 transition cursor-pointer">
+                        <div class="w-16 h-16 rounded-lg bg-gradient-to-r from-green-900/50 to-green-600/50 flex items-center justify-center mr-4">
+                            <i class="fas fa-play text-green-300"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold mb-1">סיפורי הצלחה</h4>
+                            <p class="text-gray-400 text-sm">עדויות ממשקיעים ושותפים</p>
+                            <div class="flex items-center mt-2 text-xs text-gray-500">
+                                <i class="fas fa-clock mr-1"></i>
+                                <span>22:15 דקות</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mt-8">
+                    <button id="openProfitCalculator" class="w-full py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition flex items-center justify-center">
+                        <i class="fas fa-calculator mr-2"></i> חשב רווחים צפויים
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- מפה אינטראקטיבית של התפוצה הגלובלית -->
+<section id="global-map" class="py-16 px-4 md:px-12">
+    <div class="container mx-auto">
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">תפוצה גלובלית</h2>
+        
+        <div class="feature-card p-8 fade-in hover-lift card-3d">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div>
+                    <h3 class="text-2xl font-bold mb-6 text-blue-400">נוכחות בינלאומית</h3>
+                    <p class="text-gray-300 mb-6">SELHA פעילה כבר במדינות רבות ברחבי העולם עם קהילות פעילות וצמיחה מתמדת.</p>
+                    
+                    <div class="space-y-4">
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-blue-900/50 flex items-center justify-center mr-4">
+                                <i class="fas fa-flag text-blue-400"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">מדינות פעילות</p>
+                                <p class="text-gray-400 text-sm"><span class="counter" data-target="15">0</span>+ מדינות</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-green-900/50 flex items-center justify-center mr-4">
+                                <i class="fas fa-language text-green-400"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">שפות נתמכות</p>
+                                <p class="text-gray-400 text-sm"><span class="counter" data-target="8">0</span> שפות</p>
+                            </div>
+                        </div>
+                        
+                        <div class="flex items-center">
+                            <div class="w-10 h-10 rounded-full bg-purple-900/50 flex items-center justify-center mr-4">
+                                <i class="fas fa-users text-purple-400"></i>
+                            </div>
+                            <div>
+                                <p class="font-bold">קהילות מקומיות</p>
+                                <p class="text-gray-400 text-sm"><span class="counter" data-target="24">0</span> קהילות</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-2">
+                    <div class="bg-gradient-to-br from-gray-900 to-gray-800 rounded-xl p-4 h-64 relative overflow-hidden">
+                        <!-- מפה סמלית עם נקודות פעילות -->
+                        <div class="absolute inset-0 flex items-center justify-center">
+                            <div class="relative w-64 h-64">
+                                <!-- נקודות על המפה -->
+                                <div class="absolute top-1/4 left-1/4 w-4 h-4 bg-blue-500 rounded-full animate-pulse">
+                                    <div class="tooltip">ישראל</div>
+                                </div>
+                                <div class="absolute top-1/3 left-2/3 w-4 h-4 bg-green-500 rounded-full animate-pulse">
+                                    <div class="tooltip">ארה"ב</div>
+                                </div>
+                                <div class="absolute top-2/3 left-1/3 w-4 h-4 bg-purple-500 rounded-full animate-pulse">
+                                    <div class="tooltip">גרמניה</div>
+                                </div>
+                                <div class="absolute top-1/2 left-1/2 w-4 h-4 bg-yellow-500 rounded-full animate-pulse">
+                                    <div class="tooltip">איחוד האמירויות</div>
+                                </div>
+                                <div class="absolute top-2/3 left-2/3 w-4 h-4 bg-red-500 rounded-full animate-pulse">
+                                    <div class="tooltip">סינגפור</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+                        <div class="text-center p-3 bg-blue-900/20 rounded-lg">
+                            <p class="text-sm text-gray-400">צפון אמריקה</p>
+                            <p class="font-bold text-blue-400">35%</p>
+                        </div>
+                        <div class="text-center p-3 bg-green-900/20 rounded-lg">
+                            <p class="text-sm text-gray-400">אירופה</p>
+                            <p class="font-bold text-green-400">28%</p>
+                        </div>
+                        <div class="text-center p-3 bg-purple-900/20 rounded-lg">
+                            <p class="text-sm text-gray-400">אסיה</p>
+                            <p class="font-bold text-purple-400">22%</p>
+                        </div>
+                        <div class="text-center p-3 bg-yellow-900/20 rounded-lg">
+                            <p class="text-sm text-gray-400">אחר</p>
+                            <p class="font-bold text-yellow-400">15%</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- בלוג/חדשות מתקדם -->
+<section id="advanced-blog" class="py-16 px-4 md:px-12 bg-gradient-to-l from-gray-900/20 to-dark-bg">
+    <div class="container mx-auto">
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">בלוג וחדשות מתעדכן</h2>
+        
+        <div class="fade-in">
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button class="blog-filter active px-4 py-2 rounded-full bg-blue-600 text-white" data-filter="all">הכל</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="updates">עדכונים</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tutorials">מדריכים</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="partners">שותפים</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tech">טכנולוגיה</button>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 blog-container">
+                <!-- פוסטים יתווספו דינאמית -->
+            </div>
+            
+            <div class="text-center mt-12">
+                <button id="loadMorePosts" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition">
+                    <i class="fas fa-sync-alt mr-2"></i> טען עוד פוסטים
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- פיד מדיה חברתית -->
+<section id="social-feed" class="py-16 px-4 md:px-12">
+    <div class="container mx-auto">
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">פיד מדיה חברתית</h2>
+        
+        <div class="fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="feature-card p-6 hover-lift card-3d">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-full bg-blue-600 flex items-center justify-center mr-4">
+                            <i class="fab fa-telegram text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">טלגרם</h3>
+                            <p class="text-gray-400 text-sm">@SELHA_Official</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 max-h-64 overflow-y-auto pr-2">
+                        <!-- פיד טלגרם יוכנס כאן -->
+                        <div class="p-3 bg-gray-900/30 rounded-lg">
+                            <p class="text-sm mb-2">היום הגענו ל-300 משקיעים פעילים! 🎉</p>
+                            <div class="flex justify-between text-xs text-gray-500">
+                                <span>לפני שעתיים</span>
+                                <span>❤️ 42</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <a href="https://t.me/SELHA_Official" target="_blank" class="block text-center mt-6 py-2 bg-blue-600/20 text-blue-400 rounded-lg hover:bg-blue-600/30 transition">
+                        הצטרף לערוץ
+                    </a>
+                </div>
+                
+                <div class="feature-card p-6 hover-lift card-3d">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-full bg-blue-400 flex items-center justify-center mr-4">
+                            <i class="fab fa-twitter text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">טוויטר</h3>
+                            <p class="text-gray-400 text-sm">@SELHA_Official</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 max-h-64 overflow-y-auto pr-2">
+                        <!-- פיד טוויטר יוכנס כאן -->
+                    </div>
+                    
+                    <a href="https://twitter.com/SELHA_Official" target="_blank" class="block text-center mt-6 py-2 bg-blue-400/20 text-blue-300 rounded-lg hover:bg-blue-400/30 transition">
+                        עקוב בטוויטר
+                    </a>
+                </div>
+                
+                <div class="feature-card p-6 hover-lift card-3d">
+                    <div class="flex items-center mb-6">
+                        <div class="w-12 h-12 rounded-full bg-blue-700 flex items-center justify-center mr-4">
+                            <i class="fab fa-linkedin text-white text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">לינקדאין</h3>
+                            <p class="text-gray-400 text-sm">SELHA Official</p>
+                        </div>
+                    </div>
+                    
+                    <div class="space-y-4 max-h-64 overflow-y-auto pr-2">
+                        <!-- פיד לינקדאין יוכנס כאן -->
+                    </div>
+                    
+                    <a href="https://linkedin.com/company/selha" target="_blank" class="block text-center mt-6 py-2 bg-blue-700/20 text-blue-400 rounded-lg hover:bg-blue-700/30 transition">
+                        עקוב בלינקדאין
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- קודי קופון והטבות -->
+<section id="coupon-system" class="py-16 px-4 md:px-12 bg-gradient-to-r from-yellow-900/10 to-purple-900/10">
+    <div class="container mx-auto">
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in gold-gradient">הטבות וקודי קופון</h2>
+        
+        <div class="fade-in">
+            <div class="feature-card p-8 mb-8 hover-lift card-3d">
+                <div class="text-center mb-10">
+                    <h3 class="text-2xl font-bold mb-4 gold-gradient">קבל הטבה מיוחדת עכשיו!</h3>
+                    <p class="text-gray-300">השתמש בקוד הקופון להלן לקבלת הטבה בלעדית על ההשקעה הראשונה שלך</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div>
+                        <div class="coupon-display mb-6">
+                            <div class="bg-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600 p-6 rounded-2xl text-center border-2 border-dashed border-yellow-700">
+                                <p class="text-sm text-gray-800 mb-2">קוד קופון בלעדי</p>
+                                <p id="couponCode" class="text-3xl font-bold text-gray-900 tracking-wider mb-3">SELHA100</p>
+                                <p class="text-sm text-gray-800">₪ 100 בונוס על השקעה ראשונה</p>
+                            </div>
+                        </div>
+                        
+                        <button id="copyCouponCode" class="w-full py-3 bg-gradient-to-r from-yellow-600 to-orange-600 rounded-lg font-bold hover:opacity-90 transition mb-4">
+                            <i class="fas fa-copy mr-2"></i> העתק קוד קופון
+                        </button>
+                        
+                        <button id="generateNewCoupon" class="w-full py-3 border border-yellow-600 text-yellow-400 rounded-lg font-bold hover:bg-yellow-600/10 transition">
+                            <i class="fas fa-sync-alt mr-2"></i> צור קוד חדש
+                        </button>
+                    </div>
+                    
+                    <div>
+                        <h4 class="text-xl font-bold mb-6 text-yellow-400">קודי קופון פעילים</h4>
+                        
+                        <div class="space-y-4">
+                            <div class="flex justify-between items-center p-3 bg-yellow-900/20 rounded-lg">
+                                <div>
+                                    <p class="font-bold">SELHA50</p>
+                                    <p class="text-gray-400 text-sm">₪ 50 בונוס</p>
+                                </div>
+                                <span class="text-green-400 text-sm">פעיל</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-yellow-900/20 rounded-lg">
+                                <div>
+                                    <p class="font-bold">PARTNER25</p>
+                                    <p class="text-gray-400 text-sm">25% הנחה</p>
+                                </div>
+                                <span class="text-green-400 text-sm">פעיל</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center p-3 bg-yellow-900/20 rounded-lg">
+                                <div>
+                                    <p class="font-bold">WELCOME10</p>
+                                    <p class="text-gray-400 text-sm">10% עמלה מופחתת</p>
+                                </div>
+                                <span class="text-green-400 text-sm">פעיל</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mt-8">
+                            <h5 class="font-bold mb-3">הוראות שימוש:</h5>
+                            <ul class="space-y-2 text-sm text-gray-300">
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>הזן את קוד הקופון בטופס ההשקעה</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>קוד אחד בלבד לכל משתמש</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <i class="fas fa-check text-green-400 mt-1 mr-2"></i>
+                                    <span>תוקף הקוד: 30 יום מיום יצירה</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- סגנונות נוספים ל-CSS -->
+<style>
+    /* הרחבות לסגנונות קיימים */
+    .notification-container {
+        max-height: 400px;
+        overflow-y: auto;
+    }
+    
+    .notification {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 0.5rem;
+        animation: slideInRight 0.3s ease-out;
+    }
+    
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+    
+    .chatbot-container {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+    
+    .quick-question {
+        background: rgba(0, 102, 255, 0.1);
+        border: 1px solid rgba(0, 102, 255, 0.3);
+        border-radius: 15px;
+        padding: 0.25rem 0.75rem;
+        font-size: 0.8rem;
+        color: var(--primary-blue);
+        cursor: pointer;
+        transition: all 0.2s ease;
+        margin-bottom: 0.25rem;
+    }
+    
+    .quick-question:hover {
+        background: rgba(0, 102, 255, 0.2);
+        transform: translateY(-1px);
+    }
+    
+    .calculator-preset {
+        background: linear-gradient(135deg, rgba(0, 102, 255, 0.1) 0%, rgba(0, 212, 170, 0.1) 100%);
+        border: 1px solid rgba(0, 102, 255, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        font-weight: bold;
+        transition: all 0.3s ease;
+    }
+    
+    .calculator-preset:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 20px rgba(0, 102, 255, 0.2);
+    }
+    
+    .blog-filter.active {
+        box-shadow: 0 4px 15px rgba(0, 102, 255, 0.3);
+    }
+    
+    .blog-post {
+        transition: all 0.3s ease;
+    }
+    
+    .blog-post:hover {
+        transform: translateY(-5px);
+    }
+    
+    .coupon-display {
+        transition: transform 0.3s ease;
+    }
+    
+    .coupon-display:hover {
+        transform: scale(1.02);
+    }
+    
+    /* אנימציות נוספות */
+    @keyframes floatUp {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+    
+    .floating {
+        animation: floatUp 3s ease-in-out infinite;
+    }
+    
+    /* טיפים מתקדמים */
+    .advanced-tip {
+        position: relative;
+        background: linear-gradient(135deg, rgba(255, 215, 0, 0.1) 0%, rgba(138, 43, 226, 0.1) 100%);
+        border: 1px solid rgba(255, 215, 0, 0.3);
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 1rem 0;
+    }
+    
+    .advanced-tip::before {
+        content: '💡';
+        position: absolute;
+        right: -10px;
+        top: -10px;
+        background: var(--gold-gradient);
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+    }
+    
+    /* התאמות רספונסיביות נוספות */
+    @media (max-width: 768px) {
+        .chatbot-container {
+            width: calc(100vw - 2rem);
+            right: 1rem;
+            left: 1rem;
+        }
+        
+        #selhaChatbot {
+            left: 1rem;
+            bottom: 5rem;
+        }
+    }
+    
+    /* אפקטי רקע מתקדמים */
+    .advanced-bg-pattern {
+        background: 
+            radial-gradient(circle at 20% 80%, rgba(0, 102, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 20%, rgba(0, 212, 170, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 40% 40%, rgba(255, 215, 0, 0.05) 0%, transparent 50%);
+    }
+</style>
+
+<!-- סקריפטים נוספים ל-JavaScript -->
+<script>
+    // ========== מערכת התראות מתקדמת ==========
+    class NotificationSystem {
+        constructor() {
+            this.container = document.getElementById('notificationSystem').querySelector('.notification-container');
+            this.notifications = [];
+            this.maxNotifications = 5;
+            this.init();
+        }
+        
+        init() {
+            // הוספת התראות ראשוניות
+            setTimeout(() => this.add({
+                title: 'ברוכים הבאים ל-SELHA!',
+                message: 'האתר עודכן עם פיצ'רים חדשים ומתקדמים.',
+                type: 'info',
+                icon: 'fas fa-rocket'
+            }), 1000);
+            
+            // בדיקת התראות חדשות כל 30 שניות
+            setInterval(() => this.checkNewNotifications(), 30000);
+        }
+        
+        add(notification) {
+            const id = Date.now();
+            const notificationObj = { id, ...notification, time: new Date() };
+            this.notifications.unshift(notificationObj);
+            
+            if (this.notifications.length > this.maxNotifications) {
+                this.notifications.pop();
+            }
+            
+            this.render();
+        }
+        
+        render() {
+            this.container.innerHTML = '';
+            
+            this.notifications.forEach(notif => {
+                const element = document.createElement('div');
+                element.className = `notification border-l-4 ${this.getBorderColor(notif.type)}`;
+                element.innerHTML = `
+                    <div class="flex items-start">
+                        <div class="mr-3 mt-1 ${this.getIconColor(notif.type)}">
+                            <i class="${notif.icon || this.getDefaultIcon(notif.type)}"></i>
+                        </div>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-sm mb-1">${notif.title}</h4>
+                            <p class="text-gray-400 text-xs">${notif.message}</p>
+                            <div class="text-right mt-2">
+                                <span class="text-gray-500 text-xs">${this.formatTime(notif.time)}</span>
+                            </div>
+                        </div>
+                        <button class="close-notification text-gray-500 hover:text-white ml-2" data-id="${notif.id}">
+                            <i class="fas fa-times text-xs"></i>
+                        </button>
+                    </div>
+                `;
+                
+                this.container.appendChild(element);
+                
+                // הסרה אוטומטית אחרי 10 שניות
+                setTimeout(() => {
+                    if (element.parentNode) {
+                        element.style.opacity = '0';
+                        element.style.transform = 'translateX(100%)';
+                        setTimeout(() => {
+                            if (element.parentNode) {
+                                this.remove(notif.id);
+                            }
+                        }, 300);
+                    }
+                }, 10000);
+            });
+            
+            // הוספת מאזינים לכפתורי סגירה
+            this.container.querySelectorAll('.close-notification').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = parseInt(e.currentTarget.getAttribute('data-id'));
+                    this.remove(id);
+                });
+            });
+        }
+        
+        remove(id) {
+            this.notifications = this.notifications.filter(n => n.id !== id);
+            this.render();
+        }
+        
+        getBorderColor(type) {
+            const colors = {
+                'success': 'border-green-500',
+                'error': 'border-red-500',
+                'warning': 'border-yellow-500',
+                'info': 'border-blue-500'
+            };
+            return colors[type] || 'border-gray-500';
+        }
+        
+        getIconColor(type) {
+            const colors = {
+                'success': 'text-green-400',
+                'error': 'text-red-400',
+                'warning': 'text-yellow-400',
+                'info': 'text-blue-400'
+            };
+            return colors[type] || 'text-gray-400';
+        }
+        
+        getDefaultIcon(type) {
+            const icons = {
+                'success': 'fas fa-check-circle',
+                'error': 'fas fa-exclamation-circle',
+                'warning': 'fas fa-exclamation-triangle',
+                'info': 'fas fa-info-circle'
+            };
+            return icons[type] || 'fas fa-bell';
+        }
+        
+        formatTime(date) {
+            const now = new Date();
+            const diff = now - date;
+            
+            if (diff < 60000) return 'ממש עכשיו';
+            if (diff < 3600000) return `לפני ${Math.floor(diff / 60000)} דקות`;
+            if (diff < 86400000) return `לפני ${Math.floor(diff / 3600000)} שעות`;
+            return `לפני ${Math.floor(diff / 86400000)} ימים`;
+        }
+        
+        checkNewNotifications() {
+            // כאן יתבצע בדיקה מול שרת עבור התראות חדשות
+            // לדוגמה:
+            /*
+            fetch('/api/notifications')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(notif => this.add(notif));
+                });
+            */
+        }
+    }
+    
+    // ========== צ'אטבוט חכם ==========
+    class SelhaChatbot {
+        constructor() {
+            this.container = document.querySelector('.chatbot-container');
+            this.body = this.container.querySelector('.chatbot-body');
+            this.input = document.getElementById('chatbotInput');
+            this.sendBtn = document.getElementById('sendChatbotMessage');
+            this.openBtn = document.getElementById('openChatbot');
+            this.closeBtn = document.getElementById('closeChatbot');
+            this.quickQuestions = document.querySelectorAll('.quick-question');
+            this.init();
+        }
+        
+        init() {
+            this.openBtn.addEventListener('click', () => this.open());
+            this.closeBtn.addEventListener('click', () => this.close());
+            this.sendBtn.addEventListener('click', () => this.sendMessage());
+            
+            this.input.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    this.sendMessage();
+                }
+            });
+            
+            this.quickQuestions.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const question = e.currentTarget.getAttribute('data-question');
+                    this.addMessage(question, 'user');
+                    this.processQuestion(question);
+                });
+            });
+            
+            // טעינת היסטוריית צ'אט מ-localStorage
+            this.loadHistory();
+        }
+        
+        open() {
+            this.container.classList.remove('hidden');
+            this.openBtn.classList.add('hidden');
+            setTimeout(() => this.input.focus(), 300);
+        }
+        
+        close() {
+            this.container.classList.add('hidden');
+            this.openBtn.classList.remove('hidden');
+        }
+        
+        addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${sender} mb-4`;
+            
+            if (sender === 'user') {
+                messageDiv.innerHTML = `
+                    <div class="bg-purple-900/30 p-3 rounded-2xl rounded-tr-none max-w-[80%] ml-auto">
+                        <p class="text-sm">${text}</p>
+                    </div>
+                `;
+            } else {
+                messageDiv.innerHTML = `
+                    <div class="bg-blue-900/30 p-3 rounded-2xl rounded-tl-none max-w-[80%]">
+                        <p class="text-sm">${text}</p>
+                    </div>
+                `;
+            }
+            
+            this.body.appendChild(messageDiv);
+            this.body.scrollTop = this.body.scrollHeight;
+            
+            // שמירה ב-localStorage
+            this.saveMessage(text, sender);
+        }
+        
+        sendMessage() {
+            const text = this.input.value.trim();
+            if (!text) return;
+            
+            this.addMessage(text, 'user');
+            this.input.value = '';
+            
+            // הדמיית תהליך מענה
+            setTimeout(() => {
+                this.processQuestion(text);
+            }, 1000);
+        }
+        
+        processQuestion(question) {
+            let response = '';
+            
+            // בסיס ידע בסיסי
+            const knowledgeBase = {
+                'מה זה selha': 'SELHA היא שכבת תשתית כלכלית חדשה המשלבת פיננסים, קהילה ומדינה עם טכנולוגיות AI ובלוקצ\'יין.',
+                'איך משקיעים': 'ניתן להשקיע ב-SELHA דרך רכישת מטבעות, השתתפות בסטייקינג (4% ריבית חודשית) או השקעה ישירה בפרויקט.',
+                'תוכנית שותפים': 'תוכנית השותפים שלנו מציעה 10% עמלה מכל הפקדה, אתר מותאם אישית, וכלים לשיווק וניהול.',
+                'אבטחה': 'אנו משתמשים בשכבת אבטחה HMAC מתקדמת עם TTL ואנטי-רפליי, חוזה חכם מאובטח, וארכיטקטורה מבוזרת.',
+                'צוות': 'הצוות כולל את אוסיף אונגר (ארכיטקט) וצביקה קאופמן (מייסד), עם צוות טכני מנוסה.',
+                'מחיר': 'מחיר המטבע הנוכחי הוא כ-15$ עם פוטנציאל צמיחה משמעותי.',
+                'לוח זמנים': 'המערכת כבר פעילה עם תשתיות חייות. התרחבות גלובלית מתוכננת לרבעונים הקרובים.'
+            };
+            
+            const normalizedQuestion = question.toLowerCase();
+            
+            for (const [key, value] of Object.entries(knowledgeBase)) {
+                if (normalizedQuestion.includes(key)) {
+                    response = value;
+                    break;
+                }
+            }
+            
+            if (!response) {
+                response = 'אני עדיין לומד, אבל אני ממליץ לך לבדוק באזור השאלות הנפוצות או ליצור קשר עם הצוות שלנו למידע מדויק יותר.';
+            }
+            
+            setTimeout(() => {
+                this.addMessage(response, 'bot');
+            }, 500);
+        }
+        
+        saveMessage(text, sender) {
+            const history = JSON.parse(localStorage.getItem('selha_chat_history') || '[]');
+            history.push({ text, sender, timestamp: new Date().toISOString() });
+            
+            // הגבלת גודל ההיסטוריה
+            if (history.length > 50) {
+                history.shift();
+            }
+            
+            localStorage.setItem('selha_chat_history', JSON.stringify(history));
+        }
+        
+        loadHistory() {
+            const history = JSON.parse(localStorage.getItem('selha_chat_history') || '[]');
+            
+            // נטען רק את 10 ההודעות האחרונות
+            history.slice(-10).forEach(msg => {
+                this.addMessage(msg.text, msg.sender);
+            });
+        }
+    }
+    
+    // ========== מחשבון רווחים ==========
+    class ProfitCalculator {
+        constructor() {
+            this.modal = document.getElementById('profitCalculatorModal');
+            this.closeBtn = document.getElementById('closeCalculator');
+            this.openBtn = document.getElementById('openProfitCalculator');
+            this.amountInput = document.getElementById('investmentAmount');
+            this.periodInput = document.getElementById('investmentPeriod');
+            this.rateInput = document.getElementById('interestRate');
+            this.presetBtns = document.querySelectorAll('.calculator-preset');
+            this.init();
+        }
+        
+        init() {
+            this.openBtn.addEventListener('click', () => this.open());
+            this.closeBtn.addEventListener('click', () => this.close());
+            
+            // סגירה בלחיצה מחוץ לחלון
+            this.modal.addEventListener('click', (e) => {
+                if (e.target === this.modal) {
+                    this.close();
+                }
+            });
+            
+            // עדכון ערכים בזמן אמת
+            this.amountInput.addEventListener('input', () => this.update());
+            this.periodInput.addEventListener('input', () => this.update());
+            this.rateInput.addEventListener('input', () => this.update());
+            
+            // כפתורי preset
+            this.presetBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const amount = e.currentTarget.getAttribute('data-amount');
+                    const period = e.currentTarget.getAttribute('data-period');
+                    
+                    this.amountInput.value = amount;
+                    this.periodInput.value = period;
+                    this.update();
+                });
+            });
+            
+            // עדכון ראשוני
+            this.update();
+        }
+        
+        open() {
+            this.modal.classList.remove('hidden');
+            this.modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        close() {
+            this.modal.classList.add('hidden');
+            this.modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        update() {
+            const amount = parseInt(this.amountInput.value);
+            const period = parseInt(this.periodInput.value);
+            const rate = parseInt(this.rateInput.value);
+            
+            // עדכון תצוגת הערכים הנוכחיים
+            document.getElementById('amountValue').textContent = this.formatCurrency(amount);
+            document.getElementById('periodValue').textContent = `${period} חודשים`;
+            document.getElementById('rateValue').textContent = `${rate}%`;
+            
+            // חישוב רווחים
+            const monthlyRate = rate / 100 / 12;
+            const totalProfit = amount * monthlyRate * period;
+            const totalAmount = amount + totalProfit;
+            const monthlyProfit = totalProfit / period;
+            
+            // עדכון תצוגת התוצאות
+            document.getElementById('initialAmount').textContent = this.formatCurrency(amount);
+            document.getElementById('annualInterest').textContent = `${rate}%`;
+            document.getElementById('totalProfit').textContent = this.formatCurrency(totalProfit);
+            document.getElementById('totalAmount').textContent = this.formatCurrency(totalAmount);
+            document.getElementById('monthlyProfit').textContent = this.formatCurrency(monthlyProfit);
+        }
+        
+        formatCurrency(amount) {
+            return new Intl.NumberFormat('he-IL', {
+                style: 'currency',
+                currency: 'ILS',
+                minimumFractionDigits: 0
+            }).format(amount);
+        }
+    }
+    
+    // ========== מערכת בלוג מתקדמת ==========
+    class AdvancedBlog {
+        constructor() {
+            this.container = document.querySelector('.blog-container');
+            this.filterBtns = document.querySelectorAll('.blog-filter');
+            this.loadMoreBtn = document.getElementById('loadMorePosts');
+            this.posts = [];
+            this.currentFilter = 'all';
+            this.currentPage = 1;
+            this.init();
+        }
+        
+        init() {
+            this.loadPosts();
+            
+            this.filterBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    this.filterBtns.forEach(b => b.classList.remove('active'));
+                    e.currentTarget.classList.add('active');
+                    this.currentFilter = e.currentTarget.getAttribute('data-filter');
+                    this.render();
+                });
+            });
+            
+            this.loadMoreBtn.addEventListener('click', () => this.loadMore());
+        }
+        
+        loadPosts() {
+            // כאן יטענו הפוסטים מ-API
+            // לדוגמה, פוסטים סטטיים:
+            this.posts = [
+                {
+                    id: 1,
+                    title: 'השקת תכונת סטייקינג מתקדמת',
+                    excerpt: 'המערכת החדשה מאפשרת סטייקינג גמיש עם תשואה חודשית של עד 4%',
+                    category: 'updates',
+                    date: '2024-01-15',
+                    readTime: '3 דקות',
+                    image: 'https://github.com/osifeu-prog/botshop/raw/main/assets/logo.png'
+                },
+                {
+                    id: 2,
+                    title: 'מדריך למתחיל: איך להשקיע ב-SELHA',
+                    excerpt: 'מדריך מקיף לשלבים הראשונים בהשקעה במערכת הכלכלית החדשה',
+                    category: 'tutorials',
+                    date: '2024-01-10',
+                    readTime: '8 דקות',
+                    image: 'https://github.com/osifeu-prog/botshop/raw/main/assets/start_banner.jpg'
+                },
+                {
+                    id: 3,
+                    title: 'שיתוף פעולה עם פלטפורמת תשלומים גלובלית',
+                    excerpt: 'חיבור למערכות תשלום בינלאומיות להרחבת הנגישות',
+                    category: 'partners',
+                    date: '2024-01-05',
+                    readTime: '5 דקות',
+                    image: 'https://github.com/osifeu-prog/botshop/raw/main/assets/osif.jpg'
+                },
+                {
+                    id: 4,
+                    title: 'שדרוג אבטחה: HMAC עם TTL',
+                    excerpt: 'הסבר על טכנולוגיית האבטחה המתקדמת שלנו',
+                    category: 'tech',
+                    date: '2023-12-28',
+                    readTime: '10 דקות',
+                    image: 'https://github.com/osifeu-prog/botshop/raw/main/assets/tzvika.jpg'
+                },
+                {
+                    id: 5,
+                    title: 'תוכנית שותפים: עדכון הטבות',
+                    excerpt: 'הטבות נוספות לשותפים פעילים וצמיחה אקספוננציאלית',
+                    category: 'partners',
+                    date: '2023-12-20',
+                    readTime: '4 דקות',
+                    image: 'https://github.com/osifeu-prog/botshop/raw/main/assets/logo.png'
+                },
+                {
+                    id: 6,
+                    title: 'בינה מלאכותית במערכת הכלכלית',
+                    excerpt: 'כיצד AI משפר את התהליכים הכלכליים והקהילתיים',
+                    category: 'tech',
+                    date: '2023-12-15',
+                    readTime: '12 דקות',
+                    image: 'https://github.com/osifeu-prog/botshop/raw/main/assets/start_banner2.jpg'
+                }
+            ];
+            
+            this.render();
+        }
+        
+        render() {
+            const filteredPosts = this.currentFilter === 'all' 
+                ? this.posts 
+                : this.posts.filter(post => post.category === this.currentFilter);
+            
+            // הצגת 3 פוסטים בלבד לדף
+            const postsToShow = filteredPosts.slice(0, this.currentPage * 3);
+            
+            this.container.innerHTML = '';
+            
+            postsToShow.forEach(post => {
+                const postElement = document.createElement('div');
+                postElement.className = 'blog-post feature-card p-6 hover-lift card-3d';
+                postElement.innerHTML = `
+                    <div class="aspect-w-16 aspect-h-9 mb-4 rounded-lg overflow-hidden">
+                        <img src="${post.image}" alt="${post.title}" class="w-full h-48 object-cover" onerror="this.src='https://via.placeholder.com/300x200/0066ff/ffffff?text=SELHA'">
+                    </div>
+                    <div class="flex items-center mb-3">
+                        <span class="px-2 py-1 text-xs rounded-full bg-blue-900/50 text-blue-300">${this.getCategoryName(post.category)}</span>
+                        <span class="mx-2 text-gray-500">•</span>
+                        <span class="text-gray-500 text-xs">${post.date}</span>
+                    </div>
+                    <h3 class="text-lg font-bold mb-2">${post.title}</h3>
+                    <p class="text-gray-400 text-sm mb-4">${post.excerpt}</p>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500 text-xs"><i class="fas fa-clock mr-1"></i> ${post.readTime}</span>
+                        <a href="#" class="text-blue-400 hover:text-blue-300 text-sm font-semibold">קרא עוד →</a>
+                    </div>
+                `;
+                
+                this.container.appendChild(postElement);
+            });
+            
+            // הסתרת כפתור "טען עוד" אם אין עוד פוסטים
+            this.loadMoreBtn.style.display = postsToShow.length >= filteredPosts.length ? 'none' : 'block';
+        }
+        
+        getCategoryName(category) {
+            const names = {
+                'updates': 'עדכונים',
+                'tutorials': 'מדריכים',
+                'partners': 'שותפים',
+                'tech': 'טכנולוגיה'
+            };
+            return names[category] || category;
+        }
+        
+        loadMore() {
+            this.currentPage++;
+            this.render();
+        }
+    }
+    
+    // ========== מערכת קודי קופון ==========
+    class CouponSystem {
+        constructor() {
+            this.couponCode = document.getElementById('couponCode');
+            this.copyBtn = document.getElementById('copyCouponCode');
+            this.generateBtn = document.getElementById('generateNewCoupon');
+            this.init();
+        }
+        
+        init() {
+            this.copyBtn.addEventListener('click', () => this.copyCode());
+            this.generateBtn.addEventListener('click', () => this.generateCode());
+        }
+        
+        copyCode() {
+            const text = this.couponCode.textContent;
+            
+            navigator.clipboard.writeText(text)
+                .then(() => {
+                    const originalText = this.copyBtn.innerHTML;
+                    this.copyBtn.innerHTML = '<i class="fas fa-check mr-2"></i> הועתק!';
+                    this.copyBtn.style.background = 'linear-gradient(to right, #00d4aa, #00b894)';
+                    
+                    // הוספת התראה
+                    if (window.notificationSystem) {
+                        window.notificationSystem.add({
+                            title: 'קוד הועתק!',
+                            message: 'הקוד הועתק בהצלחה ללוח. ניתן להשתמש בו בטופס ההשקעה.',
+                            type: 'success',
+                            icon: 'fas fa-copy'
+                        });
+                    }
+                    
+                    setTimeout(() => {
+                        this.copyBtn.innerHTML = originalText;
+                        this.copyBtn.style.background = '';
+                    }, 2000);
+                })
+                .catch(err => {
+                    console.error('שגיאה בהעתקה:', err);
+                });
+        }
+        
+        generateCode() {
+            const prefixes = ['SELHA', 'PARTNER', 'INVEST', 'CRYPTO', 'FUTURE'];
+            const suffix = Math.floor(100 + Math.random() * 900);
+            const prefix = prefixes[Math.floor(Math.random() * prefixes.length)];
+            
+            const newCode = `${prefix}${suffix}`;
+            this.couponCode.textContent = newCode;
+            
+            // הוספת התראה
+            if (window.notificationSystem) {
+                window.notificationSystem.add({
+                    title: 'קוד חדש נוצר!',
+                    message: `קוד קופון חדש: ${newCode} - תוקף 30 יום`,
+                    type: 'info',
+                    icon: 'fas fa-gift'
+                });
+            }
+        }
+    }
+    
+    // ========== אתחול המערכות כאשר הדף נטען ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        // אתחול מערכת ההתראות
+        window.notificationSystem = new NotificationSystem();
+        
+        // אתחול צ'אטבוט
+        window.chatbot = new SelhaChatbot();
+        
+        // אתחול מחשבון רווחים
+        window.profitCalculator = new ProfitCalculator();
+        
+        // אתחול מערכת בלוג
+        window.blogSystem = new AdvancedBlog();
+        
+        // אתחול מערכת קודי קופון
+        window.couponSystem = new CouponSystem();
+        
+        // הוספת התראת מתנה למשתמש חדש
+        setTimeout(() => {
+            if (window.notificationSystem && !localStorage.getItem('selha_welcome_shown')) {
+                window.notificationSystem.add({
+                    title: 'מתנה למשתמש חדש!',
+                    message: 'קבל קוד קופון בלעדי להטבה על ההשקעה הראשונה שלך',
+                    type: 'success',
+                    icon: 'fas fa-gift'
+                });
+                localStorage.setItem('selha_welcome_shown', 'true');
+            }
+        }, 2000);
+        
+        // טעינת פוסטים נוספים למערכת הבלוג
+        setTimeout(() => {
+            if (window.blogSystem) {
+                // כאן ניתן להוסיף טעינת פוסטים מ-API
+                console.log('Blog system initialized');
+            }
+        }, 1000);
+        
+        // אנימציות נוספות למספרים
+        const counters = document.querySelectorAll('.counter');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    const increment = target / 100;
+                    let current = 0;
+                    
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.textContent = Math.floor(current);
+                            setTimeout(updateCounter, 20);
+                        } else {
+                            counter.textContent = target;
+                        }
+                    };
+                    
+                    updateCounter();
+                    observer.unobserve(counter);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        counters.forEach(counter => observer.observe(counter));
+    });
+</script>
 </body>
 </html>
