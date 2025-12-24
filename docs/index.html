@@ -6623,4 +6623,66 @@
     </footer>
 
 </body>
+    <!-- Overlay של קבלת המשתמשים -->
+<div id="welcome-overlay">
+  <div id="welcome-box">
+    <p>
+      אנחנו מתרגשים שאתם.ן מעוניינים.ות להצטרף למשחק הכלכלי/ריבוני החדש שלנו,
+      בו כל הכלכלה היא שיוויונית במהותה.<br><br>
+      להמשך לאתר אנא לחצו – המשך
+    </p>
+
+    <button id="continue-btn">המשך</button>
+    <button id="exit-btn">צא מהאתר</button>
+  </div>
+</div>
+
+<style>
+  #welcome-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.75);
+    display: none; /* יופיע רק אחרי הטעינה */
+    justify-content: center;
+    align-items: center;
+    z-index: 999999;
+  }
+
+  #welcome-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 450px;
+    text-align: center;
+    font-size: 18px;
+    line-height: 1.6;
+  }
+
+  #welcome-box button {
+    margin: 10px;
+    padding: 10px 20px;
+    font-size: 18px;
+    cursor: pointer;
+  }
+</style>
+
+<script>
+  // מפעיל את חלון הקבלה
+  function showWelcomeOverlay() {
+    document.getElementById("welcome-overlay").style.display = "flex";
+  }
+
+  // כפתור המשך
+  document.getElementById("continue-btn").onclick = function () {
+    document.getElementById("welcome-overlay").style.display = "none";
+  };
+
+  // כפתור יציאה מהאתר
+  document.getElementById("exit-btn").onclick = function () {
+    window.open('', '_self').close(); // ניסיון לסגור דפדפן
+    window.location.href = "about:blank"; // fallback
+  };
+</script>
+
 </html>
