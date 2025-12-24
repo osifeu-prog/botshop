@@ -22,7 +22,8 @@
     <meta property="og:description" content="תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.">
     
     <!-- חשוב: יש להחליף קישור זה בקישור ישיר, ציבורי ויציב לתמונת השיתוף האמיתית שלך -->
-    <meta property="og:image" content="https://github.com/osifeu-prog/botshop/blob/main/assets/start_banner.jpg">
+    <meta property="og:image" content="https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner.jpg">
+    <meta property="og:image:type" content="image/jpeg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://slh-nft.com/">
@@ -34,7 +35,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="SELHA - Sovereign Economic Layer for Human Advancement">
     <meta name="twitter:description" content="בונים שכבת כלכלה חדשה לעולם הדיגיטלי">
-    <meta name="twitter:image" content="https://github.com/osifeu-prog/botshop/blob/main/assets/start_banner.jpg">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner.jpg">
     <meta name="twitter:site" content="@Buy_My_Shop_bot">
     <meta name="twitter:creator" content="@Buy_My_Shop_bot">
     
@@ -1985,7 +1986,6 @@
             100% { transform: translateX(100%); }
         }
     </style>
-        </style>
     
     <!-- ========== הוסף את קוד Schema Markup כאן ========== -->
     <!-- Schema.org Markup for SEO -->
@@ -2034,7 +2034,6 @@
     <!-- ========== סוף קוד Schema Markup ========== -->
     
 </head>
-</head>
 <body class="gradient-bg">
     <!-- Bubble Animation Background -->
     <div id="bubble-container"></div>
@@ -2069,7 +2068,7 @@
                 <p class="text-gray-400 mb-2">לחץ להעלאת תמונה משלך</p>
                 <p class="text-gray-500 text-sm">JPEG, PNG, GIF - עד 5MB</p>
                 <input type="file" id="imageUploadInput" accept="image/*" class="hidden">
-                <img id="imageUploadPreview" class="image-preview" alt="תצוגה מקדימה">
+                <img id="imageUploadPreview" class="image-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="תצוגה מקדימה" style="display: none;">
             </div>
             
             <div class="flex justify-between mt-6">
@@ -2119,7 +2118,7 @@
             </div>
             
             <div class="share-url-container">
-                <input type="text" readonly class="share-url" id="shareUrl" value="https://selha.com">
+                <input type="text" readonly class="share-url" id="shareUrl" value="https://slh-nft.com">
                 <button class="copy-url" id="copyUrlButton">העתק</button>
             </div>
             
@@ -2147,20 +2146,18 @@
         </div>
     </div>
     
-    <!-- Accessibility: Skip to content link -->
     <a href="#main-content" class="skip-to-content focus-visible">דלג לתוכן הראשי</a>
-    
-    <!-- Accessibility toolbar -->
+
     <div class="accessibility-toolbar no-print">
         <div class="accessibility-btn" id="themeToggle" aria-label="החלף מצב תצוגה">
             <i class="fas fa-moon" id="themeIcon"></i>
             <div class="tooltip">החלף בין מצב כהה/בהיר</div>
         </div>
-        <div class="accessibility-btn" id="fontIncrease" aria-label="הגדל גודל גופן">
+        <div class="accessibility-btn" id="fontIncrease" role="button" aria-label="הגדל גודל טקסט">
             <i class="fas fa-text-height"></i>
             <div class="tooltip">הגדל גודל טקסט</div>
         </div>
-        <div class="accessibility-btn" id="fontDecrease" aria-label="הקטן גודל גופן">
+        <div class="accessibility-btn" id="fontDecrease" role="button" tabindex="0" aria-label="הקטן גודל טקסט">
             <i class="fas fa-text-width"></i>
             <div class="tooltip">הקטן גודל טקסט</div>
         </div>
@@ -2168,11 +2165,11 @@
             <i class="fas fa-adjust"></i>
             <div class="tooltip">החלף מצב ניגודיות גבוהה</div>
         </div>
-        <div class="accessibility-btn" id="speechToggle" aria-label="הקראת תוכן">
+        <div class="accessibility-btn" id="speechToggle" role="button" tabindex="0" aria-label="הקראת תוכן">
             <i class="fas fa-volume-up"></i>
             <div class="tooltip">הפעל הקראת תוכן</div>
         </div>
-        <div class="accessibility-btn" id="shareButton" aria-label="שתף אתר זה">
+        <div class="accessibility-btn" id="shareButton" role="button" tabindex="0" aria-label="שתף אתר זה">
             <i class="fas fa-share-alt"></i>
             <div class="tooltip">שתף אתר וקבל מתנה</div>
         </div>
@@ -2248,7 +2245,7 @@
                                     </a>
                                 </div>
                             </div>
-                                      <div class="carousel-slide">
+                            <div class="carousel-slide">
                                 <div class="carousel-slide-content">
                                     <h2>אתר זה עדיין בפיתוח</h2>
                                     <p>בקרוב פונקציונאליות מלאה</p>
@@ -2275,6 +2272,7 @@
                             <div class="carousel-dot active" data-slide="0"></div>
                             <div class="carousel-dot" data-slide="1"></div>
                             <div class="carousel-dot" data-slide="2"></div>
+                            <div class="carousel-dot" data-slide="3"></div>
                         </div>
                     </div>
                 </div>
@@ -2384,12 +2382,12 @@
                                 
                                 <div class="mt-8 pt-8 border-t border-gray-800">
                                     <p class="text-center text-gray-300 mb-4">מגייסים כעת:</p>
-                                    <p class="text-3xl font-bold text-center text-blue-400">300M ₪</p>
+                                    <p class="text-3xl font-bold text-center text-blue-400">30M ₪</p>
                                     <p class="text-center text-gray-400 text-sm mt-2">לפיתוח תשתיות, AI, אבטחה וצוות</p>
                                     <div class="mt-4 progress-bar-enhanced">
                                         <div class="progress-fill w-2/3"></div>
                                     </div>
-                                    <p class="text-center text-xs text-gray-500 mt-2">67% הושגו</p>
+                                    <p class="text-center text-xs text-gray-500 mt-2">10% הושגו</p>
                                 </div>
                             </div>
                         </div>
@@ -4193,7 +4191,7 @@
                     </div>
                     
                     <!-- קרדיטים עם אנימציית מרקיז -->
-                    <div class="credits-marquee mt--12">
+                    <div class="credits-marquee mt-12">
                         <div class="marquee-content">
                             <span class="mx-8">🏆 אבטחה מתקדמת • 🤖 AI חכם • 🌐 Web3 מתקדם • 💰 סטייקינג 4% • 🤝 שותפים יוקרתיים • 🔗 בלוקצ'יין פעיל • 🎓 אקדמיה מובנית • 🌍 כלכלה גלובלית • 🚀 צמיחה אקספוננציאלית • 💎 הזדמנות חד פעמית • 🏆 אבטחה מתקדמת • 🤖 AI חכם • 🌐 Web3 מתקדם • 💰 סטייקינג 4% • 🤝 שותפים יוקרתיים • 🔗 בלוקצ'יין פעיל • 🎓 אקדמיה מובנית • 🌍 כלכלה גלובלית • 🚀 צמיחה אקספוננציאלית • 💎 הזדמנות חד פעמית</span>
                         </div>
@@ -4203,6 +4201,773 @@
                         <p class="text-gray-400">
                             <i class="fas fa-exclamation-circle mr-2"></i>
                             כל השקעה כרוכה בסיכונים. אנא ערכו בדיקת נאותות מקיפה לפני כל השקעה.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer משודרג -->
+    <footer class="py-12 px-4 md:px-12 bg-gradient-to-t from-gray-900 to-dark-bg border-t border-gray-800 no-print">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-12">
+                <div>
+                    <div class="flex items-center space-x-3 space-x-reverse mb-6">
+                        <div class="nav-logo">
+                            <img src="https://github.com/osifeu-prog/botshop/raw/main/assets/logo.png" alt="SELHA Logo" onerror="this.src='https://via.placeholder.com/40/0066ff/ffffff?text=SELHA'">
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-bold">SELHA</h3>
+                            <p class="text-xs text-gray-400">Sovereign Economic Layer for Human Advancement</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6">
+                        תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.
+                    </p>
+                    <div class="flex space-x-4 space-x-reverse">
+                        <a href="https://t.me/Buy_My_Shop_bot" target="_blank" class="text-gray-400 hover:text-blue-400 transition" aria-label="טלגרם">
+                            <i class="fab fa-telegram text-xl"></i>
+                        </a>
+                        <a href="https://twitter.com/" target="_blank" class="text-gray-400 hover:text-blue-400 transition" aria-label="טוויטר">
+                            <i class="fab fa-twitter text-xl"></i>
+                        </a>
+                        <a href="https://github.com/osifeu-prog" target="_blank" class="text-gray-400 hover:text-gray-300 transition" aria-label="גיטהאב">
+                            <i class="fab fa-github text-xl"></i>
+                        </a>
+                        <a href="mailto:kaufmanungar@gmail.com" class="text-gray-400 hover:text-red-400 transition" aria-label="אימייל">
+                            <i class="fas fa-envelope text-xl"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">קישורים מהירים</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#about" class="text-gray-400 hover:text-blue-400 transition">אודות SELHA</a></li>
+                        <li><a href="#technology" class="text-gray-400 hover:text-blue-400 transition">טכנולוגיה</a></li>
+                        <li><a href="#ecosystem" class="text-gray-400 hover:text-blue-400 transition">אקוסיסטם חי</a></li>
+                        <li><a href="#partners" class="text-gray-400 hover:text-yellow-400 transition gold-gradient">תוכנית שותפים</a></li>
+                        <li><a href="#security" class="text-gray-400 hover:text-blue-400 transition">אבטחה</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">משאבים</h4>
+                    <ul class="space-y-3">
+                        <li><a href="https://bscscan.com/token/0xACb0A09414CEA1C879c67bB7A877E4e19480f022" target="_blank" class="text-gray-400 hover:text-blue-400 transition">חוזה חכם</a></li>
+                        <li><a href="https://slhisrael.com/" target="_blank" class="text-gray-400 hover:text-blue-400 transition">אתר ראשי</a></li>
+                        <li><a href="https://slh-nft.com/" target="_blank" class="text-gray-400 hover:text-blue-400 transition">NFT Marketplace</a></li>
+                        <li><a href="https://web-production-112f6.up.railway.app/investors/" target="_blank" class="text-gray-400 hover:text-blue-400 transition">פורטל משקיעים</a></li>
+                        <li><span class="text-gray-500">מסמכים טכניים - <span class="text-yellow-400">בקרוב</span></span></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="text-lg font-bold mb-6">יצירת קשר</h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start">
+                            <i class="fas fa-phone text-blue-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">058-4203384 (אוסיף)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-phone text-teal-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">054-6671882 (צביקה)</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fas fa-envelope text-purple-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">kaufmanungar@gmail.com</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fab fa-telegram text-green-400 mt-1 mr-3"></i>
+                            <span class="text-gray-400">@Buy_My_Shop_bot</span>
+                        </li>
+                        <li><span class="text-gray-500">שירות לקוחות - <span class="text-yellow-400">בקרוב</span></span></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="mt-12 pt-8 border-t border-gray-800">
+                <div class="flex flex-col md:flex-row justify-between items-center">
+                    <p class="text-gray-500 text-sm mb-4 md:mb-0">
+                        © 2024 SELHA - Sovereign Economic Layer for Human Advancement. כל הזכויות שמורות.
+                    </p>
+                    <div class="flex space-x-6 space-x-reverse">
+                        <a href="#privacy" class="text-gray-500 hover:text-gray-300 text-sm transition">מדיניות פרטיות</a>
+                        <a href="#terms" class="text-gray-500 hover:text-gray-300 text-sm transition">תנאי שימוש</a>
+                        <a href="#disclaimer" class="text-gray-500 hover:text-gray-300 text-sm transition">הצהרת אחריות</a>
+                        <a href="#sitemap" class="text-gray-500 hover:text-gray-300 text-sm transition">מפת אתר</a>
+                    </div>
+                </div>
+                <div class="mt-4 text-center text-gray-600 text-xs">
+                    <p>אתר זה מנוהל על ידי SELHA ומשמש למטרות מידע בלבד. השקעות כרוכות בסיכונים.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- JavaScript Code -->
+    <script>
+        // 1. טקסט "בקרוב" שנוסף
+        console.log("אתר SELHA - Sovereign Economic Layer for Human Advancement");
+        console.log("פונקציונאליות מלאה - בקרוב");
+        
+        // 2. הגדרות בסיסיות
+        document.addEventListener('DOMContentLoaded', function() {
+            // טעינה ראשונית
+            setTimeout(() => {
+                document.getElementById('loadingOverlay').style.opacity = '0';
+                document.getElementById('loadingOverlay').style.visibility = 'hidden';
+            }, 1500);
+            
+            // חישוב תאריך יעד לגיוס (30 ימים מעכשיו)
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 30);
+            
+            // 3. אנימציית בועות
+            function createBubbles() {
+                const container = document.getElementById('bubble-container');
+                const bubbleCount = 20;
+                
+                for (let i = 0; i < bubbleCount; i++) {
+                    const bubble = document.createElement('div');
+                    bubble.classList.add('bubble');
+                    
+                    const size = Math.random() * 120 + 20;
+                    bubble.style.width = `${size}px`;
+                    bubble.style.height = `${size}px`;
+                    bubble.style.right = `${Math.random() * 100}%`;
+                    bubble.style.animationDuration = `${Math.random() * 20 + 15}s`;
+                    bubble.style.animationDelay = `${Math.random() * 5}s`;
+                    
+                    container.appendChild(bubble);
+                }
+            }
+            
+            // 4. אנימציית גשם דיגיטלי
+            function createDigitalRain() {
+                const container = document.getElementById('digitalRain');
+                const dropCount = 100;
+                
+                for (let i = 0; i < dropCount; i++) {
+                    const drop = document.createElement('div');
+                    drop.classList.add('rain-drop');
+                    
+                    drop.style.left = `${Math.random() * 100}%`;
+                    drop.style.animationDuration = `${Math.random() * 2 + 1}s`;
+                    drop.style.animationDelay = `${Math.random() * 2}s`;
+                    drop.style.opacity = `${Math.random() * 0.1 + 0.05}`;
+                    
+                    container.appendChild(drop);
+                }
+            }
+            
+            // 5. אנימציית חלקיקים
+            function createParticles() {
+                const container = document.getElementById('particlesContainer');
+                const particleCount = 50;
+                
+                for (let i = 0; i < particleCount; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    
+                    const size = Math.random() * 10 + 2;
+                    particle.style.width = `${size}px`;
+                    particle.style.height = `${size}px`;
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.top = `${Math.random() * 100}%`;
+                    particle.style.animationDuration = `${Math.random() * 20 + 10}s`;
+                    particle.style.animationDelay = `${Math.random() * 5}s`;
+                    particle.style.opacity = `${Math.random() * 0.1 + 0.05}`;
+                    
+                    container.appendChild(particle);
+                }
+            }
+            
+            // 6. טיימר גיוס
+            function updateFundingTimer() {
+                const now = new Date().getTime();
+                const distance = targetDate - now;
+                
+                if (distance < 0) {
+                    targetDate.setDate(targetDate.getDate() + 30);
+                    return updateFundingTimer();
+                }
+                
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                
+                document.getElementById('timerDays').textContent = days.toString().padStart(2, '0');
+                document.getElementById('timerHours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('timerMinutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('timerSeconds').textContent = seconds.toString().padStart(2, '0');
+            }
+            
+            // 7. אנימציית מונה
+            function animateCounters() {
+                const counters = document.querySelectorAll('.counter');
+                const speed = 200;
+                
+                counters.forEach(counter => {
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    const increment = target / speed;
+                    let current = 0;
+                    
+                    const updateCounter = () => {
+                        current += increment;
+                        if (current < target) {
+                            counter.textContent = Math.floor(current) + (counter.getAttribute('data-target') > 99 ? '+' : '');
+                            setTimeout(updateCounter, 1);
+                        } else {
+                            counter.textContent = target + (counter.getAttribute('data-target') > 99 ? '+' : '');
+                        }
+                    };
+                    
+                    updateCounter();
+                });
+            }
+            
+            // 8. קאורוסל
+            function initCarousel() {
+                const slides = document.querySelectorAll('.carousel-slide');
+                const dots = document.querySelectorAll('.carousel-dot');
+                const prevBtn = document.querySelector('.carousel-prev');
+                const nextBtn = document.querySelector('.carousel-next');
+                let currentSlide = 0;
+                let slideInterval;
+                
+                function showSlide(n) {
+                    slides.forEach(slide => slide.style.display = 'none');
+                    dots.forEach(dot => dot.classList.remove('active'));
+                    
+                    currentSlide = (n + slides.length) % slides.length;
+                    slides[currentSlide].style.display = 'flex';
+                    dots[currentSlide].classList.add('active');
+                }
+                
+                function nextSlide() {
+                    showSlide(currentSlide + 1);
+                }
+                
+                function prevSlide() {
+                    showSlide(currentSlide - 1);
+                }
+                
+                function startSlideInterval() {
+                    slideInterval = setInterval(nextSlide, 5000);
+                }
+                
+                function stopSlideInterval() {
+                    clearInterval(slideInterval);
+                }
+                
+                // Event Listeners
+                prevBtn.addEventListener('click', () => {
+                    prevSlide();
+                    stopSlideInterval();
+                    startSlideInterval();
+                });
+                
+                nextBtn.addEventListener('click', () => {
+                    nextSlide();
+                    stopSlideInterval();
+                    startSlideInterval();
+                });
+                
+                dots.forEach((dot, index) => {
+                    dot.addEventListener('click', () => {
+                        showSlide(index);
+                        stopSlideInterval();
+                        startSlideInterval();
+                    });
+                });
+                
+                // Start carousel
+                showSlide(0);
+                startSlideInterval();
+                
+                // Pause on hover
+                const carouselContainer = document.querySelector('.carousel-container');
+                carouselContainer.addEventListener('mouseenter', stopSlideInterval);
+                carouselContainer.addEventListener('mouseleave', startSlideInterval);
+            }
+            
+            // 9. מערכת נגישות
+            function initAccessibility() {
+                // מצב תצוגה (כהה/בהיר)
+                const themeToggle = document.getElementById('themeToggle');
+                const themeIcon = document.getElementById('themeIcon');
+                
+                themeToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('light-mode');
+                    if (document.body.classList.contains('light-mode')) {
+                        themeIcon.classList.remove('fa-moon');
+                        themeIcon.classList.add('fa-sun');
+                    } else {
+                        themeIcon.classList.remove('fa-sun');
+                        themeIcon.classList.add('fa-moon');
+                    }
+                });
+                
+                // שינוי גודל טקסט
+                const fontIncrease = document.getElementById('fontIncrease');
+                const fontDecrease = document.getElementById('fontDecrease');
+                
+                fontIncrease.addEventListener('click', () => {
+                    if (document.body.classList.contains('font-xlarge')) return;
+                    if (document.body.classList.contains('font-large')) {
+                        document.body.classList.remove('font-large');
+                        document.body.classList.add('font-xlarge');
+                    } else {
+                        document.body.classList.add('font-large');
+                    }
+                });
+                
+                fontDecrease.addEventListener('click', () => {
+                    if (document.body.classList.contains('font-xlarge')) {
+                        document.body.classList.remove('font-xlarge');
+                        document.body.classList.add('font-large');
+                    } else if (document.body.classList.contains('font-large')) {
+                        document.body.classList.remove('font-large');
+                    }
+                });
+                
+                // מצב ניגודיות גבוהה
+                const contrastToggle = document.getElementById('contrastToggle');
+                
+                contrastToggle.addEventListener('click', () => {
+                    document.body.classList.toggle('high-contrast');
+                });
+                
+                // כפתור שיתוף
+                const shareButton = document.getElementById('shareButton');
+                const openShareModal = document.getElementById('openShareModal');
+                
+                function openShareModalFunc() {
+                    document.getElementById('shareModal').style.display = 'flex';
+                }
+                
+                shareButton.addEventListener('click', openShareModalFunc);
+                openShareModal.addEventListener('click', openShareModalFunc);
+                
+                // סגירת מודל שיתוף
+                document.getElementById('closeShareModal').addEventListener('click', () => {
+                    document.getElementById('shareModal').style.display = 'none';
+                });
+                
+                // סגירת מודל בחירת תמונה
+                document.getElementById('cancelImageSelection').addEventListener('click', () => {
+                    document.getElementById('imageSelectionModal').style.display = 'none';
+                });
+                
+                // כפתור חזרה למעלה
+                const backToTop = document.getElementById('backToTop');
+                
+                window.addEventListener('scroll', () => {
+                    if (window.pageYOffset > 300) {
+                        backToTop.classList.add('visible');
+                    } else {
+                        backToTop.classList.remove('visible');
+                    }
+                });
+                
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+                
+                // העתקת קישור שיתוף
+                document.getElementById('copyUrlButton').addEventListener('click', () => {
+                    const shareUrl = document.getElementById('shareUrl');
+                    shareUrl.select();
+                    shareUrl.setSelectionRange(0, 99999);
+                    document.execCommand('copy');
+                    
+                    const originalText = document.getElementById('copyUrlButton').textContent;
+                    document.getElementById('copyUrlButton').textContent = 'הועתק!';
+                    setTimeout(() => {
+                        document.getElementById('copyUrlButton').textContent = originalText;
+                    }, 2000);
+                });
+                
+                // טופס דיווח שיתוף
+                document.getElementById('shareReportForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    alert('תודה על הדיווח! נציגינו ייצרו איתך קשר תוך 24 שעות לקבלת המתנה.');
+                    document.getElementById('shareModal').style.display = 'none';
+                });
+                
+                // בחירת תמונה לשיתוף
+                document.getElementById('selectShareImage').addEventListener('click', () => {
+                    document.getElementById('shareModal').style.display = 'none';
+                    document.getElementById('imageSelectionModal').style.display = 'flex';
+                    loadImageGallery();
+                });
+                
+                // העלאת תמונה
+                const imageUploadInput = document.getElementById('imageUploadInput');
+                const imageUploadArea = document.getElementById('imageUploadArea');
+                const imageUploadPreview = document.getElementById('imageUploadPreview');
+                
+                imageUploadArea.addEventListener('click', () => {
+                    imageUploadInput.click();
+                });
+                
+                imageUploadInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0];
+                    if (file) {
+                        const reader = new FileReader();
+                        reader.onload = (e) => {
+                            imageUploadPreview.src = e.target.result;
+                            imageUploadPreview.style.display = 'block';
+                            imageUploadArea.querySelector('i').style.display = 'none';
+                            imageUploadArea.querySelector('p').style.display = 'none';
+                        };
+                        reader.readAsDataURL(file);
+                    }
+                });
+            }
+            
+            // 10. טעינת גלריית תמונות
+            function loadImageGallery() {
+                const gallery = document.getElementById('imageGallery');
+                gallery.innerHTML = '';
+                
+                const images = [
+                    'https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner.jpg',
+                    'https://github.com/osifeu-prog/botshop/raw/main/assets/logo.png',
+                    'https://github.com/osifeu-prog/botshop/raw/main/assets/osif.jpg',
+                    'https://github.com/osifeu-prog/botshop/raw/main/assets/tzvika.jpg',
+                    'https://via.placeholder.com/400x300/0066ff/ffffff?text=SELHA+1',
+                    'https://via.placeholder.com/400x300/00d4aa/ffffff?text=SELHA+2',
+                    'https://via.placeholder.com/400x300/9333ea/ffffff?text=SELHA+3',
+                    'https://via.placeholder.com/400x300/ff9900/ffffff?text=SELHA+4'
+                ];
+                
+                images.forEach((src, index) => {
+                    const imageOption = document.createElement('div');
+                    imageOption.classList.add('image-option');
+                    imageOption.dataset.index = index;
+                    
+                    const img = document.createElement('img');
+                    img.src = src;
+                    img.alt = `תמונת שיתוף ${index + 1}`;
+                    img.onerror = function() {
+                        this.src = 'https://via.placeholder.com/400x300/333333/ffffff?text=SELHA';
+                    };
+                    
+                    imageOption.appendChild(img);
+                    imageOption.addEventListener('click', () => {
+                        document.querySelectorAll('.image-option').forEach(opt => opt.classList.remove('selected'));
+                        imageOption.classList.add('selected');
+                    });
+                    
+                    gallery.appendChild(imageOption);
+                });
+                
+                // אישור בחירת תמונה
+                document.getElementById('confirmImageSelection').addEventListener('click', () => {
+                    const selected = document.querySelector('.image-option.selected');
+                    if (selected) {
+                        document.getElementById('imageSelectionModal').style.display = 'none';
+                        document.getElementById('shareModal').style.display = 'flex';
+                    } else {
+                        alert('אנא בחר תמונה מהגלריה או העלה תמונה משלך.');
+                    }
+                });
+            }
+            
+            // 11. אנימציית Fade In
+            function initFadeIn() {
+                const fadeElements = document.querySelectorAll('.fade-in');
+                
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                fadeElements.forEach(el => observer.observe(el));
+            }
+            
+            // 12. FAQ אינטראקטיבי
+            function initFAQ() {
+                const faqItems = document.querySelectorAll('.faq-item');
+                
+                faqItems.forEach(item => {
+                    const question = item.querySelector('.faq-question');
+                    question.addEventListener('click', () => {
+                        item.classList.toggle('active');
+                    });
+                });
+            }
+            
+            // 13. וולידציה לטופסים
+            function initFormValidation() {
+                // טופס שותפים
+                const partnerForm = document.getElementById('partner-contact-form');
+                const partnerSubmitBtn = document.getElementById('partner-submit-btn');
+                
+                partnerForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let isValid = true;
+                    
+                    // איפוס שגיאות
+                    document.querySelectorAll('.form-error').forEach(error => error.style.display = 'none');
+                    
+                    // בדיקת שדות חובה
+                    const requiredFields = partnerForm.querySelectorAll('[required]');
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            const errorId = field.id ? `${field.id}-error` : `${field.name}-error`;
+                            const errorEl = document.getElementById(errorId);
+                            if (errorEl) errorEl.style.display = 'block';
+                        }
+                    });
+                    
+                    // בדיקת אימייל
+                    const emailField = partnerForm.querySelector('input[type="email"]');
+                    if (emailField && emailField.value) {
+                        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                        if (!emailRegex.test(emailField.value)) {
+                            isValid = false;
+                            document.getElementById('email-error').style.display = 'block';
+                        }
+                    }
+                    
+                    if (isValid) {
+                        partnerSubmitBtn.disabled = true;
+                        partnerSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>שולח...';
+                        
+                        // סימולציה של שליחה
+                        setTimeout(() => {
+                            document.getElementById('partner-form-success').style.display = 'block';
+                            partnerForm.reset();
+                            partnerSubmitBtn.disabled = false;
+                            partnerSubmitBtn.innerHTML = '<i class="fas fa-user-plus mr-2"></i>הגש מועמדות לתוכנית השותפים';
+                            
+                            setTimeout(() => {
+                                document.getElementById('partner-form-success').style.display = 'none';
+                            }, 5000);
+                        }, 2000);
+                    }
+                });
+                
+                // טופס יצירת קשר ראשי
+                const mainForm = document.getElementById('main-contact-form');
+                const mainSubmitBtn = document.getElementById('main-submit-btn');
+                
+                mainForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    let isValid = true;
+                    
+                    // איפוס שגיאות
+                    document.querySelectorAll('.form-error').forEach(error => error.style.display = 'none');
+                    
+                    // בדיקת שדות חובה
+                    const requiredFields = mainForm.querySelectorAll('[required]');
+                    requiredFields.forEach(field => {
+                        if (!field.value.trim()) {
+                            isValid = false;
+                            const errorId = field.id ? `${field.id}-error` : `${field.name}-error`;
+                            const errorEl = document.getElementById(errorId);
+                            if (errorEl) errorEl.style.display = 'block';
+                        }
+                    });
+                    
+                    if (isValid) {
+                        mainSubmitBtn.disabled = true;
+                        mainSubmitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>שולח...';
+                        
+                        // סימולציה של שליחה
+                        setTimeout(() => {
+                            document.getElementById('main-form-success').style.display = 'block';
+                            mainForm.reset();
+                            mainSubmitBtn.disabled = false;
+                            mainSubmitBtn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>שלח פניה להצטרפות';
+                            
+                            setTimeout(() => {
+                                document.getElementById('main-form-success').style.display = 'none';
+                            }, 5000);
+                        }, 2000);
+                    }
+                });
+            }
+            
+            // 14. אנימציית Ripple לכפתורים
+            function initRippleButtons() {
+                document.querySelectorAll('.ripple-button').forEach(button => {
+                    button.addEventListener('click', function(e) {
+                        const ripple = document.createElement('span');
+                        const rect = this.getBoundingClientRect();
+                        const size = Math.max(rect.width, rect.height);
+                        const x = e.clientX - rect.left - size / 2;
+                        const y = e.clientY - rect.top - size / 2;
+                        
+                        ripple.style.width = ripple.style.height = size + 'px';
+                        ripple.style.left = x + 'px';
+                        ripple.style.top = y + 'px';
+                        ripple.classList.add('ripple-effect');
+                        
+                        this.appendChild(ripple);
+                        
+                        setTimeout(() => {
+                            ripple.remove();
+                        }, 600);
+                    });
+                });
+            }
+            
+            // 15. טיפול בטעינת תמונות
+            function initLazyLoading() {
+                const lazyImages = document.querySelectorAll('.lazy-load');
+                
+                const imageObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src || img.src;
+                            img.classList.add('loaded');
+                            imageObserver.unobserve(img);
+                        }
+                    });
+                });
+                
+                lazyImages.forEach(img => imageObserver.observe(img));
+            }
+            
+            // 16. ניווט חלק
+            function initSmoothScroll() {
+                document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                    anchor.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        const targetId = this.getAttribute('href');
+                        if (targetId === '#') return;
+                        
+                        const targetElement = document.querySelector(targetId);
+                        if (targetElement) {
+                            window.scrollTo({
+                                top: targetElement.offsetTop - 80,
+                                behavior: 'smooth'
+                            });
+                        }
+                    });
+                });
+            }
+            
+            // 17. אפקטים נוספים על עכבר
+            function initHoverEffects() {
+                // Tooltips
+                document.querySelectorAll('[data-tooltip]').forEach(el => {
+                    el.addEventListener('mouseenter', function() {
+                        const tooltip = document.createElement('div');
+                        tooltip.className = 'tooltip';
+                        tooltip.textContent = this.getAttribute('data-tooltip');
+                        document.body.appendChild(tooltip);
+                        
+                        const rect = this.getBoundingClientRect();
+                        tooltip.style.position = 'fixed';
+                        tooltip.style.top = (rect.top - tooltip.offsetHeight - 10) + 'px';
+                        tooltip.style.left = (rect.left + rect.width / 2 - tooltip.offsetWidth / 2) + 'px';
+                        tooltip.style.zIndex = '10000';
+                        
+                        this.tooltipElement = tooltip;
+                    });
+                    
+                    el.addEventListener('mouseleave', function() {
+                        if (this.tooltipElement) {
+                            this.tooltipElement.remove();
+                            this.tooltipElement = null;
+                        }
+                    });
+                });
+            }
+            
+            // 18. ניהול מצב הגלילה לניווט
+            function initScrollSpy() {
+                const sections = document.querySelectorAll('section[id]');
+                const navLinks = document.querySelectorAll('.nav-link');
+                
+                window.addEventListener('scroll', () => {
+                    let current = '';
+                    
+                    sections.forEach(section => {
+                        const sectionTop = section.offsetTop;
+                        const sectionHeight = section.clientHeight;
+                        if (scrollY >= (sectionTop - 100)) {
+                            current = section.getAttribute('id');
+                        }
+                    });
+                    
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${current}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                });
+            }
+            
+            // אתחול כל הפונקציות
+            createBubbles();
+            createDigitalRain();
+            createParticles();
+            initCarousel();
+            initAccessibility();
+            initFadeIn();
+            initFAQ();
+            initFormValidation();
+            initRippleButtons();
+            initLazyLoading();
+            initSmoothScroll();
+            initHoverEffects();
+            initScrollSpy();
+            
+            // התחלת טיימרים
+            updateFundingTimer();
+            setInterval(updateFundingTimer, 1000);
+            
+            // התחלת מונים אחרי טעינה
+            setTimeout(animateCounters, 2000);
+            
+            // הוספת אפקטי גלילה על אלמנטים עם אנימציה
+            setTimeout(() => {
+                document.querySelectorAll('.slide-in-left, .slide-in-right').forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+            }, 500);
+            
+            // הודעת בקרוב למערכות שנמצאות בפיתוח
+            console.log("פונקציונאליות נוספות - בקרוב:");
+            console.log("- מערכת CRM מלאה לשותפים");
+            console.log("- דשבורד ניהול מתקדם");
+            console.log("- מערכת סטייקינג אוטומטית");
+            console.log("- API ציבורי למפתחים");
+            console.log("- אפליקציית מובייל");
+            
+            // הצגת הודעת בקרוב באתר
+            const soonElements = document.querySelectorAll('.text-yellow-400');
+            soonElements.forEach(el => {
+                if (el.textContent.includes('בקרוב')) {
+                    el.style.animation = 'pulse 2s infinite';
+                }
+            });
+        });
+        
+        // הודעת פיתוח בהתחלת האתר
+        window.onload = function() {
+            console.log('%c🚀 SELHA - Sovereign Economic Layer for Human Advancement', 'color: #0066ff; font-size: 18px; font-weight: bold;');
+            console.log('%cפלטפורמה כלכלית חדשה לעולם הדיגיטלי', 'color: #00d4aa; font-size: 14px;');
+            console.log('%cפיתוח פעיל - פונקציונאליות מלאה בקרוב', 'color: #ff9900; font-size: 12px;');
+        };
+    </script>
+</body>
+</html>
                         </p>
                         <p class="text-gray-400 text-sm mt-4">
                             Founded & Architected by Osif e.Ungar & Tzvika Kaufman • Sovereign Economic Layer for Human Advancement
