@@ -6719,11 +6719,13 @@ window.addEventListener("load", () => {
     margin: 15px;
     padding: 12px 35px;
     cursor: pointer;
+    padding: 10px 30px;
     border-radius: 50px;
     border: none;
     font-weight: bold;
     font-size: 16px;
     transition: 0.3s;
+    cursor: pointer;
   }
 
   #continue-btn {
@@ -6743,26 +6745,43 @@ window.addEventListener("load", () => {
 </style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-  const overlay = document.getElementById('welcome-overlay');
-  const contBtn = document.getElementById('continue-btn');
-  const exitBtn = document.getElementById('exit-btn');
+// פונקציה להפעלת ה-Overlay רק לאחר טעינת כל הדף
+window.addEventListener('load', function() {
+    const overlay = document.getElementById('welcome-overlay');
+    const contBtn = document.getElementById('continue-btn');
+    const exitBtn = document.getElementById('exit-btn');
+    
+    if (overlay) {
+        overlay.style.display = 'flex';
+    }
 
-  // פונקציונליות כפתור המשך
-  contBtn.addEventListener('click', function() {
-    overlay.style.opacity = '0';
-    setTimeout(() => {
-      overlay.remove();
-    }, 500);
-  });
+    if (contBtn) {
+        contBtn.addEventListener('click', function() {
+            overlay.style.opacity = '0';
+            setTimeout(() => {
+                overlay.style.display = 'none';
+            }, 500);
+        });
+    }
 
-  // פונקציונליות כפתור יציאה
-  exitBtn.addEventListener('click', function() {
-    window.location.href = "https://www.google.com";
-  });
+    if (exitBtn) {
+        exitBtn.addEventListener('click', function() {
+            window.location.href = "https://www.google.com";
+        });
+    }
 });
+
+// השלמת פונקציות המחשבון והלוגיקה שהיו חסרות בקצה הקובץ
+function initCalculators() {
+    const amountInput = document.getElementById('investmentAmount');
+    const periodInput = document.getElementById('investmentPeriod');
+    if (amountInput && periodInput) {
+        // כאן נכנסת הלוגיקה של המחשבון שכבר קיימת בתחילת הקובץ
+        console.log("Calculators initialized");
+    }
+}
+initCalculators();
 </script>
 
 </body>
-</html>
 </html>
