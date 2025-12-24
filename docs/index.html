@@ -1,3 +1,25 @@
+https://slh-nft.com/
+Debug
+caution-solidWarnings That Should Be Fixed
+Invalid Image Content Type
+Provided og:image URL, https://github.com/osifeu-prog/botshop/blob/main/assets/start_banner.jpg could not be processed as an image because it has an invalid content type.
+When and how we last scraped the URL
+Time Scraped	
+2 seconds ago
+Scrape Again
+Response Code	206
+Fetched URL	https://slh-nft.com/
+Canonical URL	
+https://slh-nft.com/
+135 likes, shares and comments (More Info)
+Link Preview	
+Based on the raw tags, we constructed the following Open Graph properties
+og:url	https://slh-nft.com/
+og:type	website
+og:title	SELHA - שכבת כלכלה ריבונית לקידום אנושי
+og:description	תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.
+
+וזה הקוד המלא: 
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -22,8 +44,7 @@
     <meta property="og:description" content="תשתית פיננסית‑קהילתית‑מדינתית מבוזרת, מונעת AI, המאפשרת יצירת כלכלה חדשה: יציבה, רווחית, קהילתית וריבונית.">
     
     <!-- חשוב: יש להחליף קישור זה בקישור ישיר, ציבורי ויציב לתמונת השיתוף האמיתית שלך -->
-    <meta property="og:image" content="https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner.jpg">
-    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image" content="https://github.com/osifeu-prog/botshop/blob/main/assets/start_banner.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:url" content="https://slh-nft.com/">
@@ -35,7 +56,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="SELHA - Sovereign Economic Layer for Human Advancement">
     <meta name="twitter:description" content="בונים שכבת כלכלה חדשה לעולם הדיגיטלי">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner.jpg">
+    <meta name="twitter:image" content="https://github.com/osifeu-prog/botshop/blob/main/assets/start_banner.jpg">
     <meta name="twitter:site" content="@Buy_My_Shop_bot">
     <meta name="twitter:creator" content="@Buy_My_Shop_bot">
     
@@ -1985,7 +2006,8 @@
             0% { transform: translateX(-100%); }
             100% { transform: translateX(100%); }
         }
-</style>
+    </style>
+        </style>
     
     <!-- ========== הוסף את קוד Schema Markup כאן ========== -->
     <!-- Schema.org Markup for SEO -->
@@ -2034,6 +2056,7 @@
     <!-- ========== סוף קוד Schema Markup ========== -->
     
 </head>
+</head>
 <body class="gradient-bg">
     <!-- Bubble Animation Background -->
     <div id="bubble-container"></div>
@@ -2068,7 +2091,7 @@
                 <p class="text-gray-400 mb-2">לחץ להעלאת תמונה משלך</p>
                 <p class="text-gray-500 text-sm">JPEG, PNG, GIF - עד 5MB</p>
                 <input type="file" id="imageUploadInput" accept="image/*" class="hidden">
-                <img id="imageUploadPreview" class="image-preview" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E%3Crect width='400' height='300' fill='%23f0f0f0'/%3E%3C/svg%3E" alt="תצוגה מקדימה" style="display: none;">
+                <img id="imageUploadPreview" class="image-preview" alt="תצוגה מקדימה">
             </div>
             
             <div class="flex justify-between mt-6">
@@ -2146,18 +2169,20 @@
         </div>
     </div>
     
+    <!-- Accessibility: Skip to content link -->
     <a href="#main-content" class="skip-to-content focus-visible">דלג לתוכן הראשי</a>
-
+    
+    <!-- Accessibility toolbar -->
     <div class="accessibility-toolbar no-print">
         <div class="accessibility-btn" id="themeToggle" aria-label="החלף מצב תצוגה">
             <i class="fas fa-moon" id="themeIcon"></i>
             <div class="tooltip">החלף בין מצב כהה/בהיר</div>
         </div>
-        <div class="accessibility-btn" id="themeToggle" role="button" aria-label="בהמשך">
+        <div class="accessibility-btn" id="fontIncrease" aria-label="הגדל גודל גופן">
             <i class="fas fa-text-height"></i>
             <div class="tooltip">הגדל גודל טקסט</div>
         </div>
-        <div class="accessibility-btn" id="contrastToggle" role="button" tabindex="0" aria-label="החלף מצב ניגודיות גבוהה">
+        <div class="accessibility-btn" id="fontDecrease" aria-label="הקטן גודל גופן">
             <i class="fas fa-text-width"></i>
             <div class="tooltip">הקטן גודל טקסט</div>
         </div>
@@ -2165,11 +2190,11 @@
             <i class="fas fa-adjust"></i>
             <div class="tooltip">החלף מצב ניגודיות גבוהה</div>
         </div>
-        <div class="accessibility-btn" id="speechToggle" role="button" tabindex="0" aria-label="הקראת תוכן">
+        <div class="accessibility-btn" id="speechToggle" aria-label="הקראת תוכן">
             <i class="fas fa-volume-up"></i>
             <div class="tooltip">הפעל הקראת תוכן</div>
         </div>
-        <div class="accessibility-btn" id="shareButton" role="button" tabindex="0" aria-label="שתף אתר זה">
+        <div class="accessibility-btn" id="shareButton" aria-label="שתף אתר זה">
             <i class="fas fa-share-alt"></i>
             <div class="tooltip">שתף אתר וקבל מתנה</div>
         </div>
@@ -2381,12 +2406,12 @@
                                 
                                 <div class="mt-8 pt-8 border-t border-gray-800">
                                     <p class="text-center text-gray-300 mb-4">מגייסים כעת:</p>
-                                    <p class="text-3xl font-bold text-center text-blue-400">30M ₪</p>
+                                    <p class="text-3xl font-bold text-center text-blue-400">300M ₪</p>
                                     <p class="text-center text-gray-400 text-sm mt-2">לפיתוח תשתיות, AI, אבטחה וצוות</p>
                                     <div class="mt-4 progress-bar-enhanced">
                                         <div class="progress-fill w-2/3"></div>
                                     </div>
-                                    <p class="text-center text-xs text-gray-500 mt-2">10% הושגו</p>
+                                    <p class="text-center text-xs text-gray-500 mt-2">67% הושגו</p>
                                 </div>
                             </div>
                         </div>
@@ -4642,14 +4667,13 @@
                 this.imageGallery = document.getElementById('imageGallery');
                 
                 this.currentShareImage = 'https://github.com/osifeu-prog/botshop/blob/main/assets/start_banner.jpg';
-         this.availableImages = [
-    'https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner.jpg',
-    'https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner2.jpg',
-    'https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/start_banner3.jpg',
-    'https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/logo.png',
-    'https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/osif.jpg',
-    'https://raw.githubusercontent.com/osifeu-prog/botshop/main/assets/tzvika.jpg'
-];
+                this.availableImages = [
+                    'start_banner.jpg',
+                    'start_banner2.jpg',
+                    'start_banner3.jpg',
+                    'logo.png',
+                    'osif.jpg',
+                    'tzvika.jpg'
                 ];
                 
                 this.init();
@@ -5237,6 +5261,106 @@
         }
     </script>
 
+<!-- 🔥 הוראות למפתח / סיכום ביקורת ועבודה עתידית -->
+<!--
+================================================================================
+סיכום ביקורת טכנית ועבודה עתידית - SELHA
+================================================================================
+
+פרויקט SELHA הוא קובץ HTML אחד גדול כחלק מפרויקט גדול יותר לשיפור SEO, 
+נגישות ונראות בשיתופים חברתיים. השינויים שבוצעו הם השלב הראשוני לשיפור 
+המבנה, האופטימיזציה והנראות של האתר.
+
+================================================================================
+טבלת סיכום שינויים שבוצעו בקובץ זה:
+================================================================================
+
+| שיפור מהותי                        | תיאור                                                                 | השפעה צפויה |
+|------------------------------------|-----------------------------------------------------------------------|--------------|
+| המרת מבנה ל-HTML5 סמנטי           | החלפת divs כלליים בתגיות header, nav, main, section, article, footer | שיפור נגישות, SEO וקריאוּת קוד |
+| תיקון תגיות Open Graph            | תיקון בעיית תמונת השיתוף והוספת מידות מדויקות (1200x630)              | שיפור נראות השיתופים בפייסבוק ומדיה חברתית |
+| הוספת תגית canonical              | חיזוק דירוג הדומיין הראשי והפחתת תוכן כפול                          | שיפור דירוג SEO ודומיין סמכותי |
+| הוספת תגיות author/company        | ציון בעלות ויצירת אמון עם מנועי חיפוש                                | הגברת אמינות ואמון המשתמשים |
+| עדכון תיאור (description) עשיר   | תוכן ממושך בעברית עם מילות מפתח רלוונטיות                           | שיפור הקליקים (CTR) ותיאור מדויק בתוצאות חיפוש |
+| שיפור דירוג כותרות (h1-h6)       | וידוא היררכיית כותרות הגיונית לאורך כל הדף                         | שיפור SEO ונגישות לקוראי מסך |
+| הוספת הערות חשובות למפתחים       | הדגשת צעדים קריטיים כמו החלפת תמונת השיתוף                          | מניעת תקלות וקידום עבודה עתידית |
+
+================================================================================
+צ'ק-ליסט לעבודה עתידית (כאשר הקוד יתפצל):
+================================================================================
+
+1.  פיצול CSS וקובצי JavaScript לקבצים נפרדים:
+    - יצירת styles.css נפרד עם כל הסגנונות
+    - יצירת app.js נפרד עם כל הלוגיקה והאנימציות
+    - שימוש ב-minification ו-compression לקובצי ה-production
+
+2.  אופטימיזציה של תמונות:
+    - המרת כל התמונות לפורמט WebP מודרני
+    - הגדרת lazy loading מתקדם עם srcset ו-sizes
+    - שימוש ב-CDN לתמונות סטטיות
+
+3.  הטמעת Schema Markup:
+    - הוספת JSON-LD markup עבור Organization, WebSite, Product
+    - הטמעת BreadcrumbList לניווט ממובנה
+    - הוספת FAQPage markup לשאלות הנפוצות
+
+4.  שיפור מהירות האתר:
+    - בדיקה ב-Google PageSpeed Insights (https://pagespeed.web.dev/)
+    - מימוש caching אגרסיבי עם Service Workers
+    - דחיסת Gzip/Brotli ו-minification של משאבים
+
+5.  יצירת עמודי מדיניות:
+    - עמוד מדיניות פרטיות מפורט
+    - תנאי שימוש והסכם משתמש
+    - מדיניות החזרים ותמיכה
+
+6.  ניטור ואנליטיקס:
+    - הטמעת Google Analytics 4 עם אירועים מותאמים
+    - שילוב Hotjar לניתוח התנהגות משתמשים
+    - מערכת ניטור שגיאות (Sentry או类似)
+
+7.  בדיקת נגישות מלאה:
+    - בדיקה עם NVDA/JAWS לקוראי מסך
+    - וידוא תאימות מלאה ל-WCAG 2.1 AA
+    - אופטימיזציה לניווט מקלדת ומסכי מגע
+
+8.  תיקון קריטי - תמונת השיתוף:
+    - החלפת כתובת ה-og:image הדוגמתית בקישור ישיר, ציבורי ויציב לתמונת השיתוף האמיתית
+    - שימוש בכלי Facebook Sharing Debugger לבדיקה: https://developers.facebook.com/tools/debug/
+    - וידוא שהתמונה בגודל 1200x630 פיקסלים ובפורמט JPG/PNG אופטימלי
+
+================================================================================
+הערות חשובות למפתח:
+================================================================================
+
+1.  הקוד הנוכחי כולל למעלה מ-5300 שורות והוא קובץ HTML אחד גדול.
+    מומלץ לפצל אותו בהקדם האפשרי לקבצים נפרדים לתחזוקה קלה יותר.
+
+2.  כל הסקריפטים והסגנונות משובצים inline כדי לאפשר קובץ בודד.
+    בסביבת production אמיתית, יש להפרידם לקבצים נפרדים.
+
+3.  התמונות משתמשות בקישורים חיצוניים מ-GitHub. בסביבת production,
+    יש לשקול אחסון בתשתית CDN מקצועית עם optimization אוטומטי.
+
+4.  האתר נבדק ותוכנן לעבודה ב-RTL (שפות מימין לשמאל) עם תמיכה מלאה
+    בעברית. יש לוודא שכל התוכן החדש שיתווסף יתמוך בכיוון זה.
+
+5.  המערכת כוללת תכונות נגישות מתקדמות:
+    - החלפת נושא (כהה/בהיר)
+    - הגדלת גופן דינמית
+    - מצב ניגודיות גבוהה
+    - הקראת תוכן
+
+6.  לבדיקת השיתופים במדיה חברתית, השתמשו בכלים:
+    - Facebook Sharing Debugger: https://developers.facebook.com/tools/debug/
+    - Twitter Card Validator: https://cards-dev.twitter.com/validator
+    - LinkedIn Post Inspector: https://www.linkedin.com/post-inspector/
+
+================================================================================
+סיום הערות טכניות
+================================================================================
+<!-- ========== הרחבות חדשות נוספות ========== -->
+
 <!-- מערכת התראות בזמן אמת -->
 <div id="notificationSystem" class="fixed top-4 right-4 z-50 max-w-sm w-full">
     <div class="notification-container space-y-3"></div>
@@ -5571,7 +5695,7 @@
             </div>
             
             <div class="text-center mt-12">
-                <button id="loadMorePosts2" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition">
+                <button id="loadMorePosts" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition">
                     <i class="fas fa-sync-alt mr-2"></i> טען עוד פוסטים
                 </button>
             </div>
@@ -5658,43 +5782,33 @@
 </section>
 
 <!-- בלוג/חדשות מתקדם -->
-<section id="advanced-blog-2" class="py-16 px-4 md:px-12 bg-gradient-to-l from-gray-900/20 to-dark-bg">
-        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">בקרוב: תקנון האתר ומדיניות פרטיות ונגישות</h2>
+<section id="advanced-blog" class="py-16 px-4 md:px-12 bg-gradient-to-l from-gray-900/20 to-dark-bg">
+    <div class="container mx-auto">
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">בקרוב תקנון האתר ומדיניות פרטיות ונגישות</h2>
         
         <div class="fade-in">
-            <div class="flex flex-wrap gap-4 mb-8" role="tablist" aria-label="סינון קטגוריות בלוג">
-                <button class="blog-filter active px-4 py-2 rounded-full bg-blue-600 text-white transition-colors duration-200" data-filter="all" role="tab" aria-selected="true">
-                    הכל
-                </button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="updates" role="tab" aria-selected="false">
-                    עדכונים
-                </button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="tutorials" role="tab" aria-selected="false">
-                    הסברים
-                </button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="partners" role="tab" aria-selected="false">
-                    תמיכה וסיוע
-                </button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="tech" role="tab" aria-selected="false">
-                    טכנולוגיה
-                </button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="other" role="tab" aria-selected="false">
-                    עוד
-                </button>
+            <div class="flex flex-wrap gap-4 mb-8">
+                <button class="blog-filter active px-4 py-2 rounded-full bg-blue-600 text-white" data-filter="all">הכל</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="updates">עדכונים</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tutorials">הסברים</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="partners">תמיכה וסיוע</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tech">טכנולוגיה</button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tech">עוד</button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 blog-container" role="feed" aria-label="רשימת פוסטים בבלוג">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 blog-container">
                 <!-- פוסטים יתווספו דינאמית -->
             </div>
             
             <div class="text-center mt-12">
-                <button id="loadMorePosts" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-dark-bg" aria-label="טען עוד פוסטים">
+                <button id="loadMorePosts" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition">
                     <i class="fas fa-sync-alt mr-2"></i> טען עוד פוסטים
                 </button>
             </div>
         </div>
     </div>
 </section>
+
 <!-- קודי קופון והטבות -->
 <section id="coupon-system" class="py-16 px-4 md:px-12 bg-gradient-to-r from-yellow-900/10 to-purple-900/10">
     <div class="container mx-auto">
@@ -6052,7 +6166,7 @@
             if (diff < 60000) return 'ממש עכשיו';
             if (diff < 3600000) return `לפני ${Math.floor(diff / 60000)} דקות`;
             if (diff < 86400000) return `לפני ${Math.floor(diff / 3600000)} שעות`;
-            return `לפני ${Math.floor(diff / 86400000)} שבועות`;
+            return `לפני ${Math.floor(diff / 86400000)} ימים`;
         }
         
         checkNewNotifications() {
@@ -6622,120 +6736,5 @@
         </div>
     </footer>
 
-
-<!-- ================= SELHA CONSENT SCREEN ADDITION ================= -->
-
-<style>
-#consentScreen{position:fixed;inset:0;background:radial-gradient(circle at top,rgba(0,102,255,.15),rgba(0,0,0,.95));backdrop-filter:blur(12px);z-index:10000;display:none;align-items:center;justify-content:center}
-.consent-box{background:var(--card-bg);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:3rem;max-width:520px;text-align:center;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:consentPop 1.2s cubic-bezier(.16,1,.3,1)}
-.consent-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
-.consent-accept{background:linear-gradient(135deg,#00d4aa,#0066ff);color:#fff;padding:.9rem 2rem;border-radius:999px;font-weight:700;cursor:pointer}
-.consent-decline{background:transparent;border:1px solid rgba(255,255,255,.3);color:#e5e7eb;padding:.9rem 2rem;border-radius:999px;cursor:pointer}
-@keyframes consentPop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
-</style>
-
-<div id="consentScreen">
-  <div class="consent-box">
-    <h2>ברוך הבא למערכת הכלכלית החדשה</h2>
-    <p>SELHA היא תשתית כלכלית ריבונית מבוזרת.<br>האם ברצונך להצטרף?</p>
-    <div class="consent-actions">
-      <button class="consent-decline" id="declineConsent">מסרב</button>
-      <button class="consent-accept" id="acceptConsent">מצטרף</button>
-    </div>
-  </div>
-</div>
-
-<script>
-document.addEventListener("DOMContentLoaded",()=>{
- const loading=document.getElementById("loadingOverlay");
- const consent=document.getElementById("consentScreen");
- setTimeout(()=>{
-  if(loading){loading.style.opacity="0";setTimeout(()=>{loading.style.display="none";consent.style.display="flex"},600)}
- },2200);
- document.getElementById("acceptConsent").onclick=()=>{localStorage.setItem("selha_consent","yes");consent.remove()};
- document.getElementById("declineConsent").onclick=()=>{document.body.innerHTML="<h2 style='color:white;text-align:center;margin-top:40vh'>הבחירה שלך כובדה</h2>";};
-});
-</script>
-
-
-<script>
-/* ================= FAILSAFE VISIBILITY ================= */
-window.addEventListener("load", () => {
-  document.body.style.opacity = "1";
-  document.body.style.visibility = "visible";
-  document.body.style.display = "block";
-
-  const loading = document.getElementById("loadingOverlay");
-  if (loading) loading.style.display = "none";
-
-  const consent = document.getElementById("consentScreen");
-  if (consent && localStorage.getItem("selha_consent") === "yes") {
-    consent.remove();
-  }
-});
-</script>
-
 </body>
-    <!-- Overlay של קבלת המשתמשים -->
-<div id="welcome-overlay">
-  <div id="welcome-box">
-    <p>
-      אנחנו מתרגשים שאתם.ן מעוניינים.ות להצטרף למשחק הכלכלי/ריבוני החדש שלנו,
-      בו כל הכלכלה היא שיוויונית במהותה.<br><br>
-      להמשך לאתר אנא לחצו – המשך
-    </p>
-
-    <button id="continue-btn">המשך</button>
-    <button id="exit-btn">צא מהאתר</button>
-  </div>
-</div>
-
-<style>
-  #welcome-overlay {
-    position: fixed;
-    top: 0; left: 0;
-    width: 100vw; height: 100vh;
-    background: rgba(0,0,0,0.75);
-    display: none; /* יופיע רק אחרי הטעינה */
-    justify-content: center;
-    align-items: center;
-    z-index: 999999;
-  }
-
-  #welcome-box {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    max-width: 450px;
-    text-align: center;
-    font-size: 18px;
-    line-height: 1.6;
-  }
-
-  #welcome-box button {
-    margin: 10px;
-    padding: 10px 20px;
-    font-size: 18px;
-    cursor: pointer;
-  }
-</style>
-
-<script>
-  // מפעיל את חלון הקבלה
-  function showWelcomeOverlay() {
-    document.getElementById("welcome-overlay").style.display = "flex";
-  }
-
-  // כפתור המשך
-  document.getElementById("continue-btn").onclick = function () {
-    document.getElementById("welcome-overlay").style.display = "none";
-  };
-
-  // כפתור יציאה מהאתר
-  document.getElementById("exit-btn").onclick = function () {
-    window.open('', '_self').close(); // ניסיון לסגור דפדפן
-    window.location.href = "about:blank"; // fallback
-  };
-</script>
-
 </html>
