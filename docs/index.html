@@ -1,3 +1,17 @@
+אשמח לעת עתה להשאר בקובץ אחד. אני מודע לבעיות אבל זה יעזור לתלמיד שלי ללמוד איך להיות ארכיטקט. תן לי קובץ אחד מתוקן מלא. אני מפחד שלא צרפתי את הקובץ כולו אז מצרף אותו שוב במלואוץ תן לי את כל התיקונים כדי שהוא יעלה במלואו באופן מוצלח עם כל מה שביקשתי אני: 
+botshop/docs
+/index.html
+osifeu-prog
+osifeu-prog
+Update index.html
+e068aba
+ · 
+23 minutes ago
+
+Code
+
+Blame
+6688 lines (5850 loc) · 334 KB
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
@@ -6621,6 +6635,41 @@
             </div>
         </div>
     </footer>
+
+
+<!-- ================= SELHA CONSENT SCREEN ADDITION ================= -->
+
+<style>
+#consentScreen{position:fixed;inset:0;background:radial-gradient(circle at top,rgba(0,102,255,.15),rgba(0,0,0,.95));backdrop-filter:blur(12px);z-index:10000;display:none;align-items:center;justify-content:center}
+.consent-box{background:var(--card-bg);border:1px solid rgba(255,255,255,.15);border-radius:24px;padding:3rem;max-width:520px;text-align:center;box-shadow:0 40px 120px rgba(0,0,0,.6);animation:consentPop 1.2s cubic-bezier(.16,1,.3,1)}
+.consent-actions{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.consent-accept{background:linear-gradient(135deg,#00d4aa,#0066ff);color:#fff;padding:.9rem 2rem;border-radius:999px;font-weight:700;cursor:pointer}
+.consent-decline{background:transparent;border:1px solid rgba(255,255,255,.3);color:#e5e7eb;padding:.9rem 2rem;border-radius:999px;cursor:pointer}
+@keyframes consentPop{0%{transform:scale(.9);opacity:0}100%{transform:scale(1);opacity:1}}
+</style>
+
+<div id="consentScreen">
+  <div class="consent-box">
+    <h2>ברוך הבא למערכת הכלכלית החדשה</h2>
+    <p>SELHA היא תשתית כלכלית ריבונית מבוזרת.<br>האם ברצונך להצטרף?</p>
+    <div class="consent-actions">
+      <button class="consent-decline" id="declineConsent">מסרב</button>
+      <button class="consent-accept" id="acceptConsent">מצטרף</button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded",()=>{
+ const loading=document.getElementById("loadingOverlay");
+ const consent=document.getElementById("consentScreen");
+ setTimeout(()=>{
+  if(loading){loading.style.opacity="0";setTimeout(()=>{loading.style.display="none";consent.style.display="flex"},600)}
+ },2200);
+ document.getElementById("acceptConsent").onclick=()=>{localStorage.setItem("selha_consent","yes");consent.remove()};
+ document.getElementById("declineConsent").onclick=()=>{document.body.innerHTML="<h2 style='color:white;text-align:center;margin-top:40vh'>הבחירה שלך כובדה</h2>";};
+});
+</script>
 
 </body>
     <!-- Overlay של קבלת המשתמשים -->
