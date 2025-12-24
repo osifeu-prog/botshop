@@ -5760,33 +5760,44 @@
 </section>
 
 <!-- בלוג/חדשות מתקדם -->
-<section id="advanced-blog" class="py-16 px-4 md:px-12 bg-gradient-to-l from-gray-900/20 to-dark-bg">
+<section id="advanced-blog" class="py-16 px-4 md:px-12 bg-gradient-to-l from-gray-900/20 to-dark-bg" style="--dark-bg: #0f172a;">
     <div class="container mx-auto">
-        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">בקרוב תקנון האתר ומדיניות פרטיות ונגישות</h2>
+        <h2 class="section-title text-3xl md:text-4xl font-bold mb-12 fade-in">בקרוב: תקנון האתר ומדיניות פרטיות ונגישות</h2>
         
         <div class="fade-in">
-            <div class="flex flex-wrap gap-4 mb-8">
-                <button class="blog-filter active px-4 py-2 rounded-full bg-blue-600 text-white" data-filter="all">הכל</button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="updates">עדכונים</button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tutorials">הסברים</button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="partners">תמיכה וסיוע</button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tech">טכנולוגיה</button>
-                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700" data-filter="tech">עוד</button>
+            <div class="flex flex-wrap gap-4 mb-8" role="tablist" aria-label="סינון קטגוריות בלוג">
+                <button class="blog-filter active px-4 py-2 rounded-full bg-blue-600 text-white transition-colors duration-200" data-filter="all" role="tab" aria-selected="true">
+                    הכל
+                </button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="updates" role="tab" aria-selected="false">
+                    עדכונים
+                </button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="tutorials" role="tab" aria-selected="false">
+                    הסברים
+                </button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="partners" role="tab" aria-selected="false">
+                    תמיכה וסיוע
+                </button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="tech" role="tab" aria-selected="false">
+                    טכנולוגיה
+                </button>
+                <button class="blog-filter px-4 py-2 rounded-full bg-gray-800 text-gray-300 hover:bg-gray-700 transition-colors duration-200" data-filter="other" role="tab" aria-selected="false">
+                    עוד
+                </button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 blog-container">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 blog-container" role="feed" aria-label="רשימת פוסטים בבלוג">
                 <!-- פוסטים יתווספו דינאמית -->
             </div>
             
             <div class="text-center mt-12">
-                <button id="loadMorePosts" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition">
+                <button id="loadMorePosts" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg font-bold hover:opacity-90 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-dark-bg" aria-label="טען עוד פוסטים">
                     <i class="fas fa-sync-alt mr-2"></i> טען עוד פוסטים
                 </button>
             </div>
         </div>
     </div>
 </section>
-
 <!-- קודי קופון והטבות -->
 <section id="coupon-system" class="py-16 px-4 md:px-12 bg-gradient-to-r from-yellow-900/10 to-purple-900/10">
     <div class="container mx-auto">
