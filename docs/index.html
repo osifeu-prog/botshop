@@ -2146,20 +2146,18 @@
         </div>
     </div>
     
-    <!-- Accessibility: Skip to content link -->
     <a href="#main-content" class="skip-to-content focus-visible">דלג לתוכן הראשי</a>
-    
-    <!-- Accessibility toolbar -->
+
     <div class="accessibility-toolbar no-print">
         <div class="accessibility-btn" id="themeToggle" aria-label="החלף מצב תצוגה">
             <i class="fas fa-moon" id="themeIcon"></i>
             <div class="tooltip">החלף בין מצב כהה/בהיר</div>
         </div>
-        <div class="accessibility-btn" id="themeToggle" role="button" aria-label="החלף מצב תצוגה">
+        <div class="accessibility-btn" id="themeToggle" role="button" aria-label="בהמשך">
             <i class="fas fa-text-height"></i>
             <div class="tooltip">הגדל גודל טקסט</div>
         </div>
-        <div class="accessibility-btn" id="fontDecrease" aria-label="הקטן גודל גופן">
+        <div class="accessibility-btn" id="contrastToggle" role="button" tabindex="0" aria-label="החלף מצב ניגודיות גבוהה">
             <i class="fas fa-text-width"></i>
             <div class="tooltip">הקטן גודל טקסט</div>
         </div>
@@ -2167,11 +2165,11 @@
             <i class="fas fa-adjust"></i>
             <div class="tooltip">החלף מצב ניגודיות גבוהה</div>
         </div>
-        <div class="accessibility-btn" id="speechToggle" aria-label="הקראת תוכן">
+        <div class="accessibility-btn" id="speechToggle" role="button" tabindex="0" aria-label="הקראת תוכן">
             <i class="fas fa-volume-up"></i>
             <div class="tooltip">הפעל הקראת תוכן</div>
         </div>
-        <div class="accessibility-btn" id="shareButton" aria-label="שתף אתר זה">
+        <div class="accessibility-btn" id="shareButton" role="button" tabindex="0" aria-label="שתף אתר זה">
             <i class="fas fa-share-alt"></i>
             <div class="tooltip">שתף אתר וקבל מתנה</div>
         </div>
@@ -5238,106 +5236,6 @@
             if (ogImage) console.log("Social sharing image path:", ogImage.getAttribute('content'));
         }
     </script>
-
-<!-- 🔥 הוראות למפתח / סיכום ביקורת ועבודה עתידית -->
-<!--
-================================================================================
-סיכום ביקורת טכנית ועבודה עתידית - SELHA
-================================================================================
-
-פרויקט SELHA הוא קובץ HTML אחד גדול כחלק מפרויקט גדול יותר לשיפור SEO, 
-נגישות ונראות בשיתופים חברתיים. השינויים שבוצעו הם השלב הראשוני לשיפור 
-המבנה, האופטימיזציה והנראות של האתר.
-
-================================================================================
-טבלת סיכום שינויים שבוצעו בקובץ זה:
-================================================================================
-
-| שיפור מהותי                        | תיאור                                                                 | השפעה צפויה |
-|------------------------------------|-----------------------------------------------------------------------|--------------|
-| המרת מבנה ל-HTML5 סמנטי           | החלפת divs כלליים בתגיות header, nav, main, section, article, footer | שיפור נגישות, SEO וקריאוּת קוד |
-| תיקון תגיות Open Graph            | תיקון בעיית תמונת השיתוף והוספת מידות מדויקות (1200x630)              | שיפור נראות השיתופים בפייסבוק ומדיה חברתית |
-| הוספת תגית canonical              | חיזוק דירוג הדומיין הראשי והפחתת תוכן כפול                          | שיפור דירוג SEO ודומיין סמכותי |
-| הוספת תגיות author/company        | ציון בעלות ויצירת אמון עם מנועי חיפוש                                | הגברת אמינות ואמון המשתמשים |
-| עדכון תיאור (description) עשיר   | תוכן ממושך בעברית עם מילות מפתח רלוונטיות                           | שיפור הקליקים (CTR) ותיאור מדויק בתוצאות חיפוש |
-| שיפור דירוג כותרות (h1-h6)       | וידוא היררכיית כותרות הגיונית לאורך כל הדף                         | שיפור SEO ונגישות לקוראי מסך |
-| הוספת הערות חשובות למפתחים       | הדגשת צעדים קריטיים כמו החלפת תמונת השיתוף                          | מניעת תקלות וקידום עבודה עתידית |
-
-================================================================================
-צ'ק-ליסט לעבודה עתידית (כאשר הקוד יתפצל):
-================================================================================
-
-1.  פיצול CSS וקובצי JavaScript לקבצים נפרדים:
-    - יצירת styles.css נפרד עם כל הסגנונות
-    - יצירת app.js נפרד עם כל הלוגיקה והאנימציות
-    - שימוש ב-minification ו-compression לקובצי ה-production
-
-2.  אופטימיזציה של תמונות:
-    - המרת כל התמונות לפורמט WebP מודרני
-    - הגדרת lazy loading מתקדם עם srcset ו-sizes
-    - שימוש ב-CDN לתמונות סטטיות
-
-3.  הטמעת Schema Markup:
-    - הוספת JSON-LD markup עבור Organization, WebSite, Product
-    - הטמעת BreadcrumbList לניווט ממובנה
-    - הוספת FAQPage markup לשאלות הנפוצות
-
-4.  שיפור מהירות האתר:
-    - בדיקה ב-Google PageSpeed Insights (https://pagespeed.web.dev/)
-    - מימוש caching אגרסיבי עם Service Workers
-    - דחיסת Gzip/Brotli ו-minification של משאבים
-
-5.  יצירת עמודי מדיניות:
-    - עמוד מדיניות פרטיות מפורט
-    - תנאי שימוש והסכם משתמש
-    - מדיניות החזרים ותמיכה
-
-6.  ניטור ואנליטיקס:
-    - הטמעת Google Analytics 4 עם אירועים מותאמים
-    - שילוב Hotjar לניתוח התנהגות משתמשים
-    - מערכת ניטור שגיאות (Sentry או类似)
-
-7.  בדיקת נגישות מלאה:
-    - בדיקה עם NVDA/JAWS לקוראי מסך
-    - וידוא תאימות מלאה ל-WCAG 2.1 AA
-    - אופטימיזציה לניווט מקלדת ומסכי מגע
-
-8.  תיקון קריטי - תמונת השיתוף:
-    - החלפת כתובת ה-og:image הדוגמתית בקישור ישיר, ציבורי ויציב לתמונת השיתוף האמיתית
-    - שימוש בכלי Facebook Sharing Debugger לבדיקה: https://developers.facebook.com/tools/debug/
-    - וידוא שהתמונה בגודל 1200x630 פיקסלים ובפורמט JPG/PNG אופטימלי
-
-================================================================================
-הערות חשובות למפתח:
-================================================================================
-
-1.  הקוד הנוכחי כולל למעלה מ-5300 שורות והוא קובץ HTML אחד גדול.
-    מומלץ לפצל אותו בהקדם האפשרי לקבצים נפרדים לתחזוקה קלה יותר.
-
-2.  כל הסקריפטים והסגנונות משובצים inline כדי לאפשר קובץ בודד.
-    בסביבת production אמיתית, יש להפרידם לקבצים נפרדים.
-
-3.  התמונות משתמשות בקישורים חיצוניים מ-GitHub. בסביבת production,
-    יש לשקול אחסון בתשתית CDN מקצועית עם optimization אוטומטי.
-
-4.  האתר נבדק ותוכנן לעבודה ב-RTL (שפות מימין לשמאל) עם תמיכה מלאה
-    בעברית. יש לוודא שכל התוכן החדש שיתווסף יתמוך בכיוון זה.
-
-5.  המערכת כוללת תכונות נגישות מתקדמות:
-    - החלפת נושא (כהה/בהיר)
-    - הגדלת גופן דינמית
-    - מצב ניגודיות גבוהה
-    - הקראת תוכן
-
-6.  לבדיקת השיתופים במדיה חברתית, השתמשו בכלים:
-    - Facebook Sharing Debugger: https://developers.facebook.com/tools/debug/
-    - Twitter Card Validator: https://cards-dev.twitter.com/validator
-    - LinkedIn Post Inspector: https://www.linkedin.com/post-inspector/
-
-================================================================================
-סיום הערות טכניות
-================================================================================
-<!-- ========== הרחבות חדשות נוספות ========== -->
 
 <!-- מערכת התראות בזמן אמת -->
 <div id="notificationSystem" class="fixed top-4 right-4 z-50 max-w-sm w-full">
