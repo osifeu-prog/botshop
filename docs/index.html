@@ -2033,19 +2033,48 @@
     </script>
     <!-- ========== סוף קוד Schema Markup ========== -->
     
-<!-- ================= SELHA GLOBAL CSS FIX ================= -->
-<style id="selha-css-fix">
+<!-- ===== SELHA SEO / PERFORMANCE ===== -->
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0b0e14">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="dns-prefetch" href="//fonts.googleapis.com">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="SELHA – Sovereign Economic Layer">
+<meta property="og:description" content="תשתית כלכלית ריבונית מבוססת בלוקצ'יין, AI וקהילה">
+<meta property="og:url" content="https://slh-nft.com/">
+
+<meta name="twitter:card" content="summary_large_image">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "SELHA",
+  "url": "https://slh-nft.com/",
+  "description": "Sovereign Economic Layer for Human Advancement",
+  "sameAs": [
+    "https://t.me/Buy_My_Shop_bot",
+    "https://t.me/Osifs_Factory_bot"
+  ]
+}
+</script>
+<!-- ================================= -->
+<!-- ===== SELHA STABILITY CSS ===== -->
+<style id="selha-stable-css">
 html, body {
-  visibility: visible !important;
-  opacity: 1 !important;
+  visibility: visible;
+  opacity: 1;
+  overflow-x: hidden;
 }
-[hidden], .hidden, .d-none {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-}
+
+a { cursor: pointer; }
+
+img { max-width: 100%; height: auto; }
 </style>
-<!-- ======================================================== -->
+<!-- ============================== -->
 </head>
 <body class="gradient-bg">
     <!-- Bubble Animation Background -->
@@ -4978,63 +5007,37 @@ SLH היא שכבת תשתית כלכלית חדשה — שילוב של פינ�
             console.log('%cפיתוח פעיל - פונקציונאליות מלאה בקרוב', 'color: #ff9900; font-size: 12px;');
         };
     </script>
-<!-- ================= SELHA FULL JS DEBUG & FIX ================= -->
-<script id="selha-js-fix">
+<!-- ===== SELHA PROD INIT ===== -->
+<script id="selha-prod-js">
 (function(){
-  "use strict";
+  'use strict';
 
-  const log = (...a) => console.log("%c[SELHA]", "color:#00ffcc", ...a);
-  const err = (...a) => console.error("[SELHA ERROR]", ...a);
-
-  function ready(fn){
-    document.readyState !== "loading"
-      ? fn()
-      : document.addEventListener("DOMContentLoaded", fn);
-  }
-
-  window.addEventListener("error", e => {
-    err("JS crash captured:", e.message);
-    return true;
-  });
-
-  ready(() => {
-    log("DOM ready");
-
-    ["loading","loader","loadingOverlay","preloader"].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.remove();
+  function init(){
+    // Remove only known loaders
+    ['loading','loader','loadingOverlay','preloader'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.remove();
     });
 
-    document.body.style.overflow = "auto";
-
-    if (!document.querySelector("main")) {
-      const m = document.createElement("main");
-      while (document.body.firstChild) {
-        m.appendChild(document.body.firstChild);
-      }
-      document.body.appendChild(m);
+    // Ensure main visible
+    const main=document.querySelector('main');
+    if(main){
+      main.style.visibility='visible';
+      main.style.opacity='1';
+      main.style.display='';
     }
 
-    document.querySelectorAll("*").forEach(el => {
-      const cs = getComputedStyle(el);
-      if (cs.display === "none") el.style.display = "";
-      if (cs.visibility === "hidden") el.style.visibility = "visible";
-      if (cs.opacity === "0") el.style.opacity = "1";
-    });
+    // Lazy-load images
+    document.querySelectorAll('img:not([loading])')
+      .forEach(img=>img.setAttribute('loading','lazy'));
 
-    log("SELHA FIXES APPLIED");
-  });
+    document.body.style.overflow='auto';
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
-
-<div id="selha-debug"
-     style="position:fixed;bottom:10px;right:10px;
-            background:black;color:#0f0;
-            padding:10px;font-family:monospace;
-            z-index:999999;">
-SELHA DEBUG ACTIVE<br>2025-12-29 11:36:50Z
-</div>
-<!-- ====================================================== -->
+<!-- ============================= -->
 </body>
 </html>
                         </p>
@@ -7548,62 +7551,36 @@ SELHA DEBUG ACTIVE<br>2025-12-29 11:36:50Z
         </div>
     </footer>
 
-<!-- ================= SELHA FULL JS DEBUG & FIX ================= -->
-<script id="selha-js-fix">
+<!-- ===== SELHA PROD INIT ===== -->
+<script id="selha-prod-js">
 (function(){
-  "use strict";
+  'use strict';
 
-  const log = (...a) => console.log("%c[SELHA]", "color:#00ffcc", ...a);
-  const err = (...a) => console.error("[SELHA ERROR]", ...a);
-
-  function ready(fn){
-    document.readyState !== "loading"
-      ? fn()
-      : document.addEventListener("DOMContentLoaded", fn);
-  }
-
-  window.addEventListener("error", e => {
-    err("JS crash captured:", e.message);
-    return true;
-  });
-
-  ready(() => {
-    log("DOM ready");
-
-    ["loading","loader","loadingOverlay","preloader"].forEach(id => {
-      const el = document.getElementById(id);
-      if (el) el.remove();
+  function init(){
+    // Remove only known loaders
+    ['loading','loader','loadingOverlay','preloader'].forEach(id=>{
+      const el=document.getElementById(id);
+      if(el) el.remove();
     });
 
-    document.body.style.overflow = "auto";
-
-    if (!document.querySelector("main")) {
-      const m = document.createElement("main");
-      while (document.body.firstChild) {
-        m.appendChild(document.body.firstChild);
-      }
-      document.body.appendChild(m);
+    // Ensure main visible
+    const main=document.querySelector('main');
+    if(main){
+      main.style.visibility='visible';
+      main.style.opacity='1';
+      main.style.display='';
     }
 
-    document.querySelectorAll("*").forEach(el => {
-      const cs = getComputedStyle(el);
-      if (cs.display === "none") el.style.display = "";
-      if (cs.visibility === "hidden") el.style.visibility = "visible";
-      if (cs.opacity === "0") el.style.opacity = "1";
-    });
+    // Lazy-load images
+    document.querySelectorAll('img:not([loading])')
+      .forEach(img=>img.setAttribute('loading','lazy'));
 
-    log("SELHA FIXES APPLIED");
-  });
+    document.body.style.overflow='auto';
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
 })();
 </script>
-
-<div id="selha-debug"
-     style="position:fixed;bottom:10px;right:10px;
-            background:black;color:#0f0;
-            padding:10px;font-family:monospace;
-            z-index:999999;">
-SELHA DEBUG ACTIVE<br>2025-12-29 11:36:50Z
-</div>
-<!-- ====================================================== -->
+<!-- ============================= -->
 </body>
 </html>
