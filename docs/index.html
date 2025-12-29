@@ -2033,6 +2033,19 @@
     </script>
     <!-- ========== סוף קוד Schema Markup ========== -->
     
+<!-- ================= SELHA GLOBAL CSS FIX ================= -->
+<style id="selha-css-fix">
+html, body {
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+[hidden], .hidden, .d-none {
+  display: block !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+}
+</style>
+<!-- ======================================================== -->
 </head>
 <body class="gradient-bg">
     <!-- Bubble Animation Background -->
@@ -4965,6 +4978,63 @@ SLH היא שכבת תשתית כלכלית חדשה — שילוב של פינ�
             console.log('%cפיתוח פעיל - פונקציונאליות מלאה בקרוב', 'color: #ff9900; font-size: 12px;');
         };
     </script>
+<!-- ================= SELHA FULL JS DEBUG & FIX ================= -->
+<script id="selha-js-fix">
+(function(){
+  "use strict";
+
+  const log = (...a) => console.log("%c[SELHA]", "color:#00ffcc", ...a);
+  const err = (...a) => console.error("[SELHA ERROR]", ...a);
+
+  function ready(fn){
+    document.readyState !== "loading"
+      ? fn()
+      : document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  window.addEventListener("error", e => {
+    err("JS crash captured:", e.message);
+    return true;
+  });
+
+  ready(() => {
+    log("DOM ready");
+
+    ["loading","loader","loadingOverlay","preloader"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    });
+
+    document.body.style.overflow = "auto";
+
+    if (!document.querySelector("main")) {
+      const m = document.createElement("main");
+      while (document.body.firstChild) {
+        m.appendChild(document.body.firstChild);
+      }
+      document.body.appendChild(m);
+    }
+
+    document.querySelectorAll("*").forEach(el => {
+      const cs = getComputedStyle(el);
+      if (cs.display === "none") el.style.display = "";
+      if (cs.visibility === "hidden") el.style.visibility = "visible";
+      if (cs.opacity === "0") el.style.opacity = "1";
+    });
+
+    log("SELHA FIXES APPLIED");
+  });
+})();
+</script>
+
+<div id="selha-debug"
+     style="position:fixed;bottom:10px;right:10px;
+            background:black;color:#0f0;
+            padding:10px;font-family:monospace;
+            z-index:999999;">
+SELHA DEBUG ACTIVE<br>2025-12-29 11:36:50Z
+</div>
+<!-- ====================================================== -->
 </body>
 </html>
                         </p>
@@ -7478,5 +7548,62 @@ SLH היא שכבת תשתית כלכלית חדשה — שילוב של פינ�
         </div>
     </footer>
 
+<!-- ================= SELHA FULL JS DEBUG & FIX ================= -->
+<script id="selha-js-fix">
+(function(){
+  "use strict";
+
+  const log = (...a) => console.log("%c[SELHA]", "color:#00ffcc", ...a);
+  const err = (...a) => console.error("[SELHA ERROR]", ...a);
+
+  function ready(fn){
+    document.readyState !== "loading"
+      ? fn()
+      : document.addEventListener("DOMContentLoaded", fn);
+  }
+
+  window.addEventListener("error", e => {
+    err("JS crash captured:", e.message);
+    return true;
+  });
+
+  ready(() => {
+    log("DOM ready");
+
+    ["loading","loader","loadingOverlay","preloader"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.remove();
+    });
+
+    document.body.style.overflow = "auto";
+
+    if (!document.querySelector("main")) {
+      const m = document.createElement("main");
+      while (document.body.firstChild) {
+        m.appendChild(document.body.firstChild);
+      }
+      document.body.appendChild(m);
+    }
+
+    document.querySelectorAll("*").forEach(el => {
+      const cs = getComputedStyle(el);
+      if (cs.display === "none") el.style.display = "";
+      if (cs.visibility === "hidden") el.style.visibility = "visible";
+      if (cs.opacity === "0") el.style.opacity = "1";
+    });
+
+    log("SELHA FIXES APPLIED");
+  });
+})();
+</script>
+
+<div id="selha-debug"
+     style="position:fixed;bottom:10px;right:10px;
+            background:black;color:#0f0;
+            padding:10px;font-family:monospace;
+            z-index:999999;">
+SELHA DEBUG ACTIVE<br>2025-12-29 11:36:50Z
+</div>
+<!-- ====================================================== -->
 </body>
 </html>
